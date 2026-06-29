@@ -227,16 +227,22 @@ export default function PerfilAdmin() {
             width: isDesktop ? '140px' : '76px',
             height: isDesktop ? '140px' : '76px',
             borderRadius: '50%',
-            backgroundColor: '#ccf600',
-            color: '#002855',
+            backgroundColor: '#fff',
+            border: '4px solid #fff',
+            overflow: 'hidden',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: isDesktop ? '3.2rem' : '1.8rem',
-            fontWeight: 900,
-            border: '4px solid #fff',
+            justifyContent: 'center'
           }}>
-            TS
+            <img 
+              src={getMediaUrl('/uploads/foto3_nobg.png')} 
+              alt="Senador Styveson Valim"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover'
+              }}
+            />
           </div>
         </div>
 
@@ -527,16 +533,22 @@ export default function PerfilAdmin() {
                         width: '24px',
                         height: '24px',
                         borderRadius: '50%',
-                        backgroundColor: '#ccf600',
-                        color: '#002855',
+                        backgroundColor: '#fff',
+                        border: '1.5px solid #fff',
+                        overflow: 'hidden',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: '0.65rem',
-                        fontWeight: 900,
-                        border: '2px solid #fff',
                       }}>
-                        TS
+                        <img 
+                          src={getMediaUrl('/uploads/foto3_nobg.png')} 
+                          alt="Senador Styveson Valim"
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover'
+                          }}
+                        />
                       </div>
                     </div>
                     <div style={{ textAlign: 'left' }}>

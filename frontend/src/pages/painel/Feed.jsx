@@ -252,8 +252,12 @@ export default function FeedPerfil() {
                 {/* Post Header */}
                 <div style={{ display: 'flex', alignItems: 'center', padding: '14px', gap: '10px' }}>
                   <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(45deg, #f99f1b, #d82d7e, #962fbf, #4f5bd5)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#ccf600', color: '#002855', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 'bold', border: '2px solid #fff' }}>
-                      TS
+                    <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#fff', border: '1.5px solid #fff', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <img 
+                        src={getMediaUrl('/uploads/foto3_nobg.png')} 
+                        alt="Senador Styveson Valim"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
                     </div>
                   </div>
                   <div style={{ flex: 1 }}>
