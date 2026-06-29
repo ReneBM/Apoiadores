@@ -74,10 +74,14 @@ export default function AppRoutes() {
             <Route path="/apoiadores/:id/editar" element={<ApoiadoresEdit />} />
           </Route>
 
-          {/* Equipe - Perfis de Acesso e Integrantes */}
+          {/* Equipe - Integrantes */}
           <Route element={<PrivateRoute permission={{ func: 'Equipe', action: 'visualizar' }} />}>
             <Route path="/equipe"                  element={<MultiplicadoresList title="Equipe" />} />
-            <Route path="/perfis"                  element={user?.role === 'admin' ? <PerfisAcesso /> : <Navigate to="/" replace />} />
+          </Route>
+
+          {/* Perfis de Acesso */}
+          <Route element={<PrivateRoute permission={{ func: 'Perfis de Acesso', action: 'visualizar' }} />}>
+            <Route path="/perfis"                  element={<PerfisAcesso />} />
           </Route>
 
           <Route element={<PrivateRoute permission={{ func: 'Equipe', action: 'criar' }} />}>

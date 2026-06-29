@@ -32,21 +32,22 @@ export default function PerfisAcesso() {
     loadData();
   }, []);
 
+  const targetFuncs = ['Apoiadores', 'Equipe', 'Notícias', 'Materiais', 'Mensagens', 'Dashboard', 'Perfis de Acesso'];
+
   const handleNewProfile = () => {
     setEditingId(null);
     setFormName('');
     setFormDesc('');
     setFormBaseRole('multiplicador');
     
-    // Inicializa permissões com todas falsas para as 6 funcionalidades
-    const defaultPerms = [
-      { funcionalidade: 'Apoiadores', visualizar: false, criar: false, editar: false, excluir: false },
-      { funcionalidade: 'Equipe', visualizar: false, criar: false, editar: false, excluir: false },
-      { funcionalidade: 'Notícias', visualizar: false, criar: false, editar: false, excluir: false },
-      { funcionalidade: 'Materiais', visualizar: false, criar: false, editar: false, excluir: false },
-      { funcionalidade: 'Mensagens', visualizar: false, criar: false, editar: false, excluir: false },
-      { funcionalidade: 'Dashboard', visualizar: false, criar: false, editar: false, excluir: false },
-    ];
+    // Inicializa permissões com todas falsas para todas as funcionalidades
+    const defaultPerms = targetFuncs.map(func => ({
+      funcionalidade: func,
+      visualizar: false,
+      criar: false,
+      editar: false,
+      excluir: false
+    }));
     setFormPerms(defaultPerms);
     setShowForm(true);
   };
@@ -58,7 +59,14 @@ export default function PerfisAcesso() {
       setFormName(data.nome);
       setFormDesc(data.descricao || '');
       setFormBaseRole(data.base_role);
-      setFormPerms(data.permissoes || []);
+
+      // Merge existing permissions with the new default list
+      const mergedPerms = targetFuncs.map(func => {
+        const existing = (data.permissoes || []).find(p => p.funcionalidade === func);
+        return existing || { funcionalidade: func, visualizar: false, criar: false, editar: false, excluir: false };
+      });
+
+      setFormPerms(mergedPerms);
       setShowForm(true);
     } catch {
       toast.error('Erro ao carregar detalhes do perfil.');

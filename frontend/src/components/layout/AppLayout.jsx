@@ -307,7 +307,7 @@ export default function AppLayout() {
   if (hasPermission('Equipe', 'visualizar')) {
     sidebarLinks.push({ to: '/equipe', icon: Users, label: 'Equipe' });
   }
-  if (user?.role === 'admin') {
+  if (hasPermission('Perfis de Acesso', 'visualizar')) {
     sidebarLinks.push({ to: '/perfis', icon: Shield, label: 'Perfis de Acesso' });
   }
 
