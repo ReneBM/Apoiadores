@@ -316,46 +316,15 @@ export default function AppLayout() {
     sidebarLinks.push({ to: '/feed', icon: MessageSquare, label: 'Feed de Notícias' });
   }
 
-  if (isDesktop) {
-    return (
-      <>
-        <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: 'var(--bg)' }}>
+  return (
+    <>
+      <div className="app-layout-container">
         
         {/* Sidebar Desktop */}
-        <aside style={{
-          width: '260px',
-          backgroundColor: 'var(--primary-deeper)',
-          borderRight: '1px solid rgba(255,255,255,0.08)',
-          display: 'flex',
-          flexDirection: 'column',
-          color: '#fff',
-          position: 'sticky',
-          top: 0,
-          height: '100vh',
-          flexShrink: 0,
-          zIndex: 99
-        }}>
+        <aside className="app-sidebar-desktop">
           {/* Logo Section */}
-          <div style={{
-            padding: '1.5rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
-            borderBottom: '1px solid rgba(255,255,255,0.06)'
-          }}>
-            <div style={{
-              width: '36px',
-              height: '36px',
-              backgroundColor: 'var(--lime)',
-              color: '#000',
-              borderRadius: '10px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: 900,
-              fontSize: '0.9rem',
-              boxShadow: '0 4px 10px rgba(204,246,0,0.25)',
-            }}>
+          <div className="sidebar-logo-section">
+            <div className="sidebar-logo-icon">
               TS
             </div>
             <div style={{ textAlign: 'left' }}>
@@ -367,39 +336,14 @@ export default function AppLayout() {
           </div>
 
           {/* Links Section */}
-          <nav style={{ flex: 1, padding: '1rem 0.75rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+          <nav className="sidebar-nav">
             {sidebarLinks.map((link) => {
               const Icon = link.icon;
-              const isActive = location.pathname === link.to;
               return (
                 <NavLink
                   key={link.to}
                   to={link.to}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.85rem',
-                    padding: '0.75rem 1rem',
-                    borderRadius: '10px',
-                    color: isActive ? 'var(--lime)' : 'rgba(255,255,255,0.7)',
-                    textDecoration: 'none',
-                    fontSize: '0.88rem',
-                    fontWeight: isActive ? 700 : 500,
-                    backgroundColor: isActive ? 'rgba(255,255,255,0.06)' : 'transparent',
-                    transition: 'all 0.2s',
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive) {
-                      e.currentTarget.style.color = '#fff';
-                      e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.03)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive) {
-                      e.currentTarget.style.color = 'rgba(255,255,255,0.7)';
-                      e.currentTarget.style.backgroundColor = 'transparent';
-                    }
-                  }}
+                  className={({ isActive }) => `sidebar-nav-link ${isActive ? 'active' : ''}`}
                 >
                   <Icon size={18} />
                   <span>{link.label}</span>
@@ -409,34 +353,16 @@ export default function AppLayout() {
           </nav>
 
           {/* User Info / Profile & Logout */}
-          <div style={{
-            padding: '1rem',
-            borderTop: '1px solid rgba(255,255,255,0.06)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.75rem',
-            backgroundColor: 'rgba(0,0,0,0.1)'
-          }}>
+          <div className="sidebar-footer">
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <div style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(255,255,255,0.1)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '0.8rem',
-                fontWeight: 700,
-                color: 'var(--lime)'
-              }}>
+              <div className="sidebar-user-avatar">
                 {user?.nome?.charAt(0).toUpperCase()}
               </div>
               <div style={{ minWidth: 0, textAlign: 'left' }}>
-                <span style={{ fontSize: '0.8rem', fontWeight: 700, display: 'block', color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <span className="sidebar-user-name">
                   {user?.nome}
                 </span>
-                <span style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.5)', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <span className="sidebar-user-email">
                   {user?.email}
                 </span>
               </div>
@@ -444,21 +370,9 @@ export default function AppLayout() {
 
             <button
               onClick={handleLogout}
+              className="sidebar-logout-btn"
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
-                width: '100%',
-                padding: '0.6rem',
-                borderRadius: '8px',
-                border: 'none',
-                backgroundColor: confirmLogout ? '#ef4444' : 'rgba(255,255,255,0.08)',
-                color: '#fff',
-                fontSize: '0.8rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                transition: 'all 0.2s'
+                backgroundColor: confirmLogout ? '#ef4444' : 'rgba(255,255,255,0.08)'
               }}
             >
               <LogOut size={14} />
@@ -468,35 +382,14 @@ export default function AppLayout() {
         </aside>
 
         {/* Content Area */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <div className="app-main-wrapper">
           <Header title={title} />
-          <main style={{
-            flex: 1,
-            padding: '2rem 3rem',
-            maxWidth: '1200px',
-            width: '100%',
-            margin: '0 auto',
-            boxSizing: 'border-box'
-          }}>
+          <main className="app-main-content">
             <Outlet />
           </main>
+          <BottomNavBar />
         </div>
 
-      </div>
-      {activeAviso && renderAvisoModal()}
-      </>
-    );
-  }
-
-  // Mobile Layout
-  return (
-    <>
-      <div className="app-layout">
-        <Header title={title} />
-        <main className="main-content page-enter">
-          <Outlet />
-        </main>
-        <BottomNavBar />
       </div>
       {activeAviso && renderAvisoModal()}
     </>
