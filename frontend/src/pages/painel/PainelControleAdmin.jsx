@@ -13,7 +13,7 @@ import { copyToClipboard } from '../../utils/clipboard';
 // ── Componente Principal ───────────────────────────────────────────────────
 
 export default function PainelControleAdmin() {
-  const { user } = useAuth();
+  const { user, hasPermission } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [pendingCount, setPendingCount] = useState(0);
@@ -176,38 +176,40 @@ export default function PainelControleAdmin() {
             <span>Link de Cadastro</span>
           </button>
 
-          <button
-            onClick={handleExportCSV}
-            disabled={exporting}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              backgroundColor: 'rgba(0, 84, 166, 0.08)',
-              border: 'none',
-              borderRadius: '20px',
-              padding: '0.45rem 1rem',
-              fontSize: '0.75rem',
-              fontWeight: 700,
-              color: 'var(--primary)',
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-              opacity: exporting ? 0.7 : 1
-            }}
-            onMouseEnter={(e) => {
-              if (!exporting) e.currentTarget.style.backgroundColor = 'rgba(0, 84, 166, 0.12)';
-            }}
-            onMouseLeave={(e) => {
-              if (!exporting) e.currentTarget.style.backgroundColor = 'rgba(0, 84, 166, 0.08)';
-            }}
-          >
-            {exporting ? (
-              <Loader2 size={14} className="spin" color="var(--primary)" />
-            ) : (
-              <Download size={14} />
-            )}
-            <span>Exportar Base</span>
-          </button>
+          {hasPermission('Apoiadores', 'visualizar') && (
+            <button
+              onClick={handleExportCSV}
+              disabled={exporting}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                backgroundColor: 'rgba(0, 84, 166, 0.08)',
+                border: 'none',
+                borderRadius: '20px',
+                padding: '0.45rem 1rem',
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                color: 'var(--primary)',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                opacity: exporting ? 0.7 : 1
+              }}
+              onMouseEnter={(e) => {
+                if (!exporting) e.currentTarget.style.backgroundColor = 'rgba(0, 84, 166, 0.12)';
+              }}
+              onMouseLeave={(e) => {
+                if (!exporting) e.currentTarget.style.backgroundColor = 'rgba(0, 84, 166, 0.08)';
+              }}
+            >
+              {exporting ? (
+                <Loader2 size={14} className="spin" color="var(--primary)" />
+              ) : (
+                <Download size={14} />
+              )}
+              <span>Exportar Base</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -215,81 +217,85 @@ export default function PainelControleAdmin() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem', marginBottom: '0.5rem' }}>
         
         {/* Fila de Aprovações */}
-        <div 
-          onClick={() => navigate('/aprovacoes')}
-          className="card cursor-pointer" 
-          style={{ 
-            padding: '1rem', 
-            display: 'flex', 
-            flexDirection: 'column', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            textAlign: 'center',
-            gap: '0.5rem',
-            border: '1.5px solid var(--borda)',
-            transition: 'all 0.2s',
-            position: 'relative'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = 'var(--primary)';
-            e.currentTarget.style.transform = 'translateY(-2px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'var(--borda)';
-            e.currentTarget.style.transform = 'translateY(0)';
-          }}
-        >
-          {pendingCount > 0 && (
-            <span style={{ 
-              position: 'absolute', 
-              top: '6px', 
-              right: '6px', 
-              backgroundColor: '#ef4444', 
-              color: '#fff', 
-              fontSize: '0.65rem', 
-              fontWeight: 800, 
-              padding: '2px 6px', 
-              borderRadius: '99px' 
-            }}>
-              {pendingCount}
-            </span>
-          )}
-          <CheckSquare size={24} color="var(--primary)" />
-          <strong style={{ fontSize: '0.8rem', color: 'var(--texto)' }}>Aprovações</strong>
-          <span style={{ fontSize: '0.65rem', color: 'var(--texto-claro)' }}>Aprovar simpatizantes</span>
-        </div>
+        {hasPermission('Apoiadores', 'visualizar') && (
+          <div 
+            onClick={() => navigate('/aprovacoes')}
+            className="card cursor-pointer" 
+            style={{ 
+              padding: '1rem', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              textAlign: 'center',
+              gap: '0.5rem',
+              border: '1.5px solid var(--borda)',
+              transition: 'all 0.2s',
+              position: 'relative'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--primary)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--borda)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+          >
+            {pendingCount > 0 && (
+              <span style={{ 
+                position: 'absolute', 
+                top: '6px', 
+                right: '6px', 
+                backgroundColor: '#ef4444', 
+                color: '#fff', 
+                fontSize: '0.65rem', 
+                fontWeight: 800, 
+                padding: '2px 6px', 
+                borderRadius: '99px' 
+              }}>
+                {pendingCount}
+              </span>
+            )}
+            <CheckSquare size={24} color="var(--primary)" />
+            <strong style={{ fontSize: '0.8rem', color: 'var(--texto)' }}>Aprovações</strong>
+            <span style={{ fontSize: '0.65rem', color: 'var(--texto-claro)' }}>Aprovar simpatizantes</span>
+          </div>
+        )}
 
         {/* Gestão de Equipe */}
-        <div 
-          onClick={() => navigate('/equipe')}
-          className="card cursor-pointer" 
-          style={{ 
-            padding: '1rem', 
-            display: 'flex', 
-            flexDirection: 'column', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            textAlign: 'center',
-            gap: '0.5rem',
-            border: '1.5px solid var(--borda)',
-            transition: 'all 0.2s'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = 'var(--primary)';
-            e.currentTarget.style.transform = 'translateY(-2px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'var(--borda)';
-            e.currentTarget.style.transform = 'translateY(0)';
-          }}
-        >
-          <Users size={24} color="#059669" />
-          <strong style={{ fontSize: '0.8rem', color: 'var(--texto)' }}>Gestão de Equipe</strong>
-          <span style={{ fontSize: '0.65rem', color: 'var(--texto-claro)' }}>Contas & Acessos</span>
-        </div>
+        {hasPermission('Equipe', 'visualizar') && (
+          <div 
+            onClick={() => navigate('/equipe')}
+            className="card cursor-pointer" 
+            style={{ 
+              padding: '1rem', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              textAlign: 'center',
+              gap: '0.5rem',
+              border: '1.5px solid var(--borda)',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--primary)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--borda)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+          >
+            <Users size={24} color="#059669" />
+            <strong style={{ fontSize: '0.8rem', color: 'var(--texto)' }}>Gestão de Equipe</strong>
+            <span style={{ fontSize: '0.65rem', color: 'var(--texto-claro)' }}>Contas & Acessos</span>
+          </div>
+        )}
 
         {/* Perfis de Acesso */}
-        {user?.role === 'admin' && (
+        {hasPermission('Perfis de Acesso', 'visualizar') && (
           <div 
             onClick={() => navigate('/perfis')}
             className="card cursor-pointer" 
@@ -320,91 +326,97 @@ export default function PainelControleAdmin() {
         )}
 
         {/* Apoiadores */}
-        <div 
-          onClick={() => navigate('/apoiadores')}
-          className="card cursor-pointer" 
-          style={{ 
-            padding: '1rem', 
-            display: 'flex', 
-            flexDirection: 'column', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            textAlign: 'center',
-            gap: '0.5rem',
-            border: '1.5px solid var(--borda)',
-            transition: 'all 0.2s'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = 'var(--primary)';
-            e.currentTarget.style.transform = 'translateY(-2px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'var(--borda)';
-            e.currentTarget.style.transform = 'translateY(0)';
-          }}
-        >
-          <Users size={24} color="#0054A6" />
-          <strong style={{ fontSize: '0.8rem', color: 'var(--texto)' }}>Apoiadores</strong>
-          <span style={{ fontSize: '0.65rem', color: 'var(--texto-claro)' }}>Base de cadastrados</span>
-        </div>
+        {hasPermission('Apoiadores', 'visualizar') && (
+          <div 
+            onClick={() => navigate('/apoiadores')}
+            className="card cursor-pointer" 
+            style={{ 
+              padding: '1rem', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              textAlign: 'center',
+              gap: '0.5rem',
+              border: '1.5px solid var(--borda)',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--primary)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--borda)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+          >
+            <Users size={24} color="#0054A6" />
+            <strong style={{ fontSize: '0.8rem', color: 'var(--texto)' }}>Apoiadores</strong>
+            <span style={{ fontSize: '0.65rem', color: 'var(--texto-claro)' }}>Base de cadastrados</span>
+          </div>
+        )}
 
         {/* Materiais de Campanha */}
-        <div 
-          onClick={() => navigate('/central-coordenador?tab=materiais')}
-          className="card cursor-pointer" 
-          style={{ 
-            padding: '1rem', 
-            display: 'flex', 
-            flexDirection: 'column', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            textAlign: 'center',
-            gap: '0.5rem',
-            border: '1.5px solid var(--borda)',
-            transition: 'all 0.2s'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = 'var(--primary)';
-            e.currentTarget.style.transform = 'translateY(-2px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'var(--borda)';
-            e.currentTarget.style.transform = 'translateY(0)';
-          }}
-        >
-          <FileText size={24} color="#7c3aed" />
-          <strong style={{ fontSize: '0.8rem', color: 'var(--texto)' }}>Materiais de Campanha</strong>
-          <span style={{ fontSize: '0.65rem', color: 'var(--texto-claro)' }}>Adicionar artes e links</span>
-        </div>
+        {hasPermission('Materiais', 'visualizar') && (
+          <div 
+            onClick={() => navigate('/central-coordenador?tab=materiais')}
+            className="card cursor-pointer" 
+            style={{ 
+              padding: '1rem', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              textAlign: 'center',
+              gap: '0.5rem',
+              border: '1.5px solid var(--borda)',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--primary)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--borda)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+          >
+            <FileText size={24} color="#7c3aed" />
+            <strong style={{ fontSize: '0.8rem', color: 'var(--texto)' }}>Materiais de Campanha</strong>
+            <span style={{ fontSize: '0.65rem', color: 'var(--texto-claro)' }}>Adicionar artes e links</span>
+          </div>
+        )}
 
         {/* Avisos (Pop-up) */}
-        <div 
-          onClick={() => setShowAvisoModal(true)}
-          className="card cursor-pointer" 
-          style={{ 
-            padding: '1rem', 
-            display: 'flex', 
-            flexDirection: 'column', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            textAlign: 'center',
-            gap: '0.5rem',
-            border: '1.5px solid var(--borda)',
-            transition: 'all 0.2s'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = 'var(--primary)';
-            e.currentTarget.style.transform = 'translateY(-2px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'var(--borda)';
-            e.currentTarget.style.transform = 'translateY(0)';
-          }}
-        >
-          <Megaphone size={24} color="#d97706" />
-          <strong style={{ fontSize: '0.8rem', color: 'var(--texto)' }}>Avisos (Pop-up)</strong>
-          <span style={{ fontSize: '0.65rem', color: 'var(--texto-claro)' }}>Disparar avisos pop-up</span>
-        </div>
+        {hasPermission('Mensagens', 'criar') && (
+          <div 
+            onClick={() => setShowAvisoModal(true)}
+            className="card cursor-pointer" 
+            style={{ 
+              padding: '1rem', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              textAlign: 'center',
+              gap: '0.5rem',
+              border: '1.5px solid var(--borda)',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--primary)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--borda)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+          >
+            <Megaphone size={24} color="#d97706" />
+            <strong style={{ fontSize: '0.8rem', color: 'var(--texto)' }}>Avisos (Pop-up)</strong>
+            <span style={{ fontSize: '0.65rem', color: 'var(--texto-claro)' }}>Disparar avisos pop-up</span>
+          </div>
+        )}
 
 
 
