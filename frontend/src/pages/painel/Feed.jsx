@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api, { getMediaUrl } from '../../api/axios';
 import { useAuth } from '../../contexts/AuthContext';
 import {
-  Heart, MessageCircle, Share2, Film, Grid, Loader2, Menu, LogOut, UserPlus, CheckSquare, Megaphone, Plus, Upload, X, Image
+  Heart, MessageCircle, Share2, Film, Grid, Loader2, Menu, LogOut, UserPlus, CheckSquare, Megaphone, Plus, Upload, X, Image, Trash2
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -42,6 +42,18 @@ export default function FeedPerfil() {
       toast.error('Erro ao carregar o feed.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeletePost = async (id) => {
+    if (!window.confirm('Tem certeza de que deseja excluir esta publicação?')) return;
+    try {
+      await api.delete(`/noticias/${id}`);
+      toast.success('Publicação excluída com sucesso!');
+      loadFeed();
+    } catch (err) {
+      console.error(err);
+      toast.error('Erro ao excluir a publicação.');
     }
   };
 
@@ -251,6 +263,26 @@ export default function FeedPerfil() {
                     </span>
                     {news.antecipada && <span style={{ fontSize: '12px', color: '#8e8e8e' }}>Exclusivo para Líderes</span>}
                   </div>
+                  {canManageAll && (
+                    <button
+                      onClick={() => handleDeletePost(news.id)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#ef4444',
+                        cursor: 'pointer',
+                        padding: '4px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'opacity 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.7'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  )}
                 </div>
 
                 {/* Media */}

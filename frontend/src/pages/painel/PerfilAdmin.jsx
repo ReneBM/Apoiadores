@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { Grid, Film, Plus, X, Heart, MessageCircle, Share2, Loader2, Upload, LogOut } from 'lucide-react';
+import { Grid, Film, Plus, X, Heart, MessageCircle, Share2, Loader2, Upload, LogOut, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api, { getMediaUrl } from '../../api/axios';
 
@@ -63,6 +63,19 @@ export default function PerfilAdmin() {
       toast.error('Erro ao buscar publicações.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeletePost = async (id) => {
+    if (!window.confirm('Tem certeza de que deseja excluir esta publicação?')) return;
+    try {
+      await api.delete(`/noticias/${id}`);
+      toast.success('Publicação excluída!');
+      setSelectedPost(null);
+      fetchNoticias();
+    } catch (err) {
+      console.error(err);
+      toast.error('Erro ao excluir publicação.');
     }
   };
 
@@ -533,20 +546,42 @@ export default function PerfilAdmin() {
                       </span>
                     </div>
                   </div>
-                  <button 
-                    onClick={() => setSelectedPost(null)}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: 'var(--texto-medio)',
-                      cursor: 'pointer',
-                      fontSize: '1.2rem',
-                      fontWeight: 'bold',
-                      padding: '4px'
-                    }}
-                  >
-                    ×
-                  </button>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {canManageAll && (
+                      <button
+                        onClick={() => handleDeletePost(news.id)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: '#ef4444',
+                          cursor: 'pointer',
+                          padding: '4px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          transition: 'opacity 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.opacity = '0.7'}
+                        onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    )}
+                    <button 
+                      onClick={() => setSelectedPost(null)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: 'var(--texto-medio)',
+                        cursor: 'pointer',
+                        fontSize: '1.2rem',
+                        fontWeight: 'bold',
+                        padding: '4px'
+                      }}
+                    >
+                      ×
+                    </button>
+                  </div>
                 </div>
 
                 {/* Body legend and comments */}
