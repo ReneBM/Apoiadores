@@ -53,31 +53,13 @@ export default function FeedPerfil() {
     if (noticias.length > 0) {
       const initialLikes = {};
       const initialComments = {};
-      const mockUserNames = ['Carla Silva', 'João Souza', 'Marcos Lima', 'Mariana Oliveira', 'Roberto Santos', 'Felipe Costa', 'Amanda Dias'];
-      const mockTexts = [
-        'Excelente iniciativa! Tô com Styvenson!',
-        'Muito importante essa divulgação. Vamos compartilhar!',
-        'Grande trabalho Senador!',
-        'RN precisa de mais ações como essa.',
-        'Contem com meu apoio na divulgação!',
-        'Excelente post, já enviei para a família toda no WhatsApp!',
-        'Muito bom acompanhar os trabalhos por aqui.'
-      ];
 
       noticias.forEach((news) => {
         initialLikes[news.id] = {
           liked: false,
-          count: Math.floor(Math.random() * 140) + 15
+          count: 0
         };
-        const comms = [];
-        const numComms = Math.floor(Math.random() * 3) + 1;
-        for (let i = 0; i < numComms; i++) {
-          comms.push({
-            name: mockUserNames[Math.floor(Math.random() * mockUserNames.length)],
-            text: mockTexts[Math.floor(Math.random() * mockTexts.length)]
-          });
-        }
-        initialComments[news.id] = comms;
+        initialComments[news.id] = [];
       });
 
       setLikes(initialLikes);
