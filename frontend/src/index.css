@@ -755,6 +755,26 @@ select.form-input {
 
 /* Telas Grandes (Desktop) */
 @media (min-width: 1024px) {
+  body {
+    background-color: var(--bg) !important;
+    display: block !important;
+    min-height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #root {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    position: static !important;
+    display: block !important;
+  }
+
   .app-sidebar-desktop {
     display: flex;
     flex-direction: column;
