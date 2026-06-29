@@ -49,8 +49,9 @@ export default function Login() {
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
         .login-page {
-          position: fixed;
+          position: absolute;
           inset: 0;
+          overflow-y: auto;
           background: url('/page-bg.jpg') no-repeat center center;
           background-size: cover;
           display: flex;
@@ -58,6 +59,7 @@ export default function Login() {
           justify-content: center;
           padding: 2rem;
           font-family: 'Inter', -apple-system, sans-serif;
+          box-sizing: border-box;
         }
 
         .login-overlay {

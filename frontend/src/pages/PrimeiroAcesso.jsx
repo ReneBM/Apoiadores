@@ -77,7 +77,7 @@ export default function PrimeiroAcesso() {
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
         .primeiro-acesso-page {
-          position: fixed;
+          position: absolute;
           inset: 0;
           background: url('/page-bg.jpg') no-repeat center center;
           background-size: cover;
@@ -87,6 +87,7 @@ export default function PrimeiroAcesso() {
           padding: 2rem;
           font-family: 'Inter', -apple-system, sans-serif;
           overflow-y: auto;
+          box-sizing: border-box;
         }
 
         .primeiro-acesso-overlay {

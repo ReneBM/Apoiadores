@@ -194,7 +194,9 @@ export default function CadastroApoiador() {
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
       .signup-page {
-        min-height: 100vh;
+        position: absolute;
+        inset: 0;
+        overflow-y: auto;
         background: url('/page-bg.jpg') no-repeat center center fixed;
         background-size: cover;
         display: flex;
@@ -202,7 +204,7 @@ export default function CadastroApoiador() {
         justify-content: center;
         padding: 2rem 1rem;
         font-family: 'Inter', -apple-system, sans-serif;
-        position: relative;
+        box-sizing: border-box;
       }
 
       .signup-overlay {
