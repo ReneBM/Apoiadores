@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Grid, Film, Plus, X, Heart, MessageCircle, Share2, Loader2, Upload, LogOut } from 'lucide-react';
 import toast from 'react-hot-toast';
-import api from '../../api/axios';
+import api, { getMediaUrl } from '../../api/axios';
 
 export default function PerfilAdmin() {
   const { user, logout } = useAuth();
@@ -23,8 +23,8 @@ export default function PerfilAdmin() {
   const [newsForm, setNewsForm] = useState({ titulo: '', conteudo: '', imagem_url: '', antecipada: false });
   const [newsLoading, setNewsLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  
+  const [stats, setStats] = useState({ totalApoiadores: 0, totalMultiplicadores: 0 });
+
   const isDesktop = false;
   const canManageAll = user?.role === 'admin';
 
@@ -35,17 +35,27 @@ export default function PerfilAdmin() {
   const fetchNoticias = async () => {
     try {
       setLoading(true);
+
+      if (user?.role === 'admin' || user?.role === 'coordenador') {
+        try {
+          const statsRes = await api.get('/dashboard/admin');
+          setStats({
+            totalApoiadores: statsRes.data?.kpis?.totalApoiadores || 0,
+            totalMultiplicadores: statsRes.data?.kpis?.totalMultiplicadores || 0
+          });
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
       const res = await api.get('/noticias');
       setNoticias(res.data);
       
       const initialLikes = {};
       const initialComments = {};
       res.data.forEach(n => {
-        initialLikes[n.id] = { liked: false, count: Math.floor(Math.random() * 50) + 10 };
-        initialComments[n.id] = [
-          { name: 'joao.silva', text: 'Excelente trabalho, Senador!' },
-          { name: 'maria_lima', text: 'Estamos juntos nessa caminhada.' }
-        ];
+        initialLikes[n.id] = { liked: false, count: 0 };
+        initialComments[n.id] = [];
       });
       setLikes(initialLikes);
       setComments(initialComments);
@@ -251,8 +261,8 @@ export default function PerfilAdmin() {
           {isDesktop && (
             <div style={{ display: 'flex', gap: '2.5rem', marginBottom: '0px', fontSize: '0.95rem', color: '#262626' }}>
               <span><strong>{noticias.length}</strong> publicações</span>
-              <span><strong>35.4k</strong> voluntários</span>
-              <span><strong>167</strong> coordenadores</span>
+              <span><strong>{stats.totalApoiadores}</strong> voluntários</span>
+              <span><strong>{stats.totalMultiplicadores}</strong> coordenadores</span>
             </div>
           )}
         </div>
@@ -266,11 +276,11 @@ export default function PerfilAdmin() {
             <span style={{ color: '#8e8e8e' }}>posts</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <strong>35.4k</strong>
+            <strong>{stats.totalApoiadores}</strong>
             <span style={{ color: '#8e8e8e' }}>voluntários</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <strong>167</strong>
+            <strong>{stats.totalMultiplicadores}</strong>
             <span style={{ color: '#8e8e8e' }}>líderes</span>
           </div>
         </div>
@@ -354,7 +364,7 @@ export default function PerfilAdmin() {
                   isVideoUrl(news.imagem_url) ? (
                     <div style={{ width: '100%', height: '100%', position: 'relative', backgroundColor: '#000' }}>
                       <video
-                        src={news.imagem_url}
+                        src={getMediaUrl(news.imagem_url)}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         muted
                       />
@@ -364,7 +374,7 @@ export default function PerfilAdmin() {
                     </div>
                   ) : (
                     <img
-                      src={news.imagem_url}
+                      src={getMediaUrl(news.imagem_url)}
                       alt={news.titulo}
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
@@ -448,7 +458,7 @@ export default function PerfilAdmin() {
                 {news.imagem_url ? (
                   isVideoUrl(news.imagem_url) ? (
                     <video
-                      src={news.imagem_url}
+                      src={getMediaUrl(news.imagem_url)}
                       controls
                       autoPlay
                       playsInline
@@ -456,7 +466,7 @@ export default function PerfilAdmin() {
                     />
                   ) : (
                     <img
-                      src={news.imagem_url}
+                      src={getMediaUrl(news.imagem_url)}
                       alt={news.titulo}
                       style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                     />
