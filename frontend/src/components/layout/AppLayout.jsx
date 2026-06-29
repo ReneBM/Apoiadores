@@ -312,7 +312,7 @@ export default function AppLayout() {
   }
 
   // Feed (Notícias)
-  if (hasPermission('Notícias', 'visualizar')) {
+  if (hasPermission('Feed de Notícias', 'visualizar')) {
     sidebarLinks.push({ to: '/feed', icon: MessageSquare, label: 'Feed de Notícias' });
   }
 

@@ -3,6 +3,18 @@ import { Shield, Plus, Edit2, Trash2, Check, X, ShieldAlert, CheckSquare, Square
 import api from '../../api/axios';
 import toast from 'react-hot-toast';
 
+const FUNC_ACTIONS = {
+  'Apoiadores': ['visualizar', 'criar', 'editar', 'excluir'],
+  'Apoiadores - Aprovar Cadastros': ['visualizar', 'editar'],
+  'Apoiadores - Exportar Base': ['visualizar'],
+  'Equipe': ['visualizar', 'criar', 'editar', 'excluir'],
+  'Perfis de Acesso': ['visualizar', 'criar', 'editar', 'excluir'],
+  'Feed de Notícias': ['visualizar', 'criar', 'excluir'],
+  'Materiais': ['visualizar', 'criar'],
+  'Mensagens': ['visualizar', 'criar'],
+  'Dashboard': ['visualizar']
+};
+
 export default function PerfisAcesso() {
   const [perfis, setPerfis] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +44,17 @@ export default function PerfisAcesso() {
     loadData();
   }, []);
 
-  const targetFuncs = ['Apoiadores', 'Equipe', 'Notícias', 'Materiais', 'Mensagens', 'Dashboard', 'Perfis de Acesso'];
+  const targetFuncs = [
+    'Apoiadores',
+    'Apoiadores - Aprovar Cadastros',
+    'Apoiadores - Exportar Base',
+    'Equipe',
+    'Perfis de Acesso',
+    'Feed de Notícias',
+    'Materiais',
+    'Mensagens',
+    'Dashboard'
+  ];
 
   const handleNewProfile = () => {
     setEditingId(null);
@@ -97,17 +119,22 @@ export default function PerfisAcesso() {
 
   // Funções de seleção rápida
   const handleQuickSelect = (action, value) => {
-    setFormPerms((prev) => prev.map((p) => ({ ...p, [action]: value })));
+    setFormPerms((prev) =>
+      prev.map((p) => ({
+        ...p,
+        [action]: FUNC_ACTIONS[p.funcionalidade]?.includes(action) ? value : false,
+      }))
+    );
   };
 
   const handleSelectAll = (value) => {
     setFormPerms((prev) =>
       prev.map((p) => ({
         ...p,
-        visualizar: value,
-        criar: value,
-        editar: value,
-        excluir: value,
+        visualizar: FUNC_ACTIONS[p.funcionalidade]?.includes('visualizar') ? value : false,
+        criar: FUNC_ACTIONS[p.funcionalidade]?.includes('criar') ? value : false,
+        editar: FUNC_ACTIONS[p.funcionalidade]?.includes('editar') ? value : false,
+        excluir: FUNC_ACTIONS[p.funcionalidade]?.includes('excluir') ? value : false,
       }))
     );
   };
@@ -294,36 +321,52 @@ export default function PerfisAcesso() {
                         {perm.funcionalidade}
                       </td>
                       <td style={{ padding: '10px 8px', textAlign: 'center' }}>
-                        <input
-                          type="checkbox"
-                          checked={perm.visualizar}
-                          onChange={(e) => handleCheckboxChange(perm.funcionalidade, 'visualizar', e.target.checked)}
-                          style={{ width: '17px', height: '17px', cursor: 'pointer', accentColor: 'var(--primary)' }}
-                        />
+                        {FUNC_ACTIONS[perm.funcionalidade]?.includes('visualizar') ? (
+                          <input
+                            type="checkbox"
+                            checked={perm.visualizar}
+                            onChange={(e) => handleCheckboxChange(perm.funcionalidade, 'visualizar', e.target.checked)}
+                            style={{ width: '17px', height: '17px', cursor: 'pointer', accentColor: 'var(--primary)' }}
+                          />
+                        ) : (
+                          <span style={{ color: '#cbd5e1', fontSize: '1.1rem' }}>-</span>
+                        )}
                       </td>
                       <td style={{ padding: '10px 8px', textAlign: 'center' }}>
-                        <input
-                          type="checkbox"
-                          checked={perm.criar}
-                          onChange={(e) => handleCheckboxChange(perm.funcionalidade, 'criar', e.target.checked)}
-                          style={{ width: '17px', height: '17px', cursor: 'pointer', accentColor: 'var(--primary)' }}
-                        />
+                        {FUNC_ACTIONS[perm.funcionalidade]?.includes('criar') ? (
+                          <input
+                            type="checkbox"
+                            checked={perm.criar}
+                            onChange={(e) => handleCheckboxChange(perm.funcionalidade, 'criar', e.target.checked)}
+                            style={{ width: '17px', height: '17px', cursor: 'pointer', accentColor: 'var(--primary)' }}
+                          />
+                        ) : (
+                          <span style={{ color: '#cbd5e1', fontSize: '1.1rem' }}>-</span>
+                        )}
                       </td>
                       <td style={{ padding: '10px 8px', textAlign: 'center' }}>
-                        <input
-                          type="checkbox"
-                          checked={perm.editar}
-                          onChange={(e) => handleCheckboxChange(perm.funcionalidade, 'editar', e.target.checked)}
-                          style={{ width: '17px', height: '17px', cursor: 'pointer', accentColor: 'var(--primary)' }}
-                        />
+                        {FUNC_ACTIONS[perm.funcionalidade]?.includes('editar') ? (
+                          <input
+                            type="checkbox"
+                            checked={perm.editar}
+                            onChange={(e) => handleCheckboxChange(perm.funcionalidade, 'editar', e.target.checked)}
+                            style={{ width: '17px', height: '17px', cursor: 'pointer', accentColor: 'var(--primary)' }}
+                          />
+                        ) : (
+                          <span style={{ color: '#cbd5e1', fontSize: '1.1rem' }}>-</span>
+                        )}
                       </td>
                       <td style={{ padding: '10px 8px', textAlign: 'center' }}>
-                        <input
-                          type="checkbox"
-                          checked={perm.excluir}
-                          onChange={(e) => handleCheckboxChange(perm.funcionalidade, 'excluir', e.target.checked)}
-                          style={{ width: '17px', height: '17px', cursor: 'pointer', accentColor: 'var(--primary)' }}
-                        />
+                        {FUNC_ACTIONS[perm.funcionalidade]?.includes('excluir') ? (
+                          <input
+                            type="checkbox"
+                            checked={perm.excluir}
+                            onChange={(e) => handleCheckboxChange(perm.funcionalidade, 'excluir', e.target.checked)}
+                            style={{ width: '17px', height: '17px', cursor: 'pointer', accentColor: 'var(--primary)' }}
+                          />
+                        ) : (
+                          <span style={{ color: '#cbd5e1', fontSize: '1.1rem' }}>-</span>
+                        )}
                       </td>
                     </tr>
                   ))}

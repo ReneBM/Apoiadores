@@ -5,8 +5,11 @@
  */
 const FUNCIONALIDADES = [
   'Apoiadores',
+  'Apoiadores - Aprovar Cadastros',
+  'Apoiadores - Exportar Base',
   'Equipe',
-  'Notícias',
+  'Perfis de Acesso',
+  'Feed de Notícias',
   'Materiais',
   'Mensagens',
   'Dashboard'

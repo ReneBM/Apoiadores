@@ -43,18 +43,18 @@ const upload = multer({
 router.use(authenticate);
 
 // GET /api/noticias - todos listam
-router.get('/', requirePermission('Notícias', 'visualizar'), list);
+router.get('/', requirePermission('Feed de Notícias', 'visualizar'), list);
 
 // POST /api/noticias - cria notícia
-router.post('/', requirePermission('Notícias', 'criar'), create);
+router.post('/', requirePermission('Feed de Notícias', 'criar'), create);
 
 // DELETE /api/noticias/:id - deleta notícia
-router.delete('/:id', requirePermission('Notícias', 'excluir'), remove);
+router.delete('/:id', requirePermission('Feed de Notícias', 'excluir'), remove);
 
 // POST /api/noticias/upload - upload de mídia
 router.post(
   '/upload',
-  requirePermission('Notícias', 'criar'),
+  requirePermission('Feed de Notícias', 'criar'),
   (req, res, next) => {
 
     upload.single('file')(req, res, (err) => {

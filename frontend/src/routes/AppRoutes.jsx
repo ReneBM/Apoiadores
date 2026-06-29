@@ -99,7 +99,7 @@ export default function AppRoutes() {
           </Route>
 
           {/* Notícias / Feed */}
-          <Route element={<PrivateRoute permission={{ func: 'Notícias', action: 'visualizar' }} />}>
+          <Route element={<PrivateRoute permission={{ func: 'Feed de Notícias', action: 'visualizar' }} />}>
             <Route path="/feed" element={<Feed />} />
           </Route>
 

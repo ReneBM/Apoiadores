@@ -9,7 +9,7 @@ router.use(authenticate);
 // Exporta apoiadores (multiplicador exporta apenas os seus)
 router.get(
   '/apoiadores',
-  requirePermission('Apoiadores', 'visualizar'),
+  requirePermission('Apoiadores - Exportar Base', 'visualizar'),
   ownResourceOnly,
   exportApoiadores
 );
