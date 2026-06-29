@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import api from '../api/axios';
+import api, { getMediaUrl } from '../api/axios';
 import { Loader2, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validarCPF } from '../utils/cpf';
@@ -408,7 +408,7 @@ export default function CadastroApoiador() {
               alignItems: 'flex-start'
             }}>
               <img 
-                src="/uploads/foto5_nobg.png" 
+                src={getMediaUrl('/uploads/foto5_nobg.png')} 
                 alt="Senador Styvenson Valim" 
                 style={{
                   height: '145px',

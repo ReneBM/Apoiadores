@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Copy, Check, Share2, Award, Video, ArrowRight, MessageSquare, MapPin, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { copyToClipboard } from '../../utils/clipboard';
+import { getMediaUrl } from '../../api/axios';
 
 export default function PainelMultiplicador() {
   const { user } = useAuth();
@@ -58,7 +59,7 @@ export default function PainelMultiplicador() {
           </p>
         </div>
         <img 
-          src="/uploads/foto5_nobg.png" 
+          src={getMediaUrl('/uploads/foto5_nobg.png')} 
           alt="Senador Styvenson Valim" 
           style={{
             height: '115px',

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { getMediaUrl } from '../api/axios';
 
 export default function Login() {
   const { login } = useAuth();
@@ -255,7 +256,7 @@ export default function Login() {
               alignItems: 'flex-start'
             }}>
               <img 
-                src="/uploads/foto4_nobg.png" 
+                src={getMediaUrl('/uploads/foto4_nobg.png')} 
                 alt="Senador Styvenson Valim" 
                 style={{
                   height: '145px',

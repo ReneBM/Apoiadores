@@ -6,6 +6,16 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
+export const getMediaUrl = (path) => {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) {
+    return path;
+  }
+  const baseUrl = (import.meta.env.VITE_API_URL || '').replace(/\/api$/, '') || 'http://localhost:3001';
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  return `${baseUrl}${cleanPath}`;
+};
+
 // ── Interceptor de Request: injeta o access token ─────────────
 api.interceptors.request.use(
   (config) => {

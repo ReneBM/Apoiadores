@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Lock, Eye, EyeOff, ShieldCheck, Loader2, AlertTriangle } from 'lucide-react';
-import api from '../api/axios';
+import api, { getMediaUrl } from '../api/axios';
 import toast from 'react-hot-toast';
 
 export default function PrimeiroAcesso() {
@@ -205,7 +205,7 @@ export default function PrimeiroAcesso() {
           {/* Logo + Título */}
           <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
             <img 
-              src="/uploads/foto4_nobg.png" 
+              src={getMediaUrl('/uploads/foto4_nobg.png')} 
               alt="Senador Styvenson Valim" 
               style={{
                 height: '135px',

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../api/axios';
+import api, { getMediaUrl } from '../../api/axios';
 import { useAuth } from '../../contexts/AuthContext';
 import {
   Heart, MessageCircle, Share2, Film, Grid, Loader2, Menu, LogOut, UserPlus, CheckSquare, Megaphone, Plus, Upload, X, Image
@@ -275,9 +275,9 @@ export default function FeedPerfil() {
                 <div style={{ width: '100%', backgroundColor: '#000', display: 'flex', justifyContent: 'center' }}>
                   {news.imagem_url ? (
                     isVideoUrl(news.imagem_url) ? (
-                      <video src={news.imagem_url} controls playsInline style={{ width: '100%', maxHeight: '600px', objectFit: 'contain' }} />
+                      <video src={getMediaUrl(news.imagem_url)} controls playsInline style={{ width: '100%', maxHeight: '600px', objectFit: 'contain' }} />
                     ) : (
-                      <img src={news.imagem_url} alt={news.titulo} style={{ width: '100%', maxHeight: '600px', objectFit: 'contain' }} />
+                      <img src={getMediaUrl(news.imagem_url)} alt={news.titulo} style={{ width: '100%', maxHeight: '600px', objectFit: 'contain' }} />
                     )
                   ) : (
                     <div style={{ width: '100%', aspectRatio: '1/1', background: 'linear-gradient(135deg, #002855 0%, #0054A6 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
