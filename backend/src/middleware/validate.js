@@ -31,11 +31,26 @@ const loginSchema = z.object({
 
 const apoiadorSchema = z.object({
   nome: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres.').max(150),
+  email: z.string().email('E-mail inválido.'),
   telefone: z.string().max(20).optional().nullable(),
+  cpf: z.string().max(14).optional().nullable(),
+  sexo: z.string().max(20).optional().nullable(),
   cidade: z.string().min(2, 'Cidade obrigatória.').max(100),
   bairro: z.string().max(100).optional().nullable(),
   interesse: z.string().max(500).optional().nullable(),
   observacoes: z.string().max(1000).optional().nullable(),
+  acao_impacto: z.string().max(2000).optional().nullable(),
+  como_se_considera: z.string().max(50).optional().nullable(),
+  como_ajudar: z.array(z.string()).optional().nullable(),
+  pessoas_mobilizar: z.string().max(50).optional().nullable(),
+  grupo_organizacao: z.array(z.string()).optional().nullable(),
+  temas_interesse: z.array(z.string()).optional().nullable(),
+  redes_sociais: z.object({
+    instagram: z.string().max(150).optional().nullable(),
+    facebook: z.string().max(150).optional().nullable(),
+    tiktok: z.string().max(150).optional().nullable(),
+    youtube: z.string().max(150).optional().nullable(),
+  }).optional().nullable(),
   consentimento_lgpd: z.literal(true, {
     errorMap: () => ({ message: 'O consentimento LGPD é obrigatório.' }),
   }),
@@ -47,6 +62,7 @@ const apoiadorUpdateSchema = apoiadorSchema
   .omit({ consentimento_lgpd: true })
   .partial()
   .extend({
+    email: z.string().email('E-mail inválido.').optional().nullable(),
     status: z.enum(['ativo', 'inativo', 'pendente']).optional(),
   });
 
@@ -61,9 +77,15 @@ const userSchema = z.object({
     .regex(/[0-9]/, 'Senha deve conter ao menos um número.')
     .optional()
     .nullable(),
-  role: z.enum(['admin', 'coordenador', 'multiplicador']),
+  role: z.enum(['admin', 'coordenador', 'multiplicador']).optional().nullable(),
+  tipo: z.string().max(50).optional().nullable(),
+  perfil_id: z.preprocess((val) => (val === '' ? null : val), z.string().uuid().optional().nullable()),
+  ativo: z.boolean().optional(),
+  _demote: z.boolean().optional(),
   municipio: z.string().max(100).optional().nullable(),
   telefone: z.string().max(20).optional().nullable(),
+  cep: z.string().max(9).optional().nullable(),
+  bairro: z.string().max(100).optional().nullable(),
   coordenador_id: z.preprocess((val) => (val === '' ? null : val), z.string().uuid().optional().nullable()),
   meta_apoiadores: z.preprocess(
     (val) => (val === '' || val === null || val === undefined || isNaN(val) ? 0 : Number(val)),
