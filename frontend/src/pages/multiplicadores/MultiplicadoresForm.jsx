@@ -113,8 +113,7 @@ export default function MultiplicadoresForm({ editMode = false }) {
 
     if (submitData.perfil_id === 'apoiador') {
       submitData.perfil_id = null;
-      submitData.role = 'apoiador';
-      submitData.tipo = 'Apoiador';
+      submitData._demote = true;
       delete submitData.coordenador_id;
       delete submitData.meta_apoiadores;
     } else {

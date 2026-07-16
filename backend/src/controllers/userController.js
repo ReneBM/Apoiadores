@@ -268,7 +268,10 @@ const update = async (req, res, next) => {
     const emailVal = email !== undefined ? email : existing.email;
     const ativoVal = ativo !== undefined ? ativo : existing.ativo;
 
-    if (tipoVal === 'Apoiador') {
+    // Rebaixar para apoiador só ocorre quando o frontend envia explicitamente
+    // role='apoiador' OU perfil_id=null com tipo='Apoiador' — nunca por nome de perfil
+    const isExplicitDemotion = (role === 'apoiador') || (req.body._demote === true);
+    if (isExplicitDemotion) {
       // Se for rebaixado para Apoiador, remove o acesso à plataforma e volta pra lista geral
       await client.query('DELETE FROM refresh_tokens WHERE user_id = $1', [id]);
       await client.query('DELETE FROM multiplicadores WHERE user_id = $1', [id]);

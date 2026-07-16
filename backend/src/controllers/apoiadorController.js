@@ -377,7 +377,7 @@ const createPublic = async (req, res, next) => {
   try {
     const {
       nome, email, telefone, cidade, bairro, interesse,
-      consentimento_lgpd, ref,
+      consentimento_lgpd, ref, senha,
       cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais
     } = req.body;
 
@@ -417,13 +417,19 @@ const createPublic = async (req, res, next) => {
       }
     }
 
+    // Hash da senha escolhida pelo apoiador (se fornecida)
+    let senhaHash = null;
+    if (senha && senha.length >= 6) {
+      senhaHash = await bcrypt.hash(senha, 12);
+    }
+
     const id = uuidv4();
     await db.query(
       `INSERT INTO apoiadores
          (id, nome, email, telefone, cidade, bairro, interesse,
           consentimento_lgpd, data_consentimento, status, multiplicador_id, cadastrado_por,
-          cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, now(), 'pendente', $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)`,
+          cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais, senha_inicial)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, now(), 'pendente', $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)`,
       [
         id, nome, email || null, telefone || null, cidade, bairro || null,
         interesse || null, consentimento_lgpd, multiplicadorId, cadastradoPor,
@@ -432,7 +438,8 @@ const createPublic = async (req, res, next) => {
         pessoas_mobilizar || null,
         grupo_organizacao ? JSON.stringify(grupo_organizacao) : null,
         temas_interesse ? JSON.stringify(temas_interesse) : null,
-        redes_sociais ? JSON.stringify(redes_sociais) : null
+        redes_sociais ? JSON.stringify(redes_sociais) : null,
+        senhaHash
       ]
     );
 
@@ -473,13 +480,20 @@ const approve = async (req, res, next) => {
       const emailCheck = await db.query('SELECT id FROM users WHERE email = $1', [apoiador.email]);
       if (emailCheck.rows.length === 0) {
         const userId = uuidv4();
-        // Senha temporária padrão SV@12345
-        const senhaHash = await bcrypt.hash('SV@12345', 12);
+        // Usa a senha que o apoiador definiu no cadastro (se disponível), caso contrário usa a padrão
+        const senhaFinal = apoiador.senha_inicial || await bcrypt.hash('SV@12345', 12);
+        // Se senha_inicial já é um hash, usa direto; se não é um hash, faz o hash
+        const senhaHash = apoiador.senha_inicial
+          ? apoiador.senha_inicial  // já está hasheada pelo createPublic
+          : await bcrypt.hash('SV@12345', 12);
+
+        // Perfil padrão: Operador (multiplicador) — c3c3c3c3 é o UUID do perfil Operador
+        const PERFIL_OPERADOR_ID = 'c3c3c3c3-c3c3-c3c3-c3c3-c3c3c3c3c3c3';
         
         await db.query(
-          `INSERT INTO users (id, nome, email, senha_hash, role, ativo, primeiro_acesso)
-           VALUES ($1, $2, $3, $4, 'multiplicador', true, true)`,
-          [userId, apoiador.nome, apoiador.email, senhaHash]
+          `INSERT INTO users (id, nome, email, senha_hash, role, ativo, primeiro_acesso, perfil_id)
+           VALUES ($1, $2, $3, $4, 'multiplicador', true, $5, $6)`,
+          [userId, apoiador.nome, apoiador.email, senhaHash, !apoiador.senha_inicial, PERFIL_OPERADOR_ID]
         );
 
         // Cria o perfil correspondente em multiplicadores

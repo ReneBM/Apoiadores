@@ -50,6 +50,8 @@ export default function CadastroApoiador() {
       tiktok: '',
       youtube: ''
     },
+    senha: '',
+    confirmarSenha: '',
     consentimento_lgpd: false,
   });
 
@@ -148,8 +150,25 @@ export default function CadastroApoiador() {
       return;
     }
 
+    // Valida formato do e-mail
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      toast.error('Por favor, informe um e-mail válido.');
+      return;
+    }
+
     if (form.cpf.length !== 14 || !validarCPF(form.cpf)) {
       toast.error('O CPF informado é inválido. Verifique os números.');
+      return;
+    }
+
+    if (!form.senha || form.senha.length < 6) {
+      toast.error('Crie uma senha com no mínimo 6 caracteres.');
+      return;
+    }
+
+    if (form.senha !== form.confirmarSenha) {
+      toast.error('As senhas não conferem. Verifique e tente novamente.');
       return;
     }
 
@@ -173,8 +192,10 @@ export default function CadastroApoiador() {
 
     setLoading(true);
     try {
+      // eslint-disable-next-line no-unused-vars
+      const { confirmarSenha, ...formData } = form;
       await api.post('/apoiadores/publico', {
-        ...form,
+        ...formData,
         como_ajudar: finalComoAjudar,
         temas_interesse: finalTemas,
         ref,
@@ -383,9 +404,9 @@ export default function CadastroApoiador() {
                 Seu cadastro foi enviado com sucesso e está pendente de aprovação. Em breve, sua conta será analisada por um coordenador.
               </p>
               <div className="temp-password-box">
-                <span style={{ color: '#0054A6', fontWeight: 800, display: 'block', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.5px' }}>Senha Temporária</span>
-                <p style={{ color: '#0f172a', fontSize: '1.25rem', fontWeight: 800, margin: 0, letterSpacing: '1.5px' }}>SV@12345</p>
-                <small style={{ color: '#64748b', display: 'block', marginTop: '0.75rem', fontWeight: 500 }}>Use esta senha no seu primeiro acesso após seu cadastro ser aprovado por e-mail.</small>
+                <span style={{ color: '#0054A6', fontWeight: 800, display: 'block', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.5px' }}>Sua Senha de Acesso</span>
+                <p style={{ color: '#0f172a', fontSize: '1.25rem', fontWeight: 800, margin: 0, letterSpacing: '1.5px' }}>{form.senha}</p>
+                <small style={{ color: '#64748b', display: 'block', marginTop: '0.75rem', fontWeight: 500 }}>Guarde esta senha! Você irá usá-la para acessar o aplicativo após seu cadastro ser aprovado.</small>
               </div>
             </div>
           </div>
@@ -477,7 +498,9 @@ export default function CadastroApoiador() {
                 <input
                   type="email" name="email" placeholder="seu@email.com"
                   value={form.email} onChange={handleChange} disabled={loading}
-                  className="form-input" required
+                  className="form-input"
+                  inputMode="email"
+                  autoComplete="email"
                 />
               </div>
             </div>
@@ -628,6 +651,42 @@ export default function CadastroApoiador() {
               </label>
             </div>
 
+            {/* Campos de Senha */}
+            <h3 className="section-title">4. Crie sua Senha de Acesso</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className="form-group">
+                <label className="form-label">Senha *</label>
+                <input
+                  type="password"
+                  name="senha"
+                  placeholder="Mínimo 6 caracteres"
+                  value={form.senha}
+                  onChange={handleChange}
+                  disabled={loading}
+                  className="form-input"
+                  autoComplete="new-password"
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Confirmar Senha *</label>
+                <input
+                  type="password"
+                  name="confirmarSenha"
+                  placeholder="Repita a senha"
+                  value={form.confirmarSenha}
+                  onChange={handleChange}
+                  disabled={loading}
+                  className="form-input"
+                  autoComplete="new-password"
+                />
+              </div>
+            </div>
+            <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '8px', padding: '0.75rem 1rem', marginBottom: '0.5rem' }}>
+              <p style={{ margin: 0, color: '#1e40af', fontSize: '0.82rem', fontWeight: 500 }}>
+                🔒 Esta senha será usada para você acessar o aplicativo após seu cadastro ser aprovado. Guarde-a em um lugar seguro!
+              </p>
+            </div>
+
             <button type="submit" disabled={loading} className="submit-btn">
               {loading ? (
                 <>
@@ -639,6 +698,7 @@ export default function CadastroApoiador() {
               )}
             </button>
           </form>
+
         </div>
       </div>
     </>
