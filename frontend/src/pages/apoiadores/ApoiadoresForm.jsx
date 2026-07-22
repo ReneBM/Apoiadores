@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import api from '../../api/axios';
 import { useAuth } from '../../contexts/AuthContext';
 import toast from 'react-hot-toast';
-import { Loader2, ChevronLeft, ShieldCheck } from 'lucide-react';
+import { Loader2, ChevronLeft, ShieldCheck, Key } from 'lucide-react';
 import { validarCPF } from '../../utils/cpf';
 
 const formatCPF = (value) => {
@@ -31,15 +31,17 @@ export default function ApoiadoresForm() {
   const { user, isAdmin, isCoordenador } = useAuth();
 
   const [multiplicadores, setMultiplicadores] = useState([]);
+  const [cidades, setCidades] = useState([]);
   const [submitting, setSubmitting] = useState(false);
 
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     defaultValues: {
       nome: '', email: '', telefone: '', cpf: '', sexo: '',
-      cidade: '', bairro: '', acao_impacto: '', como_se_considera: '',
+      cep: '', cidade: '', bairro: '', acao_impacto: '', como_se_considera: '',
       como_ajudar: [], pessoas_mobilizar: '', grupo_organizacao: [],
       temas_interesse: [],
       redes_sociais: { instagram: '', facebook: '', tiktok: '', youtube: '' },
+      senha: '', confirmarSenha: '',
       observacoes: '', status: 'ativo',
       multiplicador_id: user?.role === 'multiplicador' ? user?.multiplicadorId ?? '' : '',
       consentimento_lgpd: false,
@@ -49,11 +51,51 @@ export default function ApoiadoresForm() {
   const consentimento = watch('consentimento_lgpd');
   const cpfValue = watch('cpf');
   const telefoneValue = watch('telefone');
+  const cepValue = watch('cep');
 
   const formComoAjudar = watch('como_ajudar');
   const formGrupo = watch('grupo_organizacao');
   const formTemas = watch('temas_interesse');
   const formRedes = watch('redes_sociais');
+
+  // Carrega cidades do RN do IBGE
+  useEffect(() => {
+    fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados/RN/municipios')
+      .then(res => res.json())
+      .then(data => {
+        setCidades(data.map(c => c.nome).sort((a, b) => a.localeCompare(b)));
+      })
+      .catch(() => {
+        setCidades(['Natal', 'Mossoró', 'Parnamirim', 'São Gonçalo do Amarante', 'Macaíba', 'Caicó', 'Açu']);
+      });
+  }, []);
+
+  // Busca endereço por CEP (ViaCEP)
+  useEffect(() => {
+    if (cepValue) {
+      const val = cepValue.replace(/\D/g, '');
+      if (val.length === 8) {
+        fetch(`https://viacep.com.br/ws/${val}/json/`)
+          .then(res => res.json())
+          .then(data => {
+            if (!data.erro) {
+              if (data.localidade) setValue('cidade', data.localidade);
+              if (data.bairro) setValue('bairro', data.bairro);
+              toast.success('Endereço preenchido pelo CEP!');
+            }
+          })
+          .catch(() => {});
+      }
+    }
+  }, [cepValue, setValue]);
+
+  useEffect(() => {
+    if (isAdmin || isCoordenador) {
+      api.get('/users?role=multiplicador&ativo=true&limit=200')
+        .then(({ data }) => setMultiplicadores(data.data ?? []))
+        .catch(() => {});
+    }
+  }, [isAdmin, isCoordenador]);
 
   const handleArrayChange = (field, currentArray, val, checked) => {
     let arr = [...currentArray];
@@ -69,14 +111,6 @@ export default function ApoiadoresForm() {
     setValue('redes_sociais', { ...formRedes, [network]: val }, { shouldDirty: true });
   };
 
-  useEffect(() => {
-    if (isAdmin || isCoordenador) {
-      api.get('/users?role=multiplicador&ativo=true&limit=200')
-        .then(({ data }) => setMultiplicadores(data.data ?? []))
-        .catch(() => {});
-    }
-  }, [isAdmin, isCoordenador]);
-
   const onSubmit = async (data) => {
     if (!data.consentimento_lgpd) return;
     
@@ -85,9 +119,21 @@ export default function ApoiadoresForm() {
       return;
     }
 
+    if (data.senha && data.senha.length < 6) {
+      toast.error('A senha de acesso deve ter pelo menos 6 caracteres.');
+      return;
+    }
+
+    if (data.senha && data.senha !== data.confirmarSenha) {
+      toast.error('As senhas digitadas não coincidem.');
+      return;
+    }
+
     setSubmitting(true);
     try {
-      await api.post('/apoiadores', data);
+      // eslint-disable-next-line no-unused-vars
+      const { confirmarSenha, ...payload } = data;
+      await api.post('/apoiadores', payload);
       toast.success('Apoiador cadastrado com sucesso!');
       navigate('/apoiadores');
     } catch (err) {
@@ -102,14 +148,14 @@ export default function ApoiadoresForm() {
   const lgpdBg = consentimento ? 'rgba(5, 150, 105, 0.04)' : errors.consentimento_lgpd ? 'rgba(220, 38, 38, 0.03)' : '#f8fafc';
 
   return (
-    <div className="flex flex-col gap-5 pb-6">
+    <div className="flex flex-col gap-5 pb-24">
       <div className="flex items-center gap-3">
         <button onClick={() => navigate(-1)} className="btn-secondary" style={{ minHeight: '40px', minWidth: '40px', width: '40px', height: '40px', padding: 0 }}>
           <ChevronLeft size={20} />
         </button>
         <div>
           <h1 className="text-lg font-bold" style={{ color: 'var(--texto)' }}>Novo Apoiador</h1>
-          <p className="text-xs" style={{ color: 'var(--texto-medio)' }}>Preencha os dados abaixo</p>
+          <p className="text-xs" style={{ color: 'var(--texto-medio)' }}>Preencha a ficha do apoiador</p>
         </div>
       </div>
 
@@ -162,12 +208,11 @@ export default function ApoiadoresForm() {
               />
             </div>
             <div>
-              <label htmlFor="email" className="form-label">E-mail *</label>
+              <label htmlFor="email" className="form-label">E-mail (opcional)</label>
               <input
                 id="email" type="email" placeholder="nome@email.com"
                 className={`form-input ${errors.email ? 'border-red-500' : ''}`}
                 {...register('email', { 
-                  required: 'E-mail é obrigatório.',
                   pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'E-mail inválido.' } 
                 })}
               />
@@ -175,26 +220,76 @@ export default function ApoiadoresForm() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          {/* Endereço / CEP / Cidade */}
+          <div className="grid grid-cols-3 gap-3">
+            <div>
+              <label htmlFor="cep" className="form-label">CEP</label>
+              <input
+                id="cep" type="text" placeholder="00000-000" maxLength={9}
+                className="form-input"
+                {...register('cep')}
+                onChange={(e) => {
+                  let val = e.target.value.replace(/\D/g, '');
+                  if (val.length > 5) val = val.replace(/^(\d{5})(\d)/, '$1-$2');
+                  e.target.value = val;
+                  setValue('cep', val);
+                }}
+              />
+            </div>
             <div>
               <label htmlFor="cidade" className="form-label">Cidade *</label>
-              <input
-                id="cidade" type="text" autoCapitalize="words" placeholder="Natal"
+              <select
+                id="cidade"
                 className={`form-input ${errors.cidade ? 'border-red-500' : ''}`}
+                style={{ backgroundColor: '#fff' }}
                 {...register('cidade', { required: 'Cidade é obrigatória.' })}
-              />
+              >
+                <option value="">Selecione...</option>
+                {cidades.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
               {errors.cidade && <p className="form-error">{errors.cidade.message}</p>}
             </div>
             <div>
               <label htmlFor="bairro" className="form-label">Bairro</label>
-              <input id="bairro" type="text" autoCapitalize="words" placeholder="Centro" className="form-input" {...register('bairro')} />
+              <input id="bairro" type="text" autoCapitalize="words" placeholder="Bairro" className="form-input" {...register('bairro')} />
             </div>
           </div>
         </div>
 
-        {/* Bloco 2: Engajamento */}
+        {/* Bloco 2: Senha de Acesso ao Aplicativo (Opcional) */}
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Key size={16} /> Acesso ao Aplicativo (Opcional)
+          </h3>
+          <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--texto-medio)' }}>
+            Se o apoiador desejar acessar o aplicativo com e-mail e senha próprios, defina a senha de acesso abaixo:
+          </p>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label htmlFor="senha" className="form-label">Senha de Acesso</label>
+              <input
+                id="senha" type="password" placeholder="Mínimo 6 caracteres"
+                className="form-input"
+                {...register('senha')}
+              />
+            </div>
+            <div>
+              <label htmlFor="confirmarSenha" className="form-label">Confirmar Senha</label>
+              <input
+                id="confirmarSenha" type="password" placeholder="Repita a senha"
+                className="form-input"
+                {...register('confirmarSenha')}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Bloco 3: Engajamento */}
         <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--primary)', margin: 0 }}>2. Pesquisa de Engajamento</h3>
+          <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--primary)', margin: 0 }}>3. Pesquisa de Engajamento</h3>
 
           <div>
             <label className="form-label" style={{ textTransform: 'none', letterSpacing: 0 }}>Qual foi a principal ação de Styvenson que impactou você ou sua cidade?</label>
@@ -262,9 +357,9 @@ export default function ApoiadoresForm() {
           </div>
         </div>
 
-        {/* Bloco 3: Redes Sociais */}
+        {/* Bloco 4: Redes Sociais */}
         <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--primary)', margin: 0 }}>3. Redes Sociais</h3>
+          <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--primary)', margin: 0 }}>4. Redes Sociais</h3>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="form-label">Instagram</label>
@@ -285,9 +380,9 @@ export default function ApoiadoresForm() {
           </div>
         </div>
 
-        {/* Bloco 4: Sistema */}
+        {/* Bloco 5: Sistema */}
         <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--primary)', margin: 0 }}>4. Sistema</h3>
+          <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--primary)', margin: 0 }}>5. Sistema</h3>
           <div>
             <label htmlFor="observacoes" className="form-label">Anotações Internas</label>
             <textarea id="observacoes" rows={2} className="form-input resize-none" {...register('observacoes')} />

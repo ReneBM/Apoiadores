@@ -34,7 +34,10 @@ const loginSchema = z.object({
 
 const apoiadorSchema = z.object({
   nome: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres.').max(150),
-  email: z.string().email('E-mail inválido.'),
+  email: z.preprocess(
+    (val) => (val === '' || val === null || val === undefined ? null : val),
+    z.string().email('E-mail inválido.').optional().nullable()
+  ),
   telefone: z.string().max(20).optional().nullable(),
   cpf: z.string().max(14).optional().nullable(),
   sexo: z.string().max(20).optional().nullable(),

@@ -156,13 +156,9 @@ const create = async (req, res, next) => {
   try {
     const {
       nome, email, telefone, cidade, bairro, interesse,
-      observacoes, consentimento_lgpd, multiplicador_id, status,
+      observacoes, consentimento_lgpd, multiplicador_id, status, senha,
       cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais
     } = req.body;
-
-    if (!email) {
-      return res.status(400).json({ error: 'O E-mail é obrigatório.' });
-    }
 
     if (cpf) {
       if (!validarCPF(cpf)) {
@@ -182,13 +178,18 @@ const create = async (req, res, next) => {
       }
     }
 
+    let senhaHash = null;
+    if (senha && senha.length >= 6) {
+      senhaHash = await bcrypt.hash(senha, 12);
+    }
+
     const id = uuidv4();
     const { rows } = await db.query(
       `INSERT INTO apoiadores
          (id, nome, email, telefone, cidade, bairro, interesse, observacoes,
           consentimento_lgpd, data_consentimento, status, multiplicador_id, cadastrado_por,
-          cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,now(),$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)
+          cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais, senha_inicial)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,now(),$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22)
        RETURNING id`,
       [
         id, nome, email || null, telefone || null, cidade, bairro || null,
@@ -200,7 +201,8 @@ const create = async (req, res, next) => {
         pessoas_mobilizar || null,
         grupo_organizacao ? JSON.stringify(grupo_organizacao) : null,
         temas_interesse ? JSON.stringify(temas_interesse) : null,
-        redes_sociais ? JSON.stringify(redes_sociais) : null
+        redes_sociais ? JSON.stringify(redes_sociais) : null,
+        senhaHash
       ]
     );
 
