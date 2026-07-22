@@ -4,7 +4,7 @@ import api, { getMediaUrl } from '../api/axios';
 import toast from 'react-hot-toast';
 import { 
   MessageSquare, ShieldCheck, CheckCircle2, ArrowRight, Loader2,
-  Bell, MapPin, Share2, Sparkles, X, Lock, Users, Building2, Award
+  Bell, MapPin, Share2, Sparkles, X, Lock, Users, Instagram, Facebook, Youtube
 } from 'lucide-react';
 
 const formatPhone = (value) => {
@@ -99,203 +99,193 @@ export default function LandingPage() {
       className="full-page-lp"
       style={{ 
         minHeight: '100vh', 
-        backgroundColor: '#001a36', 
-        backgroundImage: `radial-gradient(circle at 10% 20%, #002d5e 0%, #001229 90%)`,
+        backgroundColor: '#0554f2', 
+        backgroundImage: `radial-gradient(circle at 10% 20%, #1562ff 0%, #0348d4 90%)`,
         color: '#ffffff', 
-        fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+        fontFamily: "'Outfit', 'Inter', system-ui, -apple-system, sans-serif",
         position: 'relative',
         overflowX: 'hidden'
       }}
     >
       
-      {/* HEADER INSTITUCIONAL ELEGANTE */}
-      <header style={{ 
-        backgroundColor: 'rgba(0, 26, 54, 0.95)', 
-        backdropFilter: 'blur(16px)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-        position: 'sticky',
-        top: 0,
-        zIndex: 50,
-        padding: '1rem 1.5rem'
-      }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          
-          {/* Logo Limpo e Profissional */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ 
-              width: '42px', height: '42px', borderRadius: '10px',
-              backgroundColor: '#0054A6',
-              color: '#ffffff', fontWeight: 900, fontSize: '1.2rem',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              letterSpacing: '-0.5px'
-            }}>
-              SV
-            </div>
-            <div>
-              <span style={{ fontWeight: 800, fontSize: '1rem', color: '#ffffff', display: 'block', letterSpacing: '-0.2px' }}>
-                Styvenson Valentim
-              </span>
-              <span style={{ fontSize: '0.68rem', color: '#60a5fa', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-                Senador do Rio Grande do Norte
-              </span>
-            </div>
-          </div>
+      {/* PADRÃO DE FUNDO GEOMÉTRICO (CHEVRONS/TRIÂNGULOS EM OVERLAY SUAVE) */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 10L45 25L30 40L15 25Z' fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.5'/%3E%3C/svg%3E")`,
+        opacity: 0.6,
+        pointerEvents: 'none'
+      }} />
 
-          {/* Badge WhatsApp */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', backgroundColor: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.25)', padding: '6px 12px', borderRadius: '20px' }}>
-            <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#22c55e', display: 'inline-block' }} />
-            <span style={{ fontSize: '0.75rem', color: '#4ade80', fontWeight: 700 }}>WhatsApp Oficial</span>
-          </div>
-
-        </div>
-      </header>
-
-      {/* HERO SECTION DESIGN MINIMALISTA & INSTITUCIONAL */}
+      {/* HERO SECTION EXATA BASEADA NO SITE OFICIAL SVRN.COM.BR */}
       <section style={{ 
-        maxWidth: '1200px', 
+        maxWidth: '1280px', 
         margin: '0 auto', 
-        padding: '3.5rem 1.5rem 5rem',
+        padding: '2.5rem 1.5rem 6rem',
         position: 'relative',
         zIndex: 2
       }}>
         
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '3rem', alignItems: 'center' }}>
+        {/* TOPO: PILL + LOGO INSTITUCIONAL OFICIAL SVRN */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '2rem' }}>
           
-          {/* COLUNA ESQUERDA: APRESENTAÇÃO */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            
-            {/* Pill Tagline */}
-            <div style={{ 
-              display: 'inline-flex', alignItems: 'center', gap: '8px',
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              padding: '6px 14px', borderRadius: '30px',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              width: 'fit-content'
+          {/* Pill Badge Superior */}
+          <div style={{ 
+            display: 'inline-flex', alignItems: 'center', gap: '8px',
+            backgroundColor: 'rgba(255, 255, 255, 0.15)',
+            backdropFilter: 'blur(8px)',
+            padding: '6px 16px', borderRadius: '30px',
+            border: '1px solid rgba(255, 255, 255, 0.25)',
+            width: 'fit-content'
+          }}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#22c55e', boxShadow: '0 0 8px #22c55e' }} />
+            <span style={{ fontSize: '0.8rem', color: '#ffffff', fontWeight: 600 }}>
+              Mobilização e participação · A política tem jeito!
+            </span>
+          </div>
+
+          {/* Logo Limpo Institucional SVRN.COM.BR */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <div style={{
+              width: '48px', height: '48px', borderRadius: '12px',
+              backgroundColor: '#ffffff',
+              color: '#0348d4', fontWeight: 900, fontSize: '1.3rem',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 6px 16px rgba(0,0,0,0.2)',
+              border: '2px solid rgba(255,255,255,0.4)'
             }}>
-              <Sparkles size={14} color="#f59e0b" />
-              <span style={{ fontSize: '0.78rem', color: '#fef08a', fontWeight: 700, letterSpacing: '0.5px' }}>
-                MOBILIZAÇÃO & PARTICIPAÇÃO POPULAR
+              SV
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1 }}>
+              <span style={{ fontSize: '1.5rem', fontWeight: 900, color: '#ffffff', letterSpacing: '-0.5px' }}>
+                Styvenson Valentim
+              </span>
+              <span style={{ fontSize: '0.78rem', color: '#ffd600', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1.5px', marginTop: '2px' }}>
+                SENADOR DO RIO GRANDE DO NORTE
               </span>
             </div>
+          </div>
 
-            {/* Título H1 Limpo */}
+        </div>
+
+        {/* ESTRUTURA PRINCIPAL (TEXTO À ESQUERDA + FOTO À DIREITA) */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem', alignItems: 'center' }}>
+          
+          {/* COLUNA ESQUERDA: TITULO, SUBTITULO E BOTÃO CTA */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '580px' }}>
+            
             <h1 style={{ 
-              fontSize: 'clamp(2.4rem, 5vw, 3.8rem)', 
+              fontSize: 'clamp(2.5rem, 5.5vw, 4rem)', 
               fontWeight: 900, 
-              lineHeight: 1.1, 
+              lineHeight: 1.08, 
               color: '#ffffff', 
               margin: 0, 
-              letterSpacing: '-1.2px' 
+              letterSpacing: '-1.5px' 
             }}>
               Entre para o <br />
-              <span style={{ color: '#ffd600' }}>Time Styvenson</span>
+              <span style={{ color: '#ffd600' }}>Time</span> Styvenson
             </h1>
 
-            <p style={{ fontSize: '1.1rem', color: '#cbd5e1', lineHeight: 1.6, margin: 0, fontWeight: 400 }}>
-              Cadastre-se para entrar no grupo oficial de <strong style={{ color: '#ffffff' }}>WhatsApp da sua cidade</strong> e acompanhar a prestação de contas, ações e novidades do mandato em primeira mão.
+            <p style={{ fontSize: '1.15rem', color: '#e0f2fe', lineHeight: 1.5, margin: 0, fontWeight: 500 }}>
+              Cadastre-se para entrar no grupo de <span style={{ color: '#ffd600', fontWeight: 800 }}>WhatsApp</span> da sua cidade e receber novidades em primeira mão.
             </p>
 
-            {/* BOTÃO CTA PRINCIPAL */}
+            {/* BOTÃO CTA PRINCIPAL NO ESTILO PILL COM ÍCONE DE SETA */}
             <div>
               <button
                 onClick={() => setShowModal(true)}
                 style={{
                   backgroundColor: '#ffd600',
-                  color: '#002952',
+                  color: '#0348d4',
                   border: 'none',
                   borderRadius: '50px',
-                  padding: '14px 28px',
-                  fontSize: '1.1rem',
+                  padding: '12px 14px 12px 24px',
+                  fontSize: '1.05rem',
                   fontWeight: 900,
                   cursor: 'pointer',
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '12px',
-                  boxShadow: '0 10px 30px rgba(255, 214, 0, 0.3)',
+                  gap: '14px',
+                  boxShadow: '0 12px 30px rgba(0, 0, 0, 0.25)',
                   transition: 'transform 0.2s, box-shadow 0.2s'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 14px 36px rgba(255, 214, 0, 0.45)';
+                  e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+                  e.currentTarget.style.boxShadow = '0 16px 36px rgba(0, 0, 0, 0.35)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 10px 30px rgba(255, 214, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  e.currentTarget.style.boxShadow = '0 12px 30px rgba(0, 0, 0, 0.25)';
                 }}
               >
-                <MessageSquare size={22} fill="#002952" color="#ffd600" />
-                <span>QUERO PARTICIPAR</span>
-                <ArrowRight size={20} strokeWidth={3} />
+                <MessageSquare size={22} fill="#0348d4" color="#ffd600" />
+                <span>Quero participar</span>
+                <div style={{
+                  width: '36px', height: '36px', borderRadius: '50%',
+                  backgroundColor: '#0348d4',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}>
+                  <ArrowRight size={20} color="#ffffff" strokeWidth={3} />
+                </div>
               </button>
             </div>
 
           </div>
 
-          {/* COLUNA DIREITA: RETRATO OFICIAL */}
+          {/* COLUNA DIREITA: FOTO DO SENADOR EM DESTAQUE NA DIREITA */}
           <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'flex-end' }}>
+            
+            {/* Padrão de Pontos Matriz no Canto Superior */}
             <div style={{
-              position: 'relative',
-              borderRadius: '24px',
-              overflow: 'hidden',
-              background: 'linear-gradient(180deg, rgba(0, 84, 166, 0.2) 0%, rgba(0, 26, 54, 0.9) 100%)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              display: 'flex',
-              alignItems: 'flex-end',
-              justifyContent: 'center',
-              paddingTop: '1rem',
-              boxShadow: '0 20px 40px rgba(0,0,0,0.5)'
+              position: 'absolute', top: '-10px', right: '10px',
+              display: 'grid', gridTemplateColumns: 'repeat(5, 6px)', gap: '8px', opacity: 0.3
             }}>
-              <img 
-                src={getMediaUrl('/uploads/foto5_nobg.png')} 
-                alt="Senador Styveson Valim"
-                style={{
-                  maxHeight: '460px',
-                  width: 'auto',
-                  objectFit: 'contain',
-                  filter: 'drop-shadow(0 15px 30px rgba(0,0,0,0.6))'
-                }}
-                onError={(e) => {
-                  e.currentTarget.src = getMediaUrl('/uploads/foto4_nobg.png');
-                }}
-              />
-
-              <div style={{
-                position: 'absolute',
-                bottom: 0, left: 0, right: 0,
-                padding: '16px',
-                background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,26,54,0.95) 100%)',
-                textAlign: 'center'
-              }}>
-                <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffffff' }}>
-                  Senador Styveson Valim
-                </span>
-              </div>
+              {[...Array(25)].map((_, i) => (
+                <div key={i} style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#ffffff' }} />
+              ))}
             </div>
+
+            {/* Foto do Senador Styveson Valim em alta resolução */}
+            <img 
+              src={getMediaUrl('/uploads/foto5_nobg.png')} 
+              alt="Senador Styveson Valim"
+              style={{
+                maxHeight: '480px',
+                width: 'auto',
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 20px 35px rgba(0,0,0,0.35))',
+                position: 'relative',
+                zIndex: 2
+              }}
+              onError={(e) => {
+                e.currentTarget.src = getMediaUrl('/uploads/foto4_nobg.png');
+              }}
+            />
           </div>
 
         </div>
 
-        {/* 3 CARDS DE BENEFÍCIOS LIMPOS */}
+        {/* 3 CARDS BRANCOS LADO A LADO NA BASE DO HERO */}
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
           gap: '1.25rem',
-          marginTop: '4rem'
+          marginTop: '3.5rem'
         }}>
           
+          {/* Card 1 */}
           <div style={{
             backgroundColor: '#ffffff',
             color: '#0f172a',
-            borderRadius: '16px',
-            padding: '1.5rem',
+            borderRadius: '20px',
+            padding: '1.25rem 1.5rem',
             display: 'flex',
             alignItems: 'center',
             gap: '1rem',
-            boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
+            boxShadow: '0 10px 25px rgba(0,0,0,0.15)'
           }}>
             <div style={{
-              width: '46px', height: '46px', borderRadius: '12px',
-              backgroundColor: '#0054A6',
+              width: '46px', height: '46px', borderRadius: '50%',
+              backgroundColor: '#0348d4',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               flexShrink: 0
             }}>
@@ -303,27 +293,28 @@ export default function LandingPage() {
             </div>
             <div>
               <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2px 0' }}>
-                Novidades em primeira mão
+                Receba novidades em primeira mão
               </h3>
-              <p style={{ fontSize: '0.78rem', color: '#64748b', margin: 0, lineHeight: 1.4 }}>
+              <p style={{ fontSize: '0.78rem', color: '#64748b', margin: 0, lineHeight: 1.3 }}>
                 Fique por dentro das ações e iniciativas.
               </p>
             </div>
           </div>
 
+          {/* Card 2 */}
           <div style={{
             backgroundColor: '#ffffff',
             color: '#0f172a',
-            borderRadius: '16px',
-            padding: '1.5rem',
+            borderRadius: '20px',
+            padding: '1.25rem 1.5rem',
             display: 'flex',
             alignItems: 'center',
             gap: '1rem',
-            boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
+            boxShadow: '0 10px 25px rgba(0,0,0,0.15)'
           }}>
             <div style={{
-              width: '46px', height: '46px', borderRadius: '12px',
-              backgroundColor: '#0054A6',
+              width: '46px', height: '46px', borderRadius: '50%',
+              backgroundColor: '#0348d4',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               flexShrink: 0
             }}>
@@ -331,27 +322,28 @@ export default function LandingPage() {
             </div>
             <div>
               <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2px 0' }}>
-                Grupo da sua cidade
+                Entre no grupo da sua cidade
               </h3>
-              <p style={{ fontSize: '0.78rem', color: '#64748b', margin: 0, lineHeight: 1.4 }}>
+              <p style={{ fontSize: '0.78rem', color: '#64748b', margin: 0, lineHeight: 1.3 }}>
                 Participe do WhatsApp da sua região.
               </p>
             </div>
           </div>
 
+          {/* Card 3 */}
           <div style={{
             backgroundColor: '#ffffff',
             color: '#0f172a',
-            borderRadius: '16px',
-            padding: '1.5rem',
+            borderRadius: '20px',
+            padding: '1.25rem 1.5rem',
             display: 'flex',
             alignItems: 'center',
             gap: '1rem',
-            boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
+            boxShadow: '0 10px 25px rgba(0,0,0,0.15)'
           }}>
             <div style={{
-              width: '46px', height: '46px', borderRadius: '12px',
-              backgroundColor: '#0054A6',
+              width: '46px', height: '46px', borderRadius: '50%',
+              backgroundColor: '#0348d4',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               flexShrink: 0
             }}>
@@ -359,9 +351,9 @@ export default function LandingPage() {
             </div>
             <div>
               <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2px 0' }}>
-                Compartilhe conteúdos
+                Ajude a compartilhar conteúdos
               </h3>
-              <p style={{ fontSize: '0.78rem', color: '#64748b', margin: 0, lineHeight: 1.4 }}>
+              <p style={{ fontSize: '0.78rem', color: '#64748b', margin: 0, lineHeight: 1.3 }}>
                 Sua voz fortalece o nosso trabalho.
               </p>
             </div>
@@ -369,65 +361,108 @@ export default function LandingPage() {
 
         </div>
 
-        {/* SEÇÃO DE ESTATÍSTICAS INSTITUCIONAIS */}
+        {/* SEGUNDO BANNER VIBRANTE DE REDES SOCIAIS & RECURSOS ALINHADO AO SVRN.COM.BR */}
         <div style={{
-          marginTop: '3rem',
-          borderRadius: '20px',
-          backgroundColor: 'rgba(255, 255, 255, 0.04)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
+          marginTop: '2.5rem',
+          borderRadius: '24px',
+          background: 'linear-gradient(135deg, #003366 0%, #001f42 50%, #001229 100%)',
+          border: '1px solid rgba(255,255,255,0.15)',
           padding: '2.5rem 2rem',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           gap: '2rem',
-          textAlign: 'center'
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
+          position: 'relative',
+          overflow: 'hidden'
         }}>
-          <div>
-            <Building2 size={28} color="#60a5fa" style={{ margin: '0 auto 8px' }} />
-            <div style={{ fontSize: '2rem', fontWeight: 900, color: '#38bdf8' }}>R$ 600 MILHÕES</div>
-            <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '4px' }}>Destinados em emendas para o RN</div>
+          
+          <div style={{ maxWidth: '520px', display: 'flex', flexDirection: 'column', gap: '0.75rem', position: 'relative', zIndex: 2 }}>
+            
+            <div style={{ 
+              display: 'inline-flex', alignItems: 'center', gap: '8px', 
+              backgroundColor: 'rgba(255, 214, 0, 0.15)', border: '1px solid rgba(255, 214, 0, 0.3)',
+              color: '#ffd600', padding: '6px 14px', borderRadius: '20px',
+              fontSize: '0.78rem', fontWeight: 800, width: 'fit-content'
+            }}>
+              <Sparkles size={14} color="#ffd600" />
+              SITE OFICIAL SVRN.COM.BR · A POLÍTICA TEM JEITO!
+            </div>
+
+            <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.2rem)', fontWeight: 900, color: '#ffffff', margin: '6px 0 0 0', lineHeight: 1.15 }}>
+              Siga Styvenson nas redes sociais
+            </h2>
+            <p style={{ fontSize: '0.95rem', color: '#cbd5e1', opacity: 0.95, margin: 0, lineHeight: 1.4 }}>
+              Acompanhe de perto a fiscalização e os recursos destinados para todos os potiguares.
+            </p>
+
+            <div style={{ display: 'flex', gap: '10px', marginTop: '0.5rem', flexWrap: 'wrap' }}>
+              <a href="https://instagram.com" target="_blank" rel="noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)', padding: '10px 18px', borderRadius: '30px', color: '#fff', textDecoration: 'none', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Instagram size={18} /> Instagram
+              </a>
+              <a href="https://facebook.com" target="_blank" rel="noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)', padding: '10px 18px', borderRadius: '30px', color: '#fff', textDecoration: 'none', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Facebook size={18} /> Facebook
+              </a>
+              <a href="https://youtube.com" target="_blank" rel="noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)', padding: '10px 18px', borderRadius: '30px', color: '#fff', textDecoration: 'none', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Youtube size={18} /> YouTube
+              </a>
+            </div>
           </div>
 
-          <div>
-            <MapPin size={28} color="#4ade80" style={{ margin: '0 auto 8px' }} />
-            <div style={{ fontSize: '2rem', fontWeight: 900, color: '#4ade80' }}>167 MUNICÍPIOS</div>
-            <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '4px' }}>Atendidos com investimentos</div>
+          <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', position: 'relative', zIndex: 2 }}>
+            <div style={{ backgroundColor: '#ffffff', color: '#0f172a', padding: '1.25rem 1.75rem', borderRadius: '20px', boxShadow: '0 10px 20px rgba(0,0,0,0.15)' }}>
+              <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#0348d4', lineHeight: 1 }}>
+                R$ 600 MILHÕES
+              </div>
+              <div style={{ fontSize: '0.78rem', color: '#475569', fontWeight: 700, marginTop: '4px' }}>
+                Em recursos destinados ao RN
+              </div>
+            </div>
+
+            <div style={{ backgroundColor: '#ffffff', color: '#0f172a', padding: '1.25rem 1.75rem', borderRadius: '20px', boxShadow: '0 10px 20px rgba(0,0,0,0.15)' }}>
+              <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#0348d4', lineHeight: 1 }}>
+                167 MUNICÍPIOS
+              </div>
+              <div style={{ fontSize: '0.78rem', color: '#475569', fontWeight: 700, marginTop: '4px' }}>
+                Contemplados com emendas
+              </div>
+            </div>
           </div>
 
-          <div>
-            <Award size={28} color="#f59e0b" style={{ margin: '0 auto 8px' }} />
-            <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f59e0b' }}>100% TRANSPARÊNCIA</div>
-            <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '4px' }}>Prestação de contas aberta</div>
-          </div>
         </div>
 
       </section>
 
-      {/* RODAPÉ INSTITUCIONAL */}
-      <footer style={{ backgroundColor: '#001024', color: '#64748b', padding: '2rem 1.5rem', textAlign: 'center', fontSize: '0.8rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-          <div style={{ color: '#cbd5e1', fontWeight: 700 }}>
-            Gabinete Senador Styveson Valim · Rio Grande do Norte
+      {/* RODAPÉ SIMPLES INSTITUCIONAL */}
+      <footer style={{ backgroundColor: '#023db5', color: '#e0f2fe', padding: '2.5rem 1.5rem', textAlign: 'center', fontSize: '0.8rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+          <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#ffffff' }}>
+            STYVENSON VALENTIM · SENADOR DO RIO GRANDE DO NORTE
           </div>
           <div>
-            © 2026 Todos os direitos reservados · Privacidade sob a LGPD
+            © 2026 Mandato Senador Styveson Valim · Site Oficial SVRN.COM.BR
+          </div>
+          <div style={{ opacity: 0.8, fontSize: '0.72rem' }}>
+            Privacidade & Tratamento de Dados sob a LGPD (Lei nº 13.709/2018)
           </div>
         </div>
       </footer>
 
-      {/* MODAL DE CADASTRO LIMPO E ELEGANTE */}
+      {/* MODAL / CAPTURA DE LEAD (ABRE AO CLICAR EM "QUERO PARTICIPAR") */}
       {showModal && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 100,
-          backgroundColor: 'rgba(0, 15, 35, 0.85)',
-          backdropFilter: 'blur(10px)',
+          backgroundColor: 'rgba(0, 20, 50, 0.8)',
+          backdropFilter: 'blur(8px)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: '1rem'
         }}>
           <div style={{
             backgroundColor: '#ffffff',
             color: '#0f172a',
-            borderRadius: '24px',
-            maxWidth: '460px',
+            borderRadius: '28px',
+            maxWidth: '480px',
             width: '100%',
             padding: '2rem 1.5rem',
             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
@@ -436,6 +471,7 @@ export default function LandingPage() {
             overflowY: 'auto'
           }}>
             
+            {/* Botão Fechar Modal */}
             <button
               type="button"
               onClick={() => { setShowModal(false); setSubmitted(false); }}
@@ -451,26 +487,30 @@ export default function LandingPage() {
 
             {!submitted ? (
               <>
-                <div style={{ marginBottom: '1.25rem' }}>
-                  <h2 style={{ fontSize: '1.3rem', fontWeight: 900, color: '#0f172a', margin: '0 0 4px 0' }}>
+                <div style={{ marginBottom: '1rem' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#0348d4', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    Mandato Styvenson Valentim
+                  </span>
+                  <h2 style={{ fontSize: '1.3rem', fontWeight: 900, color: '#0f172a', margin: '2px 0 2px 0' }}>
                     Entre para o Time Styvenson
                   </h2>
-                  <p style={{ fontSize: '0.82rem', color: '#64748b', margin: 0 }}>
-                    Preencha os dados para entrar no grupo oficial do WhatsApp
+                  <p style={{ fontSize: '0.78rem', color: '#64748b', margin: 0 }}>
+                    Cadastre-se para entrar no grupo de WhatsApp da sua cidade
                   </p>
                 </div>
 
-                <form onSubmit={handleSubmit(onSubmit)} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <form onSubmit={handleSubmit(onSubmit)} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
                   
+                  {/* Nome Completo */}
                   <div>
                     <label htmlFor="modal-nome" style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: '#334155', textTransform: 'uppercase', marginBottom: '4px' }}>
-                      Nome Completo *
+                      Seu Nome Completo *
                     </label>
                     <input
                       id="modal-nome"
                       type="text"
                       autoCapitalize="words"
-                      placeholder="Seu nome"
+                      placeholder="Digite seu nome completo"
                       className={`form-input ${errors.nome ? 'border-red-500' : ''}`}
                       style={{ backgroundColor: '#f8fafc', color: '#0f172a', border: '1.5px solid #cbd5e1', borderRadius: '10px', padding: '0.7rem' }}
                       {...register('nome', { required: 'Digite seu nome.', minLength: { value: 3, message: 'Digite seu nome completo.' } })}
@@ -478,9 +518,10 @@ export default function LandingPage() {
                     {errors.nome && <p className="form-error">{errors.nome.message}</p>}
                   </div>
 
+                  {/* WhatsApp */}
                   <div>
                     <label htmlFor="modal-telefone" style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: '#334155', textTransform: 'uppercase', marginBottom: '4px' }}>
-                      WhatsApp (DDD + Celular) *
+                      WhatsApp (com DDD) *
                     </label>
                     <input
                       id="modal-telefone"
@@ -496,6 +537,7 @@ export default function LandingPage() {
                     {errors.telefone && <p className="form-error">{errors.telefone.message}</p>}
                   </div>
 
+                  {/* Cidade */}
                   <div>
                     <label htmlFor="modal-cidade" style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: '#334155', textTransform: 'uppercase', marginBottom: '4px' }}>
                       Sua Cidade no RN *
@@ -514,6 +556,7 @@ export default function LandingPage() {
                     {errors.cidade && <p className="form-error">{errors.cidade.message}</p>}
                   </div>
 
+                  {/* Bairro */}
                   <div>
                     <label htmlFor="modal-bairro" style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: '#334155', textTransform: 'uppercase', marginBottom: '4px' }}>
                       Bairro (opcional)
@@ -529,9 +572,10 @@ export default function LandingPage() {
                     />
                   </div>
 
+                  {/* Senha Opcional */}
                   <div>
-                    <label htmlFor="modal-senha" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.78rem', fontWeight: 800, color: '#0054A6', marginBottom: '4px' }}>
-                      <Lock size={12} /> Senha de Acesso ao App (Opcional)
+                    <label htmlFor="modal-senha" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.78rem', fontWeight: 800, color: '#0348d4', marginBottom: '4px' }}>
+                      <Lock size={12} /> Senha para Acesso ao App (Opcional)
                     </label>
                     <input
                       id="modal-senha"
@@ -543,6 +587,7 @@ export default function LandingPage() {
                     />
                   </div>
 
+                  {/* LGPD Checkbox */}
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
                     <input
                       id="modal-lgpd"
@@ -551,10 +596,11 @@ export default function LandingPage() {
                       {...register('consentimento_lgpd', { required: true })}
                     />
                     <label htmlFor="modal-lgpd" style={{ fontSize: '0.7rem', color: '#64748b', lineHeight: 1.3, cursor: 'pointer' }}>
-                      Autorizo o recebimento de mensagens oficiais via WhatsApp conforme a LGPD.
+                      Autorizo o recebimento de mensagens e o tratamento de dados conforme a LGPD.
                     </label>
                   </div>
 
+                  {/* Botão Cadastrar */}
                   <button
                     type="submit"
                     disabled={submitting}
@@ -565,7 +611,7 @@ export default function LandingPage() {
                       borderRadius: '12px',
                       border: 'none',
                       backgroundColor: '#ffd600',
-                      color: '#002952',
+                      color: '#0348d4',
                       fontSize: '1rem',
                       fontWeight: 900,
                       cursor: 'pointer',
@@ -581,7 +627,7 @@ export default function LandingPage() {
                     ) : (
                       <>
                         <MessageSquare size={18} />
-                        ENTRAR NO GRUPO
+                        QUERO ENTRAR NO GRUPO
                         <ArrowRight size={18} />
                       </>
                     )}
@@ -590,6 +636,7 @@ export default function LandingPage() {
                 </form>
               </>
             ) : (
+              /* CARD DE CONFIRMAÇÃO E LINK DO WHATSAPP */
               <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
                 <div style={{ width: '60px', height: '60px', borderRadius: '50%', backgroundColor: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <CheckCircle2 size={36} color="#16a34a" />
