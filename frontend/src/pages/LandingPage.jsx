@@ -244,12 +244,12 @@ export default function LandingPage() {
               ))}
             </div>
 
-            {/* Foto do Senador Styveson Valim em alta resolução */}
+            {/* Foto do Senador Styveson Valim em alta resolução no Hero */}
             <img 
-              src={getMediaUrl('/uploads/foto5_nobg.png')} 
+              src="/senador/foto5.png" 
               alt="Senador Styveson Valim"
               style={{
-                maxHeight: '480px',
+                maxHeight: '500px',
                 width: 'auto',
                 objectFit: 'contain',
                 filter: 'drop-shadow(0 20px 35px rgba(0,0,0,0.35))',
@@ -257,7 +257,7 @@ export default function LandingPage() {
                 zIndex: 2
               }}
               onError={(e) => {
-                e.currentTarget.src = getMediaUrl('/uploads/foto4_nobg.png');
+                e.currentTarget.src = getMediaUrl('/uploads/foto5_nobg.png');
               }}
             />
           </div>
@@ -361,73 +361,79 @@ export default function LandingPage() {
 
         </div>
 
-        {/* SEGUNDO BANNER VIBRANTE DE REDES SOCIAIS & RECURSOS ALINHADO AO SVRN.COM.BR */}
+        {/* SEGUNDO BANNER COLORIDO COM FOTO DO SENADOR NA DIREITA */}
         <div style={{
           marginTop: '2.5rem',
           borderRadius: '24px',
-          background: 'linear-gradient(135deg, #003366 0%, #001f42 50%, #001229 100%)',
-          border: '1px solid rgba(255,255,255,0.15)',
+          background: 'linear-gradient(135deg, #ff007a 0%, #ff5200 50%, #ffd600 100%)',
           padding: '2.5rem 2rem',
-          display: 'flex',
-          flexWrap: 'wrap',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
           alignItems: 'center',
-          justifyContent: 'space-between',
           gap: '2rem',
           boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
           position: 'relative',
           overflow: 'hidden'
         }}>
           
-          <div style={{ maxWidth: '520px', display: 'flex', flexDirection: 'column', gap: '0.75rem', position: 'relative', zIndex: 2 }}>
-            
-            <div style={{ 
-              display: 'inline-flex', alignItems: 'center', gap: '8px', 
-              backgroundColor: 'rgba(255, 214, 0, 0.15)', border: '1px solid rgba(255, 214, 0, 0.3)',
-              color: '#ffd600', padding: '6px 14px', borderRadius: '20px',
-              fontSize: '0.78rem', fontWeight: 800, width: 'fit-content'
-            }}>
-              <Sparkles size={14} color="#ffd600" />
-              SITE OFICIAL SVRN.COM.BR · A POLÍTICA TEM JEITO!
-            </div>
-
-            <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.2rem)', fontWeight: 900, color: '#ffffff', margin: '6px 0 0 0', lineHeight: 1.15 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', position: 'relative', zIndex: 2 }}>
+            <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 900, color: '#ffffff', margin: 0, lineHeight: 1.15 }}>
               Siga Styvenson nas redes sociais
             </h2>
-            <p style={{ fontSize: '0.95rem', color: '#cbd5e1', opacity: 0.95, margin: 0, lineHeight: 1.4 }}>
-              Acompanhe de perto a fiscalização e os recursos destinados para todos os potiguares.
+            <p style={{ fontSize: '1rem', color: '#ffffff', opacity: 0.95, margin: 0, lineHeight: 1.4 }}>
+              Acompanhe de perto o trabalho do Senador que mais destina recursos para todo o Rio Grande do Norte.
             </p>
 
             <div style={{ display: 'flex', gap: '10px', marginTop: '0.5rem', flexWrap: 'wrap' }}>
-              <a href="https://instagram.com" target="_blank" rel="noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)', padding: '10px 18px', borderRadius: '30px', color: '#fff', textDecoration: 'none', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <a href="https://instagram.com" target="_blank" rel="noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)', padding: '10px 18px', borderRadius: '30px', color: '#fff', textDecoration: 'none', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Instagram size={18} /> Instagram
               </a>
-              <a href="https://facebook.com" target="_blank" rel="noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)', padding: '10px 18px', borderRadius: '30px', color: '#fff', textDecoration: 'none', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <a href="https://facebook.com" target="_blank" rel="noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)', padding: '10px 18px', borderRadius: '30px', color: '#fff', textDecoration: 'none', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Facebook size={18} /> Facebook
               </a>
-              <a href="https://youtube.com" target="_blank" rel="noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)', padding: '10px 18px', borderRadius: '30px', color: '#fff', textDecoration: 'none', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <a href="https://youtube.com" target="_blank" rel="noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)', padding: '10px 18px', borderRadius: '30px', color: '#fff', textDecoration: 'none', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Youtube size={18} /> YouTube
               </a>
             </div>
+
+            {/* Números de Impacto */}
+            <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+              <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', color: '#0f172a', padding: '1rem 1.25rem', borderRadius: '16px', boxShadow: '0 8px 16px rgba(0,0,0,0.15)' }}>
+                <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0348d4', lineHeight: 1 }}>
+                  R$ 600 MILHÕES
+                </div>
+                <div style={{ fontSize: '0.72rem', color: '#475569', fontWeight: 700, marginTop: '2px' }}>
+                  Destinados ao RN
+                </div>
+              </div>
+
+              <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', color: '#0f172a', padding: '1rem 1.25rem', borderRadius: '16px', boxShadow: '0 8px 16px rgba(0,0,0,0.15)' }}>
+                <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0348d4', lineHeight: 1 }}>
+                  167 MUNICÍPIOS
+                </div>
+                <div style={{ fontSize: '0.72rem', color: '#475569', fontWeight: 700, marginTop: '2px' }}>
+                  Contemplados
+                </div>
+              </div>
+            </div>
+
           </div>
 
-          <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', position: 'relative', zIndex: 2 }}>
-            <div style={{ backgroundColor: '#ffffff', color: '#0f172a', padding: '1.25rem 1.75rem', borderRadius: '20px', boxShadow: '0 10px 20px rgba(0,0,0,0.15)' }}>
-              <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#0348d4', lineHeight: 1 }}>
-                R$ 600 MILHÕES
-              </div>
-              <div style={{ fontSize: '0.78rem', color: '#475569', fontWeight: 700, marginTop: '4px' }}>
-                Em recursos destinados ao RN
-              </div>
-            </div>
-
-            <div style={{ backgroundColor: '#ffffff', color: '#0f172a', padding: '1.25rem 1.75rem', borderRadius: '20px', boxShadow: '0 10px 20px rgba(0,0,0,0.15)' }}>
-              <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#0348d4', lineHeight: 1 }}>
-                167 MUNICÍPIOS
-              </div>
-              <div style={{ fontSize: '0.78rem', color: '#475569', fontWeight: 700, marginTop: '4px' }}>
-                Contemplados com emendas
-              </div>
-            </div>
+          {/* FOTO DO SENADOR DENTRO DO SEGUNDO BANNER (COMO NO MODELO DE REFERÊNCIA) */}
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', position: 'relative', zIndex: 2, height: '100%' }}>
+            <img 
+              src="/senador/foto4.png" 
+              alt="Styvenson Valim nas redes"
+              style={{
+                maxHeight: '320px',
+                width: 'auto',
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 15px 25px rgba(0,0,0,0.35))'
+              }}
+              onError={(e) => {
+                e.currentTarget.src = getMediaUrl('/uploads/foto4_nobg.png');
+              }}
+            />
           </div>
 
         </div>
