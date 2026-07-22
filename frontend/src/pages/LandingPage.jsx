@@ -4,7 +4,7 @@ import api, { getMediaUrl } from '../api/axios';
 import toast from 'react-hot-toast';
 import { 
   MessageSquare, ShieldCheck, CheckCircle2, ArrowRight, Loader2,
-  Bell, MapPin, Share2, Sparkles, X, Lock, Users, Heart, Instagram, Facebook, Youtube
+  Bell, MapPin, Share2, X, Lock, Users, Instagram, Facebook, Youtube
 } from 'lucide-react';
 
 const formatPhone = (value) => {
@@ -125,7 +125,7 @@ export default function LandingPage() {
         zIndex: 2
       }}>
         
-        {/* TOPO: PILL + LOGO */}
+        {/* TOPO: PILL + LOGOTIPO OFICIAL DO SENADOR */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '2rem' }}>
           
           {/* Pill Badge Superior */}
@@ -143,26 +143,18 @@ export default function LandingPage() {
             </span>
           </div>
 
-          {/* Logo Estilizado Styvenson Valim */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{
-              display: 'flex', flexDirection: 'column', lineHeight: 1
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '1.8rem', fontWeight: 900, color: '#ffffff', letterSpacing: '-0.5px' }}>
-                  Styveson
-                </span>
-                <span style={{ 
-                  backgroundColor: '#ffd600', color: '#0348d4', fontSize: '0.7rem', 
-                  fontWeight: 900, padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase'
-                }}>
-                  RN
-                </span>
-              </div>
-              <span style={{ fontSize: '0.78rem', color: '#93c5fd', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', marginTop: '2px' }}>
-                SENADOR DO RN
-              </span>
-            </div>
+          {/* Logo Oficial 1: STYVENSON VALENTIM - SENADOR DO RIO GRANDE DO NORTE */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <img 
+              src="/logo_styvenson_full.png" 
+              alt="Styvenson Valentim - Senador do Rio Grande do Norte"
+              style={{
+                height: '46px',
+                width: 'auto',
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.3))'
+              }}
+            />
           </div>
 
         </div>
@@ -182,7 +174,7 @@ export default function LandingPage() {
               letterSpacing: '-1.5px' 
             }}>
               Entre para o <br />
-              <span style={{ color: '#ffd600' }}>Time</span> Styveson
+              <span style={{ color: '#ffd600' }}>Time</span> Styvenson
             </h1>
 
             <p style={{ fontSize: '1.15rem', color: '#e0f2fe', lineHeight: 1.5, margin: 0, fontWeight: 500 }}>
@@ -361,7 +353,7 @@ export default function LandingPage() {
 
         </div>
 
-        {/* SEGUNDO BANNER COLORIDO: REDES SOCIAIS E IMPACTO */}
+        {/* SEGUNDO BANNER COLORIDO COM LOGO 2: "VOCÊ NO SENADO COM STYVENSON" */}
         <div style={{
           marginTop: '2.5rem',
           borderRadius: '24px',
@@ -377,29 +369,39 @@ export default function LandingPage() {
           overflow: 'hidden'
         }}>
           
-          <div style={{ maxWidth: '500px', display: 'flex', flexDirection: 'column', gap: '0.75rem', position: 'relative', zIndex: 2 }}>
-            <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 900, color: '#ffffff', margin: 0, lineHeight: 1.15 }}>
-              Siga Styveson nas redes sociais
+          <div style={{ maxWidth: '520px', display: 'flex', flexDirection: 'column', gap: '0.75rem', position: 'relative', zIndex: 2 }}>
+            
+            {/* Logo Oficial 2: VOCÊ NO SENADO COM STYVENSON */}
+            <div style={{ backgroundColor: '#ffffff', padding: '10px 16px', borderRadius: '16px', width: 'fit-content', boxShadow: '0 8px 20px rgba(0,0,0,0.15)' }}>
+              <img 
+                src="/logo_voce_no_senado.png" 
+                alt="Você no Senado com Styvenson"
+                style={{ height: '70px', width: 'auto', objectFit: 'contain' }}
+              />
+            </div>
+
+            <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.2rem)', fontWeight: 900, color: '#ffffff', margin: '6px 0 0 0', lineHeight: 1.15 }}>
+              Siga Styvenson nas redes sociais
             </h2>
-            <p style={{ fontSize: '1rem', color: '#ffffff', opacity: 0.95, margin: 0, lineHeight: 1.4 }}>
-              Acompanhe de perto o trabalho do Senador que mais destina recursos para todo o Rio Grande do Norte.
+            <p style={{ fontSize: '0.95rem', color: '#ffffff', opacity: 0.95, margin: 0, lineHeight: 1.4 }}>
+              Acompanhe de perto a fiscalização e os recursos destinados para todos os potiguares.
             </p>
 
-            <div style={{ display: 'flex', gap: '12px', marginTop: '0.5rem' }}>
-              <a href="https://instagram.com" target="_blank" rel="noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '10px 18px', borderRadius: '30px', color: '#fff', textDecoration: 'none', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div style={{ display: 'flex', gap: '10px', marginTop: '0.5rem', flexWrap: 'wrap' }}>
+              <a href="https://instagram.com" target="_blank" rel="noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)', padding: '10px 18px', borderRadius: '30px', color: '#fff', textDecoration: 'none', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Instagram size={18} /> Instagram
               </a>
-              <a href="https://facebook.com" target="_blank" rel="noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '10px 18px', borderRadius: '30px', color: '#fff', textDecoration: 'none', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <a href="https://facebook.com" target="_blank" rel="noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)', padding: '10px 18px', borderRadius: '30px', color: '#fff', textDecoration: 'none', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Facebook size={18} /> Facebook
               </a>
-              <a href="https://youtube.com" target="_blank" rel="noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '10px 18px', borderRadius: '30px', color: '#fff', textDecoration: 'none', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <a href="https://youtube.com" target="_blank" rel="noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)', padding: '10px 18px', borderRadius: '30px', color: '#fff', textDecoration: 'none', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Youtube size={18} /> YouTube
               </a>
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', position: 'relative', zIndex: 2 }}>
-            <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', color: '#0f172a', padding: '1.25rem 1.75rem', borderRadius: '20px', boxShadow: '0 10px 20px rgba(0,0,0,0.15)' }}>
+          <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', position: 'relative', zIndex: 2 }}>
+            <div style={{ backgroundColor: '#ffffff', color: '#0f172a', padding: '1.25rem 1.75rem', borderRadius: '20px', boxShadow: '0 10px 20px rgba(0,0,0,0.15)' }}>
               <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#0348d4', lineHeight: 1 }}>
                 R$ 600 MILHÕES
               </div>
@@ -408,7 +410,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', color: '#0f172a', padding: '1.25rem 1.75rem', borderRadius: '20px', boxShadow: '0 10px 20px rgba(0,0,0,0.15)' }}>
+            <div style={{ backgroundColor: '#ffffff', color: '#0f172a', padding: '1.25rem 1.75rem', borderRadius: '20px', boxShadow: '0 10px 20px rgba(0,0,0,0.15)' }}>
               <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#0348d4', lineHeight: 1 }}>
                 167 MUNICÍPIOS
               </div>
@@ -422,9 +424,17 @@ export default function LandingPage() {
 
       </section>
 
-      {/* RODAPÉ SIMPLES */}
-      <footer style={{ backgroundColor: '#023db5', color: '#e0f2fe', padding: '2rem 1.5rem', textAlign: 'center', fontSize: '0.8rem' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+      {/* RODAPÉ COM LOGO 3: SV + MAPA DO RN */}
+      <footer style={{ backgroundColor: '#023db5', color: '#e0f2fe', padding: '2.5rem 1.5rem', textAlign: 'center', fontSize: '0.8rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+          
+          {/* Logo Oficial 3: SV + MAPA DO RN */}
+          <img 
+            src="/logo_sv_mapa.png" 
+            alt="SV - Rio Grande do Norte"
+            style={{ height: '36px', width: 'auto', objectFit: 'contain', opacity: 0.9 }}
+          />
+
           <div>
             © 2026 Mandato Senador Styveson Valim · Todos os direitos reservados
           </div>
@@ -472,17 +482,16 @@ export default function LandingPage() {
 
             {!submitted ? (
               <>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.75rem' }}>
-                  <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <MessageSquare size={20} color="#16a34a" />
-                  </div>
-                  <div>
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a', margin: 0 }}>
-                      Entre para o Time Styvenson
-                    </h2>
-                    <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Cadastre-se para entrar no grupo de WhatsApp</span>
-                  </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '0.75rem' }}>
+                  <img src="/logo_styvenson_full.png" alt="Logo Styvenson" style={{ height: '32px', width: 'auto' }} />
                 </div>
+                
+                <h2 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a', margin: '0 0 2px 0' }}>
+                  Entre para o Time Styvenson
+                </h2>
+                <p style={{ fontSize: '0.78rem', color: '#64748b', margin: '0 0 1rem 0' }}>
+                  Cadastre-se para entrar no grupo de WhatsApp da sua cidade
+                </p>
 
                 <form onSubmit={handleSubmit(onSubmit)} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
                   
