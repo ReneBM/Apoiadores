@@ -86,18 +86,48 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/perfis', perfisRoutes);
 
 
+const fs = require('fs');
+
 // Servir arquivos de uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Servir arquivos estáticos do Frontend
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
+// Servir arquivos estáticos do Frontend (se compilado)
+const distPath = path.join(__dirname, '../frontend/dist');
+const indexHtmlPath = path.join(distPath, 'index.html');
+
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+}
 
 // SPA Fallback para rotas não-API
 app.get('*', (req, res, next) => {
   if (req.path.startsWith('/api')) {
     return next();
   }
-  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+  if (fs.existsSync(indexHtmlPath)) {
+    return res.sendFile(indexHtmlPath);
+  }
+  res.status(200).send(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Mandato Senador Styveson Valim - Backend API</title>
+        <style>
+          body { font-family: system-ui, sans-serif; background: #001a38; color: #fff; display: flex; height: 100vh; align-items: center; justify-content: center; margin: 0; text-align: center; }
+          .card { background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); max-width: 500px; }
+          h1 { color: #60a5fa; margin-top: 0; }
+          p { color: #cbd5e1; line-height: 1.5; }
+        </style>
+      </head>
+      <body>
+        <div class="card">
+          <h1>Backend API On-line ✅</h1>
+          <p>O servidor backend está rodando normalmente.</p>
+          <p><small>A compilação do frontend está em andamento. Atualize esta página em instantes ou configure o Build Command no Render como: <code>cd frontend && npm install && npm run build && cd ../backend && npm install</code></small></p>
+        </div>
+      </body>
+    </html>
+  `);
 });
 
 // ── 404 ────────────────────────────────────────────────────────────────────
