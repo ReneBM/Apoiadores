@@ -671,6 +671,24 @@ select.form-input {
   animation: modalBounceIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
+/* Full Page Mode (desabilita emulador de celular em Landing Pages completas) */
+body:has(.full-page-lp) {
+  background-color: transparent !important;
+  display: block !important;
+  min-height: 100vh !important;
+  overflow-y: auto !important;
+}
+
+body:has(.full-page-lp) #root {
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
 /* ── Mobile View Emulator on Desktop ─────────────────────────── */
 @media (min-width: 480px) {
   body {

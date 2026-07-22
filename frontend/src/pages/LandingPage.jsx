@@ -86,16 +86,27 @@ export default function LandingPage() {
     }
   };
 
+  useEffect(() => {
+    document.body.classList.add('full-page-mode');
+    document.body.style.overflowY = 'auto';
+    return () => {
+      document.body.classList.remove('full-page-mode');
+    };
+  }, []);
+
   return (
-    <div style={{ 
-      minHeight: '100vh', 
-      backgroundColor: '#0554f2', 
-      backgroundImage: `radial-gradient(circle at 10% 20%, #1562ff 0%, #0348d4 90%)`,
-      color: '#ffffff', 
-      fontFamily: "'Outfit', 'Inter', system-ui, -apple-system, sans-serif",
-      position: 'relative',
-      overflowX: 'hidden'
-    }}>
+    <div 
+      className="full-page-lp"
+      style={{ 
+        minHeight: '100vh', 
+        backgroundColor: '#0554f2', 
+        backgroundImage: `radial-gradient(circle at 10% 20%, #1562ff 0%, #0348d4 90%)`,
+        color: '#ffffff', 
+        fontFamily: "'Outfit', 'Inter', system-ui, -apple-system, sans-serif",
+        position: 'relative',
+        overflowX: 'hidden'
+      }}
+    >
       
       {/* PADRÃO DE FUNDO GEOMÉTRICO (CHEVRONS/TRIÂNGULOS EM OVERLAY SUAVE) */}
       <div style={{
