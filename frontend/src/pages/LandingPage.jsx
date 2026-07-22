@@ -99,8 +99,12 @@ export default function LandingPage() {
       className="full-page-lp"
       style={{ 
         minHeight: '100vh', 
-        backgroundColor: '#0554f2', 
-        backgroundImage: `radial-gradient(circle at 10% 20%, #1562ff 0%, #0348d4 90%)`,
+        backgroundColor: '#0348d4', 
+        backgroundImage: `url('/bg_bandeira_rn.jpg')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
         color: '#ffffff', 
         fontFamily: "'Oswald', 'Outfit', 'Inter', system-ui, -apple-system, sans-serif",
         position: 'relative',
@@ -137,16 +141,16 @@ export default function LandingPage() {
 
         /* ESTILO DOS BOTÕES */
         .btn-glow-pulse {
-          min-width: 220px;
-          min-height: 56px;
+          min-width: 200px;
+          min-height: 52px;
           display: inline-flex;
           font-family: 'Oswald', sans-serif;
-          font-size: 1.15rem;
+          font-size: 1.05rem;
           align-items: center;
           justify-content: center;
           text-transform: uppercase;
           text-align: center;
-          letter-spacing: 1px;
+          letter-spacing: 0.5px;
           font-weight: 800;
           color: #0348d4;
           background: linear-gradient(90deg, #d8ff1a 0%, #ccf600 100%);
@@ -157,17 +161,18 @@ export default function LandingPage() {
           cursor: pointer;
           outline: none;
           position: relative;
-          padding: 12px 28px;
+          padding: 10px 24px;
           z-index: 1;
+          white-space: nowrap;
         }
 
         .btn-glow-pulse::before {
           content: '';
           border-radius: 1000px;
-          min-width: calc(100% + 12px);
-          min-height: calc(100% + 12px);
-          border: 4px solid #ccf600;
-          box-shadow: 0 0 40px rgba(204, 246, 0, 0.7);
+          min-width: calc(100% + 10px);
+          min-height: calc(100% + 10px);
+          border: 3px solid #ccf600;
+          box-shadow: 0 0 30px rgba(204, 246, 0, 0.7);
           position: absolute;
           top: 50%;
           left: 50%;
@@ -180,8 +185,8 @@ export default function LandingPage() {
         .btn-glow-pulse:hover, 
         .btn-glow-pulse:focus {
           color: #023db5;
-          transform: translateY(-5px);
-          box-shadow: 0 16px 35px rgba(204, 246, 0, 0.65);
+          transform: translateY(-4px);
+          box-shadow: 0 14px 30px rgba(204, 246, 0, 0.65);
         }
 
         .btn-glow-pulse:hover::before, 
@@ -191,10 +196,10 @@ export default function LandingPage() {
 
         .btn-glow-pulse::after {
           content: '';
-          width: 30px; 
-          height: 30px;
+          width: 20px; 
+          height: 20px;
           border-radius: 100%;
-          border: 4px solid #ccf600;
+          border: 3px solid #ccf600;
           position: absolute;
           z-index: -1;
           top: 50%;
@@ -212,27 +217,27 @@ export default function LandingPage() {
 
         @keyframes ringPulse {
           0% {
-            width: 30px;
-            height: 30px;
+            width: 20px;
+            height: 20px;
             opacity: 1;
           }
           100% {
-            width: 280px;
-            height: 90px;
+            width: 220px;
+            height: 80px;
             opacity: 0;
           }
         }
 
         .btn-glass-secondary {
-          min-height: 56px;
+          min-height: 52px;
           display: inline-flex;
           font-family: 'Oswald', sans-serif;
-          font-size: 1.1rem;
+          font-size: 1.05rem;
           align-items: center;
           justify-content: center;
           text-transform: uppercase;
           text-align: center;
-          letter-spacing: 1px;
+          letter-spacing: 0.5px;
           font-weight: 800;
           color: #ffffff;
           background: rgba(255, 255, 255, 0.15);
@@ -243,7 +248,8 @@ export default function LandingPage() {
           transition: all 0.3s ease-in-out;
           cursor: pointer;
           outline: none;
-          padding: 12px 26px;
+          padding: 10px 24px;
+          white-space: nowrap;
         }
 
         .btn-glass-secondary:hover {
@@ -349,13 +355,7 @@ export default function LandingPage() {
         }
       `}</style>
 
-      {/* PADRÃO DE FUNDO GEOMÉTRICO (CHEVRONS/TRIÂNGULOS EM OVERLAY SUAVE) */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 10L45 25L30 40L15 25Z' fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.5'/%3E%3C/svg%3E")`,
-        opacity: 0.6,
-        pointerEvents: 'none'
-      }} />
+
 
       {/* HEADER EXCLUSIVO DO MOBILE (EXIBE A LOGO NO TOPO ABSOLUTO DO CELULAR) */}
       <header className="top-header-mobile" style={{ position: 'relative', zIndex: 10 }}>
@@ -511,13 +511,14 @@ export default function LandingPage() {
 
             </div>
 
-            {/* BOTÕES COM EFEITO CSS PULSANTE */}
+            {/* BOTÕES COM EFEITO CSS PULSANTE (EXATAMENTE LADO A LADO NA MESMA LINHA) */}
             <div 
               className="buttons-container"
               style={{
                 display: 'flex',
-                gap: '1.25rem',
-                flexWrap: 'wrap',
+                flexDirection: 'row',
+                flexWrap: 'nowrap',
+                gap: '1rem',
                 justify: 'flex-end',
                 alignItems: 'center',
                 marginTop: '-15px',
