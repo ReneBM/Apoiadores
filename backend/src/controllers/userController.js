@@ -342,7 +342,7 @@ const update = async (req, res, next) => {
     }
 
     await client.query('COMMIT');
-    res.json({ message: 'Usuário atualizado com sucesso.' });
+    res.json({ message: 'Usuário atualizado com sucesso.', perfil_id: perfilIdVal, role: roleVal, tipo: tipoVal });
   } catch (err) {
     await client.query('ROLLBACK');
     next(err);

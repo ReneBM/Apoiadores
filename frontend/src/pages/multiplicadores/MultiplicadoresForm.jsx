@@ -251,7 +251,7 @@ export default function MultiplicadoresForm({ editMode = false }) {
         {(selectedRole === 'coordenador' || selectedRole === 'admin') && (
           <div>
             <label htmlFor="senha" className="form-label">
-              Senha de acesso * {editMode && '(deixe em branco para não alterar)'}
+              Senha de acesso {editMode ? '(deixe em branco para não alterar)' : '*'}
             </label>
             <input
               id="senha"
@@ -260,8 +260,8 @@ export default function MultiplicadoresForm({ editMode = false }) {
               className={`form-input ${errors.senha ? 'border-red-500' : ''}`}
               {...register('senha', {
                 required: !editMode ? 'Senha é obrigatória para este cargo.' : false,
-                minLength: { value: 8, message: 'Senha deve ter no mínimo 8 caracteres.' },
                 validate: {
+                  minLen: (v) => !v || v.length >= 8 || 'Senha deve ter no mínimo 8 caracteres.',
                   hasUpper: (v) => !v || /[A-Z]/.test(v) || 'Senha deve conter ao menos uma letra maiúscula.',
                   hasNum: (v) => !v || /[0-9]/.test(v) || 'Senha deve conter ao menos um número.',
                 }

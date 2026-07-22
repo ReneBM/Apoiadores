@@ -18,7 +18,10 @@ const validate = (schema) => (req, res, next) => {
     return res.status(400).json({ error: 'Dados inválidos.', detalhes: errors });
   }
 
-  req.body = result.data; // dados sanitizados
+  // Usa os dados sanitizados pelo Zod como fonte primária.
+  // Preserva campos do body original apenas quando não existem no resultado do Zod,
+  // para schemas .partial() que omitem campos não enviados.
+  req.body = result.data;
   next();
 };
 
