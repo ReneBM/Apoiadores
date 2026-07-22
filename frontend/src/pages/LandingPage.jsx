@@ -322,9 +322,17 @@ export default function LandingPage() {
           }
 
           .buttons-container {
+            flex-direction: column !important;
             justify-content: center !important;
+            align-items: center !important;
             width: 100% !important;
             margin-top: 0.75rem !important;
+            gap: 0.85rem !important;
+          }
+
+          .btn-glow-pulse, .btn-glass-secondary {
+            width: 100% !important;
+            max-width: 320px !important;
           }
 
           .benefit-cards-container {
