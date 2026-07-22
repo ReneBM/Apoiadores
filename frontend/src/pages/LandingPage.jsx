@@ -3,8 +3,8 @@ import { useForm } from 'react-hook-form';
 import api, { getMediaUrl } from '../api/axios';
 import toast from 'react-hot-toast';
 import { 
-  MessageSquare, ShieldCheck, CheckCircle2, ArrowRight, Loader2,
-  Bell, MapPin, Share2, Sparkles, X, Lock, Users, Instagram, Facebook, Youtube
+  MessageSquare, CheckCircle2, ArrowRight, Loader2,
+  X, Lock, UserCheck, UserPlus, Smartphone, Bell, Share2
 } from 'lucide-react';
 
 const formatPhone = (value) => {
@@ -102,12 +102,253 @@ export default function LandingPage() {
         backgroundColor: '#0554f2', 
         backgroundImage: `radial-gradient(circle at 10% 20%, #1562ff 0%, #0348d4 90%)`,
         color: '#ffffff', 
-        fontFamily: "'Outfit', 'Inter', system-ui, -apple-system, sans-serif",
+        fontFamily: "'Oswald', 'Outfit', 'Inter', system-ui, -apple-system, sans-serif",
         position: 'relative',
         overflowX: 'hidden'
       }}
     >
-      
+      {/* IMPORTAÇÃO DE FONTES, MEDIA QUERIES E RESPONSIVIDADE CORRETA */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700;800;900&family=Outfit:wght@800;900&display=swap');
+        
+        @keyframes fadeInLeftNoticeable {
+          0% {
+            opacity: 0;
+            transform: translateX(-60px) scale(0.92);
+            filter: blur(8px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+            filter: blur(0px);
+          }
+        }
+
+        @keyframes fadeInUpHeadline {
+          0% {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        /* ESTILO DOS BOTÕES */
+        .btn-glow-pulse {
+          min-width: 220px;
+          min-height: 56px;
+          display: inline-flex;
+          font-family: 'Oswald', sans-serif;
+          font-size: 1.15rem;
+          align-items: center;
+          justify-content: center;
+          text-transform: uppercase;
+          text-align: center;
+          letter-spacing: 1px;
+          font-weight: 800;
+          color: #0348d4;
+          background: linear-gradient(90deg, #d8ff1a 0%, #ccf600 100%);
+          border: none;
+          border-radius: 1000px;
+          box-shadow: 0 10px 25px rgba(204, 246, 0, 0.45);
+          transition: all 0.3s ease-in-out;
+          cursor: pointer;
+          outline: none;
+          position: relative;
+          padding: 12px 28px;
+          z-index: 1;
+        }
+
+        .btn-glow-pulse::before {
+          content: '';
+          border-radius: 1000px;
+          min-width: calc(100% + 12px);
+          min-height: calc(100% + 12px);
+          border: 4px solid #ccf600;
+          box-shadow: 0 0 40px rgba(204, 246, 0, 0.7);
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          opacity: 0;
+          transition: all .3s ease-in-out;
+          pointer-events: none;
+        }
+
+        .btn-glow-pulse:hover, 
+        .btn-glow-pulse:focus {
+          color: #023db5;
+          transform: translateY(-5px);
+          box-shadow: 0 16px 35px rgba(204, 246, 0, 0.65);
+        }
+
+        .btn-glow-pulse:hover::before, 
+        .btn-glow-pulse:focus::before {
+          opacity: 1;
+        }
+
+        .btn-glow-pulse::after {
+          content: '';
+          width: 30px; 
+          height: 30px;
+          border-radius: 100%;
+          border: 4px solid #ccf600;
+          position: absolute;
+          z-index: -1;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          animation: ringPulse 1.8s infinite;
+          pointer-events: none;
+        }
+
+        .btn-glow-pulse:hover::after, 
+        .btn-glow-pulse:focus::after {
+          animation: none;
+          display: none;
+        }
+
+        @keyframes ringPulse {
+          0% {
+            width: 30px;
+            height: 30px;
+            opacity: 1;
+          }
+          100% {
+            width: 280px;
+            height: 90px;
+            opacity: 0;
+          }
+        }
+
+        .btn-glass-secondary {
+          min-height: 56px;
+          display: inline-flex;
+          font-family: 'Oswald', sans-serif;
+          font-size: 1.1rem;
+          align-items: center;
+          justify-content: center;
+          text-transform: uppercase;
+          text-align: center;
+          letter-spacing: 1px;
+          font-weight: 800;
+          color: #ffffff;
+          background: rgba(255, 255, 255, 0.15);
+          backdrop-filter: blur(8px);
+          border: 2px solid rgba(255, 255, 255, 0.4);
+          border-radius: 1000px;
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+          transition: all 0.3s ease-in-out;
+          cursor: pointer;
+          outline: none;
+          padding: 12px 26px;
+        }
+
+        .btn-glass-secondary:hover {
+          background: rgba(255, 255, 255, 0.3);
+          border-color: #ffffff;
+          transform: translateY(-4px);
+          box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+        }
+
+        .benefit-card-hover {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .benefit-card-hover:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        /* ── MOBILE MEDIA QUERIES (GARANTE LOGO NO TOPO ABSOLUTO DO MOBILE) ── */
+        @media (max-width: 991px) {
+          .top-header-mobile {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            padding: 1rem 0 0.5rem !important;
+            text-align: center !important;
+          }
+          
+          .desktop-logo {
+            display: none !important;
+          }
+
+          .hero-grid {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 0.5rem !important;
+            padding-top: 0 !important;
+            align-items: center !important;
+          }
+
+          /* 1. Imagem do Senador subida para ficar próxima da logo */
+          .left-photo-col {
+            order: 1 !important;
+            margin-top: -25px !important;
+            margin-left: 0 !important;
+            justify-content: center !important;
+          }
+          .left-photo-col img {
+            max-height: 400px !important;
+          }
+
+          /* 2. Headline subida sobrepondo a base da imagem do Senador (rebaixada ligeiramente) */
+          .right-content-col {
+            order: 2 !important;
+            margin-top: -75px !important;
+            align-items: center !important;
+            text-align: center !important;
+            width: 100% !important;
+            position: relative !important;
+            z-index: 10 !important;
+          }
+
+          .headline-container {
+            text-align: center !important;
+            align-items: center !important;
+          }
+          .headline-container h1,
+          .headline-container h2 {
+            text-align: center !important;
+          }
+
+          .buttons-container {
+            justify-content: center !important;
+            width: 100% !important;
+            margin-top: 0.75rem !important;
+          }
+
+          .benefit-cards-container {
+            margin-top: 2rem !important;
+            width: 100% !important;
+          }
+        }
+
+        @media (min-width: 992px) {
+          .top-header-mobile {
+            display: none !important;
+          }
+        }
+
+        @media (max-width: 576px) {
+          .btn-glow-pulse, .btn-glass-secondary {
+            width: 100% !important;
+            min-width: 100% !important;
+          }
+
+          .top-header-mobile img {
+            height: 50px !important;
+          }
+
+          .left-photo-col img {
+            max-height: 340px !important;
+          }
+        }
+      `}</style>
+
       {/* PADRÃO DE FUNDO GEOMÉTRICO (CHEVRONS/TRIÂNGULOS EM OVERLAY SUAVE) */}
       <div style={{
         position: 'absolute', inset: 0,
@@ -116,346 +357,318 @@ export default function LandingPage() {
         pointerEvents: 'none'
       }} />
 
-      {/* HERO SECTION EXATA BASEADA NO SITE OFICIAL SVRN.COM.BR */}
+      {/* HEADER EXCLUSIVO DO MOBILE (EXIBE A LOGO NO TOPO ABSOLUTO DO CELULAR) */}
+      <header className="top-header-mobile" style={{ position: 'relative', zIndex: 10 }}>
+        <img 
+          src="/logo_sv_2025.svg" 
+          alt="Logo SV Styvenson 2025"
+          style={{
+            height: '65px',
+            width: 'auto',
+            maxWidth: '90%',
+            objectFit: 'contain',
+            filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.2))'
+          }}
+          onError={(e) => {
+            e.currentTarget.src = '/logo_sv_2025.png';
+          }}
+        />
+      </header>
+
+      {/* SEÇÃO PRINCIPAL DA LANDING PAGE */}
       <section style={{ 
         maxWidth: '1280px', 
         margin: '0 auto', 
-        padding: '2.5rem 1.5rem 6rem',
-        position: 'relative',
+        padding: '2rem 1.5rem 1rem', 
+        position: 'relative', 
         zIndex: 2
       }}>
         
-        {/* TOPO: PILL + LOGO INSTITUCIONAL OFICIAL SVRN */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '2rem' }}>
+        {/* GRID HERO RESPONSIVO */}
+        <div 
+          className="hero-grid"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'auto 1fr',
+            gap: '2.5rem',
+            alignItems: 'start'
+          }}
+        >
           
-          {/* Pill Badge Superior */}
-          <div style={{ 
-            display: 'inline-flex', alignItems: 'center', gap: '8px',
-            backgroundColor: 'rgba(255, 255, 255, 0.15)',
-            backdropFilter: 'blur(8px)',
-            padding: '6px 16px', borderRadius: '30px',
-            border: '1px solid rgba(255, 255, 255, 0.25)',
-            width: 'fit-content'
-          }}>
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#22c55e', boxShadow: '0 0 8px #22c55e' }} />
-            <span style={{ fontSize: '0.8rem', color: '#ffffff', fontWeight: 600 }}>
-              Mobilização e participação · A política tem jeito!
-            </span>
-          </div>
-
-          {/* Logo Limpo Institucional SVRN.COM.BR */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          {/* FOTO DO SENADOR (NO MOBILE FICA ABAIXO DO HEADER DE LOGO E ACIMA DA FRASE) */}
+          <div 
+            className="left-photo-col"
+            style={{ 
+              position: 'relative', 
+              display: 'flex', 
+              justify: 'flex-start', 
+              alignItems: 'flex-start',
+              marginTop: '-75px',
+              marginLeft: '-40px',
+              animation: 'fadeInLeftNoticeable 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards'
+            }}
+          >
             <div style={{
-              width: '48px', height: '48px', borderRadius: '12px',
-              backgroundColor: '#ffffff',
-              color: '#0348d4', fontWeight: 900, fontSize: '1.3rem',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 6px 16px rgba(0,0,0,0.2)',
-              border: '2px solid rgba(255,255,255,0.4)'
+              position: 'relative',
+              zIndex: 2,
+              WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 72%, rgba(0,0,0,0) 98%)',
+              maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 72%, rgba(0,0,0,0) 98%)'
             }}>
-              SV
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1 }}>
-              <span style={{ fontSize: '1.5rem', fontWeight: 900, color: '#ffffff', letterSpacing: '-0.5px' }}>
-                Styvenson Valentim
-              </span>
-              <span style={{ fontSize: '0.78rem', color: '#ffd600', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1.5px', marginTop: '2px' }}>
-                SENADOR DO RIO GRANDE DO NORTE
-              </span>
+              <img 
+                src="/senador/styveson_capacete_exato_v2.png" 
+                alt="Senador Styveson Valim"
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '740px',
+                  width: 'auto',
+                  height: 'auto',
+                  objectFit: 'contain'
+                }}
+              />
             </div>
           </div>
 
-        </div>
-
-        {/* ESTRUTURA PRINCIPAL (TEXTO À ESQUERDA + FOTO À DIREITA) */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem', alignItems: 'center' }}>
-          
-          {/* COLUNA ESQUERDA: TITULO, SUBTITULO E BOTÃO CTA */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '580px' }}>
+          {/* COLUNA DA DIREITA: LOGO (DESKTOP) + HEADLINE + BOTÕES */}
+          <div 
+            className="right-content-col"
+            style={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: '1.5rem',
+              alignItems: 'flex-end',
+              width: '100%',
+              marginTop: '-50px',
+              paddingTop: '0'
+            }}
+          >
             
-            <h1 style={{ 
-              fontSize: 'clamp(2.5rem, 5.5vw, 4rem)', 
-              fontWeight: 900, 
-              lineHeight: 1.08, 
-              color: '#ffffff', 
-              margin: 0, 
-              letterSpacing: '-1.5px' 
-            }}>
-              Entre para o <br />
-              <span style={{ color: '#ffd600' }}>Time</span> Styvenson
-            </h1>
+            {/* LOGO DESKTOP */}
+            <div 
+              className="desktop-logo"
+              style={{
+                marginTop: '32px',
+                animation: 'fadeInLeftNoticeable 1s ease-out forwards'
+              }}
+            >
+              <img 
+                src="/logo_sv_2025.svg" 
+                alt="Logo SV Styvenson 2025"
+                style={{
+                  height: '75px',
+                  width: 'auto',
+                  maxWidth: '100%',
+                  objectFit: 'contain',
+                  filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.2))'
+                }}
+                onError={(e) => {
+                  e.currentTarget.src = '/logo_sv_2025.png';
+                }}
+              />
+            </div>
 
-            <p style={{ fontSize: '1.15rem', color: '#e0f2fe', lineHeight: 1.5, margin: 0, fontWeight: 500 }}>
-              Cadastre-se para entrar no grupo de <span style={{ color: '#ffd600', fontWeight: 800 }}>WhatsApp</span> da sua cidade e receber novidades em primeira mão.
-            </p>
+            {/* HEADLINE (NO MOBILE FICA LOGO ABAIXO DA IMAGEM DO SENADOR) */}
+            <div 
+              className="headline-container"
+              style={{
+                animation: 'fadeInUpHeadline 1s ease-out 0.2s forwards',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.75rem',
+                textAlign: 'right',
+                alignItems: 'inherit'
+              }}
+            >
+              
+              <h1 style={{
+                fontFamily: "'Oswald', 'Outfit', sans-serif",
+                fontSize: 'clamp(2.2rem, 5.2vw, 4.2rem)',
+                fontWeight: 900,
+                lineHeight: 0.95,
+                textTransform: 'uppercase',
+                letterSpacing: '-0.5px',
+                margin: 0,
+                color: '#ffffff',
+                textShadow: '0 4px 20px rgba(0,0,0,0.3)'
+              }}>
+                Sua voz pode <br />
+                multiplicar mudança.
+              </h1>
 
-            {/* BOTÃO CTA PRINCIPAL NO ESTILO PILL COM ÍCONE DE SETA */}
-            <div>
+              <h2 style={{
+                fontFamily: "'Oswald', 'Outfit', sans-serif",
+                fontSize: 'clamp(1.25rem, 2.8vw, 2.3rem)',
+                fontWeight: 700,
+                lineHeight: 1.25,
+                textTransform: 'uppercase',
+                letterSpacing: '0px',
+                margin: 0,
+                color: '#ccf600',
+                textShadow: '0 2px 10px rgba(0,0,0,0.2)'
+              }}>
+                Seja um <span style={{ color: '#ffd600', fontWeight: 900, fontSize: '1.15em' }}>APOIADOR</span> <br />
+                do Capitão.
+              </h2>
+
+            </div>
+
+            {/* BOTÕES COM EFEITO CSS PULSANTE */}
+            <div 
+              className="buttons-container"
+              style={{
+                display: 'flex',
+                gap: '1.25rem',
+                flexWrap: 'wrap',
+                justify: 'flex-end',
+                alignItems: 'center',
+                marginTop: '-15px',
+                animation: 'fadeInUpHeadline 1s ease-out 0.4s forwards'
+              }}
+            >
+              
+              {/* Botão 1: Já sou Apoiador */}
+              <button
+                onClick={() => window.location.href = '/login'}
+                className="btn-glass-secondary"
+              >
+                <UserCheck size={20} color="#ffffff" style={{ marginRight: '8px' }} />
+                <span>Já sou Apoiador</span>
+              </button>
+
+              {/* Botão 2: Seja Apoiador */}
               <button
                 onClick={() => setShowModal(true)}
-                style={{
-                  backgroundColor: '#ffd600',
-                  color: '#0348d4',
-                  border: 'none',
-                  borderRadius: '50px',
-                  padding: '12px 14px 12px 24px',
-                  fontSize: '1.05rem',
-                  fontWeight: 900,
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '14px',
-                  boxShadow: '0 12px 30px rgba(0, 0, 0, 0.25)',
-                  transition: 'transform 0.2s, box-shadow 0.2s'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
-                  e.currentTarget.style.boxShadow = '0 16px 36px rgba(0, 0, 0, 0.35)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                  e.currentTarget.style.boxShadow = '0 12px 30px rgba(0, 0, 0, 0.25)';
-                }}
+                className="btn-glow-pulse"
               >
-                <MessageSquare size={22} fill="#0348d4" color="#ffd600" />
-                <span>Quero participar</span>
-                <div style={{
-                  width: '36px', height: '36px', borderRadius: '50%',
-                  backgroundColor: '#0348d4',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center'
-                }}>
-                  <ArrowRight size={20} color="#ffffff" strokeWidth={3} />
-                </div>
+                <UserPlus size={20} color="#0348d4" style={{ marginRight: '8px', position: 'relative', zIndex: 2 }} />
+                <span style={{ position: 'relative', zIndex: 2 }}>Seja Apoiador</span>
+                <ArrowRight size={18} color="#0348d4" strokeWidth={3} style={{ marginLeft: '8px', position: 'relative', zIndex: 2 }} />
               </button>
+
             </div>
 
-          </div>
-
-          {/* COLUNA DIREITA: FOTO DO SENADOR EM DESTAQUE NA DIREITA */}
-          <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'flex-end' }}>
-            
-            {/* Padrão de Pontos Matriz no Canto Superior */}
-            <div style={{
-              position: 'absolute', top: '-10px', right: '10px',
-              display: 'grid', gridTemplateColumns: 'repeat(5, 6px)', gap: '8px', opacity: 0.3
-            }}>
-              {[...Array(25)].map((_, i) => (
-                <div key={i} style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#ffffff' }} />
-              ))}
-            </div>
-
-            {/* Foto do Senador Styveson Valim em alta resolução no Hero */}
-            <img 
-              src="/senador/foto5.png?v=2" 
-              alt="Senador Styveson Valim"
-              style={{
-                maxHeight: '500px',
-                width: 'auto',
-                objectFit: 'contain',
-                filter: 'drop-shadow(0 20px 35px rgba(0,0,0,0.35))',
-                position: 'relative',
-                zIndex: 2
-              }}
-              onError={(e) => {
-                e.currentTarget.src = getMediaUrl('/uploads/foto5_nobg.png');
-              }}
-            />
           </div>
 
         </div>
 
-        {/* 3 CARDS BRANCOS LADO A LADO NA BASE DO HERO */}
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
-          gap: '1.25rem',
-          marginTop: '3.5rem'
-        }}>
+        {/* 3 CARDS SEGUIDOS DE BENEFÍCIOS */}
+        <div 
+          className="benefit-cards-container"
+          style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+            gap: '1.25rem',
+            marginTop: '-210px',
+            paddingBottom: '3rem',
+            position: 'relative',
+            zIndex: 10,
+            animation: 'fadeInUpHeadline 1s ease-out 0.6s forwards'
+          }}
+        >
           
-          {/* Card 1 */}
-          <div style={{
-            backgroundColor: '#ffffff',
-            color: '#0f172a',
-            borderRadius: '20px',
-            padding: '1.25rem 1.5rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1rem',
-            boxShadow: '0 10px 25px rgba(0,0,0,0.15)'
-          }}>
+          {/* Card 1: Aplicativo Oficial */}
+          <div 
+            className="benefit-card-hover"
+            style={{
+              backgroundColor: '#ffffff',
+              color: '#0f172a',
+              borderRadius: '24px',
+              padding: '1.5rem 1.75rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1.25rem',
+              boxShadow: '0 12px 30px rgba(0,0,0,0.12)'
+            }}
+          >
             <div style={{
-              width: '46px', height: '46px', borderRadius: '50%',
+              width: '52px', height: '52px', borderRadius: '16px',
               backgroundColor: '#0348d4',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              flexShrink: 0
+              flexShrink: 0,
+              boxShadow: '0 8px 18px rgba(3, 72, 212, 0.3)'
             }}>
-              <Bell size={22} color="#ffffff" />
+              <Smartphone size={26} color="#ffffff" />
             </div>
             <div>
-              <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2px 0' }}>
-                Receba novidades em primeira mão
+              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
+                Aplicativo Exclusivo
               </h3>
-              <p style={{ fontSize: '0.78rem', color: '#64748b', margin: 0, lineHeight: 1.3 }}>
-                Fique por dentro das ações e iniciativas.
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.84rem', color: '#475569', margin: 0, lineHeight: 1.4, fontWeight: 500 }}>
+                Acesse o app oficial do mandato, acompanhe ações e vote em enquetes.
               </p>
             </div>
           </div>
 
-          {/* Card 2 */}
-          <div style={{
-            backgroundColor: '#ffffff',
-            color: '#0f172a',
-            borderRadius: '20px',
-            padding: '1.25rem 1.5rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1rem',
-            boxShadow: '0 10px 25px rgba(0,0,0,0.15)'
-          }}>
+          {/* Card 2: Receber Notícias em Primeira Mão */}
+          <div 
+            className="benefit-card-hover"
+            style={{
+              backgroundColor: '#ffffff',
+              color: '#0f172a',
+              borderRadius: '24px',
+              padding: '1.5rem 1.75rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1.25rem',
+              boxShadow: '0 12px 30px rgba(0,0,0,0.12)'
+            }}
+          >
             <div style={{
-              width: '46px', height: '46px', borderRadius: '50%',
+              width: '52px', height: '52px', borderRadius: '16px',
               backgroundColor: '#0348d4',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              flexShrink: 0
+              flexShrink: 0,
+              boxShadow: '0 8px 18px rgba(3, 72, 212, 0.3)'
             }}>
-              <Users size={22} color="#ffffff" />
+              <Bell size={26} color="#ffffff" />
             </div>
             <div>
-              <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2px 0' }}>
-                Entre no grupo da sua cidade
+              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
+                Notícias em Primeira Mão
               </h3>
-              <p style={{ fontSize: '0.78rem', color: '#64748b', margin: 0, lineHeight: 1.3 }}>
-                Participe do WhatsApp da sua região.
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.84rem', color: '#475569', margin: 0, lineHeight: 1.4, fontWeight: 500 }}>
+                Receba novidades oficiais, conquistas e avisos no WhatsApp da sua cidade.
               </p>
             </div>
           </div>
 
-          {/* Card 3 */}
-          <div style={{
-            backgroundColor: '#ffffff',
-            color: '#0f172a',
-            borderRadius: '20px',
-            padding: '1.25rem 1.5rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1rem',
-            boxShadow: '0 10px 25px rgba(0,0,0,0.15)'
-          }}>
+          {/* Card 3: Ajude a Compartilhar Conteúdos */}
+          <div 
+            className="benefit-card-hover"
+            style={{
+              backgroundColor: '#ffffff',
+              color: '#0f172a',
+              borderRadius: '24px',
+              padding: '1.5rem 1.75rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1.25rem',
+              boxShadow: '0 12px 30px rgba(0,0,0,0.12)'
+            }}
+          >
             <div style={{
-              width: '46px', height: '46px', borderRadius: '50%',
+              width: '52px', height: '52px', borderRadius: '16px',
               backgroundColor: '#0348d4',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              flexShrink: 0
+              flexShrink: 0,
+              boxShadow: '0 8px 18px rgba(3, 72, 212, 0.3)'
             }}>
-              <Share2 size={22} color="#ffffff" />
+              <Share2 size={26} color="#ffffff" />
             </div>
             <div>
-              <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2px 0' }}>
-                Ajude a compartilhar conteúdos
+              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
+                Compartilhe Conteúdos
               </h3>
-              <p style={{ fontSize: '0.78rem', color: '#64748b', margin: 0, lineHeight: 1.3 }}>
-                Sua voz fortalece o nosso trabalho.
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.84rem', color: '#475569', margin: 0, lineHeight: 1.4, fontWeight: 500 }}>
+                Sua voz fortalece o mandato. Espalhe os resultados para todo o RN.
               </p>
             </div>
-          </div>
-
-        </div>
-
-        {/* SEGUNDO BANNER COLORIDO COM FOTO DO SENADOR NA DIREITA */}
-        <div style={{
-          marginTop: '2.5rem',
-          borderRadius: '24px',
-          background: 'linear-gradient(135deg, #ff007a 0%, #ff5200 50%, #ffd600 100%)',
-          padding: '2.5rem 2rem',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          alignItems: 'center',
-          gap: '2rem',
-          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
-          position: 'relative',
-          overflow: 'hidden'
-        }}>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', position: 'relative', zIndex: 2 }}>
-            <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 900, color: '#ffffff', margin: 0, lineHeight: 1.15 }}>
-              Siga Styvenson nas redes sociais
-            </h2>
-            <p style={{ fontSize: '1rem', color: '#ffffff', opacity: 0.95, margin: 0, lineHeight: 1.4 }}>
-              Acompanhe de perto o trabalho do Senador que mais destina recursos para todo o Rio Grande do Norte.
-            </p>
-
-            <div style={{ display: 'flex', gap: '10px', marginTop: '0.5rem', flexWrap: 'wrap' }}>
-              <a href="https://instagram.com" target="_blank" rel="noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)', padding: '10px 18px', borderRadius: '30px', color: '#fff', textDecoration: 'none', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Instagram size={18} /> Instagram
-              </a>
-              <a href="https://facebook.com" target="_blank" rel="noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)', padding: '10px 18px', borderRadius: '30px', color: '#fff', textDecoration: 'none', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Facebook size={18} /> Facebook
-              </a>
-              <a href="https://youtube.com" target="_blank" rel="noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)', padding: '10px 18px', borderRadius: '30px', color: '#fff', textDecoration: 'none', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Youtube size={18} /> YouTube
-              </a>
-            </div>
-
-            {/* Números de Impacto */}
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', flexWrap: 'wrap' }}>
-              <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', color: '#0f172a', padding: '1rem 1.25rem', borderRadius: '16px', boxShadow: '0 8px 16px rgba(0,0,0,0.15)' }}>
-                <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0348d4', lineHeight: 1 }}>
-                  R$ 600 MILHÕES
-                </div>
-                <div style={{ fontSize: '0.72rem', color: '#475569', fontWeight: 700, marginTop: '2px' }}>
-                  Destinados ao RN
-                </div>
-              </div>
-
-              <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', color: '#0f172a', padding: '1rem 1.25rem', borderRadius: '16px', boxShadow: '0 8px 16px rgba(0,0,0,0.15)' }}>
-                <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0348d4', lineHeight: 1 }}>
-                  167 MUNICÍPIOS
-                </div>
-                <div style={{ fontSize: '0.72rem', color: '#475569', fontWeight: 700, marginTop: '2px' }}>
-                  Contemplados
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          {/* FOTO DO SENADOR DENTRO DO SEGUNDO BANNER (COMO NO MODELO DE REFERÊNCIA) */}
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', position: 'relative', zIndex: 2, height: '100%' }}>
-            <img 
-              src="/senador/foto4.png?v=2" 
-              alt="Styvenson Valim nas redes"
-              style={{
-                maxHeight: '320px',
-                width: 'auto',
-                objectFit: 'contain',
-                filter: 'drop-shadow(0 15px 25px rgba(0,0,0,0.35))'
-              }}
-              onError={(e) => {
-                e.currentTarget.src = getMediaUrl('/uploads/foto4_nobg.png');
-              }}
-            />
           </div>
 
         </div>
 
       </section>
 
-      {/* RODAPÉ SIMPLES INSTITUCIONAL */}
-      <footer style={{ backgroundColor: '#023db5', color: '#e0f2fe', padding: '2.5rem 1.5rem', textAlign: 'center', fontSize: '0.8rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-          <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#ffffff' }}>
-            STYVENSON VALENTIM · SENADOR DO RIO GRANDE DO NORTE
-          </div>
-          <div>
-            © 2026 Mandato Senador Styveson Valim · Site Oficial SVRN.COM.BR
-          </div>
-          <div style={{ opacity: 0.8, fontSize: '0.72rem' }}>
-            Privacidade & Tratamento de Dados sob a LGPD (Lei nº 13.709/2018)
-          </div>
-        </div>
-      </footer>
-
-      {/* MODAL / CAPTURA DE LEAD (ABRE AO CLICAR EM "QUERO PARTICIPAR") */}
+      {/* MODAL / CAPTURA DE LEAD */}
       {showModal && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 100,
@@ -477,7 +690,6 @@ export default function LandingPage() {
             overflowY: 'auto'
           }}>
             
-            {/* Botão Fechar Modal */}
             <button
               type="button"
               onClick={() => { setShowModal(false); setSubmitted(false); }}
@@ -498,7 +710,7 @@ export default function LandingPage() {
                     Mandato Styvenson Valentim
                   </span>
                   <h2 style={{ fontSize: '1.3rem', fontWeight: 900, color: '#0f172a', margin: '2px 0 2px 0' }}>
-                    Entre para o Time Styvenson
+                    Seja um Apoiador do Capitão
                   </h2>
                   <p style={{ fontSize: '0.78rem', color: '#64748b', margin: 0 }}>
                     Cadastre-se para entrar no grupo de WhatsApp da sua cidade
@@ -507,7 +719,6 @@ export default function LandingPage() {
 
                 <form onSubmit={handleSubmit(onSubmit)} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
                   
-                  {/* Nome Completo */}
                   <div>
                     <label htmlFor="modal-nome" style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: '#334155', textTransform: 'uppercase', marginBottom: '4px' }}>
                       Seu Nome Completo *
@@ -524,7 +735,6 @@ export default function LandingPage() {
                     {errors.nome && <p className="form-error">{errors.nome.message}</p>}
                   </div>
 
-                  {/* WhatsApp */}
                   <div>
                     <label htmlFor="modal-telefone" style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: '#334155', textTransform: 'uppercase', marginBottom: '4px' }}>
                       WhatsApp (com DDD) *
@@ -543,7 +753,6 @@ export default function LandingPage() {
                     {errors.telefone && <p className="form-error">{errors.telefone.message}</p>}
                   </div>
 
-                  {/* Cidade */}
                   <div>
                     <label htmlFor="modal-cidade" style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: '#334155', textTransform: 'uppercase', marginBottom: '4px' }}>
                       Sua Cidade no RN *
@@ -562,7 +771,6 @@ export default function LandingPage() {
                     {errors.cidade && <p className="form-error">{errors.cidade.message}</p>}
                   </div>
 
-                  {/* Bairro */}
                   <div>
                     <label htmlFor="modal-bairro" style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: '#334155', textTransform: 'uppercase', marginBottom: '4px' }}>
                       Bairro (opcional)
@@ -578,7 +786,6 @@ export default function LandingPage() {
                     />
                   </div>
 
-                  {/* Senha Opcional */}
                   <div>
                     <label htmlFor="modal-senha" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.78rem', fontWeight: 800, color: '#0348d4', marginBottom: '4px' }}>
                       <Lock size={12} /> Senha para Acesso ao App (Opcional)
@@ -593,7 +800,6 @@ export default function LandingPage() {
                     />
                   </div>
 
-                  {/* LGPD Checkbox */}
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
                     <input
                       id="modal-lgpd"
@@ -606,7 +812,6 @@ export default function LandingPage() {
                     </label>
                   </div>
 
-                  {/* Botão Cadastrar */}
                   <button
                     type="submit"
                     disabled={submitting}
@@ -616,7 +821,7 @@ export default function LandingPage() {
                       padding: '0.9rem',
                       borderRadius: '12px',
                       border: 'none',
-                      backgroundColor: '#ffd600',
+                      backgroundColor: '#ccf600',
                       color: '#0348d4',
                       fontSize: '1rem',
                       fontWeight: 900,
@@ -625,7 +830,7 @@ export default function LandingPage() {
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: '8px',
-                      boxShadow: '0 8px 20px rgba(255, 214, 0, 0.4)'
+                      boxShadow: '0 8px 20px rgba(204, 246, 0, 0.4)'
                     }}
                   >
                     {submitting ? (
@@ -642,7 +847,6 @@ export default function LandingPage() {
                 </form>
               </>
             ) : (
-              /* CARD DE CONFIRMAÇÃO E LINK DO WHATSAPP */
               <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
                 <div style={{ width: '60px', height: '60px', borderRadius: '50%', backgroundColor: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <CheckCircle2 size={36} color="#16a34a" />
