@@ -20,12 +20,18 @@ import Feed          from '../pages/painel/Feed';
 import PerfilLider   from '../pages/perfil/PerfilLider';
 import PerfilAdmin   from '../pages/painel/PerfilAdmin';
 import PerfisAcesso from '../pages/admin/PerfisAcesso';
+import LandingPage from '../pages/LandingPage';
 
 export default function AppRoutes() {
   const { isAuthenticated, user, primeiroAcesso } = useAuth();
 
   return (
     <Routes>
+      {/* Rotas públicas da Landing Page (Squeeze Page WhatsApp) */}
+      <Route path="/lp" element={<LandingPage />} />
+      <Route path="/time" element={<LandingPage />} />
+      <Route path="/participar" element={<LandingPage />} />
+
       {/* Rota de login — redireciona se já autenticado */}
       <Route
         path="/login"

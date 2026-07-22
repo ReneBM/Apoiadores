@@ -341,8 +341,11 @@ export default function Login() {
 
           </form>
 
-          <p className="login-footer">
-            Sistema protegido · Dados sob LGPD
+          <p className="login-footer" style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center' }}>
+            <span>Sistema protegido · Dados sob LGPD</span>
+            <a href="/lp" style={{ color: '#0054A6', fontWeight: 700, textDecoration: 'none', fontSize: '0.8rem' }}>
+              🟢 Faça parte do Time Styvenson (Entrar no WhatsApp)
+            </a>
           </p>
         </div>
       </div>
