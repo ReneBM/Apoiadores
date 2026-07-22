@@ -246,7 +246,7 @@ export default function LandingPage() {
 
             {/* Foto do Senador Styveson Valim em alta resolução no Hero */}
             <img 
-              src="/senador/foto5.png" 
+              src="/senador/foto5.png?v=2" 
               alt="Senador Styveson Valim"
               style={{
                 maxHeight: '500px',
@@ -422,7 +422,7 @@ export default function LandingPage() {
           {/* FOTO DO SENADOR DENTRO DO SEGUNDO BANNER (COMO NO MODELO DE REFERÊNCIA) */}
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', position: 'relative', zIndex: 2, height: '100%' }}>
             <img 
-              src="/senador/foto4.png" 
+              src="/senador/foto4.png?v=2" 
               alt="Styvenson Valim nas redes"
               style={{
                 maxHeight: '320px',
