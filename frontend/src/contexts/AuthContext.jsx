@@ -14,6 +14,28 @@ export function AuthProvider({ children }) {
   });
   const [loading, setLoading] = useState(false);
 
+  // Busca dados e permissões atualizados do servidor ao carregar
+  const fetchCurrentUser = useCallback(async () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+    try {
+      const { data } = await api.get('/auth/me');
+      if (data) {
+        setUser((prev) => {
+          const updated = { ...prev, ...data };
+          localStorage.setItem('user', JSON.stringify(updated));
+          return updated;
+        });
+      }
+    } catch (err) {
+      // Interceptor trata erros de autenticação se token estiver inválido
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCurrentUser();
+  }, [fetchCurrentUser]);
+
   // Escuta o evento de logout disparado pelo interceptor Axios
   const handleForceLogout = useCallback(() => {
     setUser(null);

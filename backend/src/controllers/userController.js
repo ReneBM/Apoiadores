@@ -318,7 +318,12 @@ const update = async (req, res, next) => {
       await client.query('DELETE FROM refresh_tokens WHERE user_id = $1', [id]);
     }
 
-    // Atualiza perfil do multiplicador se existir
+    // Se trocou o perfil, revoga refresh tokens do usuário para atualizar a sessão
+    if (perfil_id !== undefined && perfil_id !== existing.perfil_id) {
+      await client.query('DELETE FROM refresh_tokens WHERE user_id = $1', [id]);
+    }
+
+    // Atualiza perfil do multiplicador se existir, ou cria se virou multiplicador
     const mResult = await client.query(
       'SELECT id FROM multiplicadores WHERE user_id = $1',
       [id]
@@ -338,6 +343,13 @@ const update = async (req, res, next) => {
          meta_apoiadores = $4
          WHERE user_id = $5`,
         [municipioVal, telefoneVal, coordenadorVal, metaVal, id]
+      );
+    } else if (roleVal === 'multiplicador') {
+      const multId = uuidv4();
+      await client.query(
+        `INSERT INTO multiplicadores (id, user_id, coordenador_id, municipio, telefone, meta_apoiadores)
+         VALUES ($1, $2, $3, $4, $5, $6)`,
+        [multId, id, coordenador_id || null, municipio || null, telefone || null, meta_apoiadores || 0]
       );
     }
 

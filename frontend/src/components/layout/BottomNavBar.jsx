@@ -20,7 +20,7 @@ export default function BottomNavBar() {
   }
 
   // Feed (Notícias)
-  if (hasPermission('Notícias', 'visualizar')) {
+  if (hasPermission('Feed de Notícias', 'visualizar') || hasPermission('Notícias', 'visualizar')) {
     links.push({ to: '/feed', icon: MessageSquare, label: 'Feed' });
   }
 
