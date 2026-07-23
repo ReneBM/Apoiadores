@@ -23,7 +23,7 @@ const formatPhone = (value) => {
     .replace(/(-\d{4})\d+?$/, '$1');
 };
 
-export default function CadastroApoiador() {
+export default function CadastroApoiador({ isModal = false, onClose }) {
   const [searchParams] = useSearchParams();
   const ref = searchParams.get('ref') || '';
 
@@ -215,20 +215,22 @@ export default function CadastroApoiador() {
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
       .signup-page {
-        position: absolute;
-        inset: 0;
+        position: ${isModal ? 'relative' : 'absolute'};
+        inset: ${isModal ? 'auto' : '0'};
+        min-height: ${isModal ? 'auto' : '100vh'};
         overflow-y: auto;
-        background: url('/page-bg.jpg') no-repeat center center fixed;
+        background: ${isModal ? 'transparent' : "url('/page-bg.jpg') no-repeat center center fixed"};
         background-size: cover;
         display: flex;
         align-items: flex-start;
         justify-content: center;
-        padding: 2rem 1rem;
+        padding: ${isModal ? '0' : '2rem 1rem'};
         font-family: 'Inter', -apple-system, sans-serif;
         box-sizing: border-box;
       }
 
       .signup-overlay {
+        display: ${isModal ? 'none' : 'block'};
         position: fixed;
         inset: 0;
         background: rgba(0, 20, 60, 0.15);
@@ -240,14 +242,14 @@ export default function CadastroApoiador() {
         z-index: 1;
         width: 100%;
         max-width: 600px;
-        background: rgba(255, 255, 255, 0.92);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-radius: 24px;
-        padding: 3rem 2.5rem;
-        box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.45);
-        border: 1px solid rgba(255, 255, 255, 0.6);
-        animation: fadeUp 0.6s ease-out forwards;
+        background: ${isModal ? '#ffffff' : 'rgba(255, 255, 255, 0.92)'};
+        backdrop-filter: ${isModal ? 'none' : 'blur(20px)'};
+        -webkit-backdrop-filter: ${isModal ? 'none' : 'blur(20px)'};
+        border-radius: ${isModal ? '0' : '24px'};
+        padding: ${isModal ? '2rem 1.5rem' : '3rem 2.5rem'};
+        box-shadow: ${isModal ? 'none' : '0 25px 60px -10px rgba(0, 0, 0, 0.45)'};
+        border: ${isModal ? 'none' : '1px solid rgba(255, 255, 255, 0.6)'};
+        animation: ${isModal ? 'none' : 'fadeUp 0.6s ease-out forwards'};
       }
 
       @keyframes fadeUp {
@@ -387,6 +389,12 @@ export default function CadastroApoiador() {
         animation: spin 0.8s linear infinite;
       }
       @keyframes spin { to { transform: rotate(360deg); } }
+
+      @media (max-width: 600px) {
+        .signup-card {
+          padding: ${isModal ? '1.5rem 1rem' : '2rem 1.25rem'};
+        }
+      }
     `}</style>
   );
 
@@ -421,11 +429,24 @@ export default function CadastroApoiador() {
       <div className="signup-page">
         <div className="signup-overlay" />
         <div className="signup-card">
+          {isModal && onClose && (
+            <button 
+              onClick={onClose}
+              style={{
+                position: 'absolute', top: '15px', right: '15px', zIndex: 10,
+                background: 'rgba(0,0,0,0.05)', border: 'none', borderRadius: '50%',
+                width: '36px', height: '36px', fontSize: '20px', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#333'
+              }}
+            >
+              ×
+            </button>
+          )}
           <div className="login-header" style={{ textAlign: 'center' }}>
             <div style={{
               height: '115px',
               overflow: 'hidden',
-              margin: '-50px auto 0.5rem',
+              margin: isModal ? '0 auto 0.5rem' : '-50px auto 0.5rem',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'flex-start'

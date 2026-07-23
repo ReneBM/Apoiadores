@@ -4,8 +4,9 @@ import api, { getMediaUrl } from '../api/axios';
 import toast from 'react-hot-toast';
 import { 
   MessageSquare, CheckCircle2, ArrowRight, Loader2,
-  X, Lock, UserCheck, UserPlus, Smartphone, Bell, Share2
+  X, Lock, UserCheck, UserPlus, Smartphone, Bell, Share2, Users
 } from 'lucide-react';
+import CadastroApoiador from './CadastroApoiador';
 
 const formatPhone = (value) => {
   if (!value) return '';
@@ -111,9 +112,9 @@ export default function LandingPage() {
         overflowX: 'hidden'
       }}
     >
-      {/* IMPORTAÇÃO DE FONTES, MEDIA QUERIES E RESPONSIVIDADE CORRETA */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700;800;900&family=Outfit:wght@800;900&display=swap');
+        @import url('https://fonts.cdnfonts.com/css/gilroy-bold');
         
         @keyframes fadeInLeftNoticeable {
           0% {
@@ -139,13 +140,39 @@ export default function LandingPage() {
           }
         }
 
-        /* ESTILO DOS BOTÕES */
+        @keyframes fadeInDownBar {
+          0% {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes wowModalOverlay {
+          from { opacity: 0; backdrop-filter: blur(0px); }
+          to { opacity: 1; backdrop-filter: blur(8px); }
+        }
+
+        @keyframes wowModalContent {
+          0% { 
+            opacity: 0; 
+            transform: scale(0.8) translateY(60px);
+          }
+          100% { 
+            opacity: 1; 
+            transform: scale(1) translateY(0);
+          }
+        }
+
         .btn-glow-pulse {
-          min-width: 200px;
-          min-height: 52px;
+          min-width: 160px;
+          min-height: 40px;
           display: inline-flex;
           font-family: 'Oswald', sans-serif;
-          font-size: 1.05rem;
+          font-size: 0.88rem;
           align-items: center;
           justify-content: center;
           text-transform: uppercase;
@@ -161,7 +188,7 @@ export default function LandingPage() {
           cursor: pointer;
           outline: none;
           position: relative;
-          padding: 10px 24px;
+          padding: 8px 18px;
           z-index: 1;
           white-space: nowrap;
         }
@@ -229,10 +256,10 @@ export default function LandingPage() {
         }
 
         .btn-glass-secondary {
-          min-height: 52px;
+          min-height: 40px;
           display: inline-flex;
           font-family: 'Oswald', sans-serif;
-          font-size: 1.05rem;
+          font-size: 0.88rem;
           align-items: center;
           justify-content: center;
           text-transform: uppercase;
@@ -267,8 +294,11 @@ export default function LandingPage() {
           box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2) !important;
         }
 
-        /* ── MOBILE MEDIA QUERIES (GARANTE LOGO NO TOPO ABSOLUTO DO MOBILE) ── */
-        @media (max-width: 991px) {
+        .mobile-text {
+          display: none;
+        }
+
+        @media (max-width: 1024px) {
           .top-header-mobile {
             display: flex !important;
             justify-content: center !important;
@@ -278,33 +308,66 @@ export default function LandingPage() {
             text-align: center !important;
           }
           
+          .desktop-text {
+            display: none !important;
+          }
+          .mobile-text {
+            display: inline-block !important;
+          }
+          
+          section {
+            height: auto !important;
+            min-height: 100vh;
+            overflow: visible !important;
+          }
+
+          .desktop-header-row {
+            order: 3 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            padding: 1rem 0 !important;
+            align-items: center !important;
+            gap: 1rem !important;
+          }
+          
           .desktop-logo {
             display: none !important;
           }
 
           .hero-grid {
+            order: 1 !important;
             display: flex !important;
             flex-direction: column !important;
-            gap: 0.5rem !important;
-            padding-top: 0 !important;
+            gap: 0 !important;
+            padding-top: 2rem !important;
             align-items: center !important;
           }
 
-          /* 1. Imagem do Senador subida para ficar próxima da logo */
           .left-photo-col {
             order: 1 !important;
-            margin-top: -25px !important;
+            margin-top: 0 !important;
+            margin-bottom: -20px !important;
             margin-left: 0 !important;
             justify-content: center !important;
+            width: 100% !important;
+          }
+          .left-photo-col > div {
+            width: 100%;
+            display: flex;
+            justify-content: center;
           }
           .left-photo-col img {
-            max-height: 400px !important;
+            height: 350px !important;
+            max-height: 50vh !important;
+            width: auto !important;
+            max-width: 100% !important;
+            object-fit: contain !important;
           }
 
-          /* 2. Headline subida sobrepondo a base da imagem do Senador (rebaixada ligeiramente) */
           .right-content-col {
             order: 2 !important;
-            margin-top: -75px !important;
+            margin-top: auto !important;
+            padding-top: 0 !important;
             align-items: center !important;
             text-align: center !important;
             width: 100% !important;
@@ -312,13 +375,9 @@ export default function LandingPage() {
             z-index: 10 !important;
           }
 
-          .headline-container {
+          .right-content-col h1 {
             text-align: center !important;
-            align-items: center !important;
-          }
-          .headline-container h1,
-          .headline-container h2 {
-            text-align: center !important;
+            font-size: clamp(2.5rem, 8vw, 3rem) !important;
           }
 
           .buttons-container {
@@ -326,7 +385,7 @@ export default function LandingPage() {
             justify-content: center !important;
             align-items: center !important;
             width: 100% !important;
-            margin-top: 0.75rem !important;
+            margin-top: 0.5rem !important;
             gap: 0.85rem !important;
           }
 
@@ -336,12 +395,39 @@ export default function LandingPage() {
           }
 
           .benefit-cards-container {
-            margin-top: 2rem !important;
+            order: 4 !important;
+            margin-top: 1rem !important;
             width: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
           }
         }
 
-        @media (min-width: 992px) {
+        /* ── TABLET E NOTEBOOKS PEQUENOS ── */
+        @media (max-width: 1200px) and (min-width: 1025px) {
+          .hero-grid {
+            grid-template-columns: 45% 1fr !important;
+            gap: 1rem !important;
+          }
+          .right-content-col h1 {
+            font-size: clamp(3rem, 5.5vw, 4.5rem) !important;
+          }
+          .left-photo-col {
+            margin-left: -20px !important;
+          }
+        }
+
+        @media (max-width: 1024px) and (min-width: 768px) {
+          .left-photo-col img {
+            height: 480px !important;
+            max-height: 55vh !important;
+          }
+          .right-content-col h1 {
+            font-size: 3.5rem !important;
+          }
+        }
+
+        @media (min-width: 1025px) {
           .top-header-mobile {
             display: none !important;
           }
@@ -354,24 +440,21 @@ export default function LandingPage() {
           }
 
           .top-header-mobile img {
-            height: 50px !important;
+            height: 28px !important;
           }
 
           .left-photo-col img {
-            max-height: 340px !important;
+            height: 300px !important;
           }
         }
       `}</style>
 
-
-
-      {/* HEADER EXCLUSIVO DO MOBILE (EXIBE A LOGO NO TOPO ABSOLUTO DO CELULAR) */}
-      <header className="top-header-mobile" style={{ position: 'relative', zIndex: 10 }}>
+      <header className="top-header-mobile" style={{ position: 'relative', zIndex: 10, display: 'flex', justifyContent: 'center', paddingTop: '1.5rem' }}>
         <img 
-          src="/logo_sv_2025.svg" 
-          alt="Logo SV Styvenson 2025"
+          src="/logo_time_sv.png" 
+          alt="Logo Time SV"
           style={{
-            height: '65px',
+            height: '36px',
             width: 'auto',
             maxWidth: '90%',
             objectFit: 'contain',
@@ -383,524 +466,156 @@ export default function LandingPage() {
         />
       </header>
 
-      {/* SEÇÃO PRINCIPAL DA LANDING PAGE */}
       <section style={{ 
         maxWidth: '1280px', 
-        margin: '0 auto', 
-        padding: '2rem 1.5rem 1rem', 
+        margin: '0 auto',
+        padding: '0 1.5rem',
         position: 'relative', 
-        zIndex: 2
+        zIndex: 2,
+        minHeight: '100vh',
+        height: 'auto',
+        display: 'flex',
+        flexDirection: 'column'
       }}>
-        
-        {/* GRID HERO RESPONSIVO */}
-        <div 
-          className="hero-grid"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'auto 1fr',
-            gap: '2.5rem',
-            alignItems: 'start'
-          }}
-        >
+
+        <div className="desktop-header-row" style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr auto 1fr',
+          alignItems: 'center',
+          width: '100%',
+          padding: '1.2rem 0 0.8rem 0',
+          flexShrink: 0,
+          opacity: 0,
+          animation: 'fadeInDownBar 0.8s ease-out forwards'
+        }}>
+          <div className="spacer-col"></div>
           
-          {/* FOTO DO SENADOR (NO MOBILE FICA ABAIXO DO HEADER DE LOGO E ACIMA DA FRASE) */}
-          <div 
-            className="left-photo-col"
-            style={{ 
-              position: 'relative', 
-              display: 'flex', 
-              justify: 'flex-start', 
-              alignItems: 'flex-start',
-              marginTop: '-75px',
-              marginLeft: '-40px',
-              animation: 'fadeInLeftNoticeable 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards'
-            }}
-          >
-            <div style={{
-              position: 'relative',
-              zIndex: 2,
-              WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 72%, rgba(0,0,0,0) 98%)',
-              maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 72%, rgba(0,0,0,0) 98%)'
-            }}>
-              <img 
-                src="/senador/styveson_capacete_exato_v2.png" 
-                alt="Senador Styveson Valim"
-                style={{
-                  maxWidth: '100%',
-                  maxHeight: '740px',
-                  width: 'auto',
-                  height: 'auto',
-                  objectFit: 'contain'
-                }}
-              />
-            </div>
+          <div className="buttons-container" style={{ display: 'flex', gap: '0.85rem', alignItems: 'center', justifyContent: 'center' }}>
+            <button onClick={() => window.open('/login', '_blank')} className="btn-glass-secondary">
+              <UserCheck size={16} color="#ffffff" style={{ marginRight: '6px' }} />
+              <span>Já sou Apoiador</span>
+            </button>
+            <button onClick={() => setShowModal(true)} className="btn-glow-pulse">
+              <UserPlus size={16} color="#0348d4" style={{ marginRight: '6px', position: 'relative', zIndex: 2 }} />
+              <span style={{ position: 'relative', zIndex: 2 }}>Seja Apoiador</span>
+              <ArrowRight size={15} color="#0348d4" strokeWidth={3} style={{ marginLeft: '6px', position: 'relative', zIndex: 2 }} />
+            </button>
           </div>
 
-          {/* COLUNA DA DIREITA: LOGO (DESKTOP) + HEADLINE + BOTÕES */}
-          <div 
-            className="right-content-col"
-            style={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              gap: '1.5rem',
-              alignItems: 'flex-end',
-              width: '100%',
-              marginTop: '-50px',
-              paddingTop: '0'
-            }}
-          >
-            
-            {/* LOGO DESKTOP */}
-            <div 
-              className="desktop-logo"
-              style={{
-                marginTop: '32px',
-                animation: 'fadeInLeftNoticeable 1s ease-out forwards'
-              }}
-            >
-              <img 
-                src="/logo_sv_2025.svg" 
-                alt="Logo SV Styvenson 2025"
-                style={{
-                  height: '75px',
-                  width: 'auto',
-                  maxWidth: '100%',
-                  objectFit: 'contain',
-                  filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.2))'
-                }}
-                onError={(e) => {
-                  e.currentTarget.src = '/logo_sv_2025.png';
-                }}
-              />
-            </div>
-
-            {/* HEADLINE (NO MOBILE FICA LOGO ABAIXO DA IMAGEM DO SENADOR) */}
-            <div 
-              className="headline-container"
-              style={{
-                animation: 'fadeInUpHeadline 1s ease-out 0.2s forwards',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.75rem',
-                textAlign: 'right',
-                alignItems: 'inherit'
-              }}
-            >
-              
-              <h1 style={{
-                fontFamily: "'Oswald', 'Outfit', sans-serif",
-                fontSize: 'clamp(2.2rem, 5.2vw, 4.2rem)',
-                fontWeight: 900,
-                lineHeight: 0.95,
-                textTransform: 'uppercase',
-                letterSpacing: '-0.5px',
-                margin: 0,
-                color: '#ffffff',
-                textShadow: '0 4px 20px rgba(0,0,0,0.3)'
-              }}>
-                Sua voz pode <br />
-                multiplicar mudança.
-              </h1>
-
-              <h2 style={{
-                fontFamily: "'Oswald', 'Outfit', sans-serif",
-                fontSize: 'clamp(1.25rem, 2.8vw, 2.3rem)',
-                fontWeight: 700,
-                lineHeight: 1.25,
-                textTransform: 'uppercase',
-                letterSpacing: '0px',
-                margin: 0,
-                color: '#ccf600',
-                textShadow: '0 2px 10px rgba(0,0,0,0.2)'
-              }}>
-                Seja um <span style={{ color: '#ffd600', fontWeight: 900, fontSize: '1.15em' }}>APOIADOR</span> <br />
-                do Capitão.
-              </h2>
-
-            </div>
-
-            {/* BOTÕES COM EFEITO CSS PULSANTE (EXATAMENTE LADO A LADO NA MESMA LINHA) */}
-            <div 
-              className="buttons-container"
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                flexWrap: 'nowrap',
-                gap: '1rem',
-                justify: 'flex-end',
-                alignItems: 'center',
-                marginTop: '-15px',
-                animation: 'fadeInUpHeadline 1s ease-out 0.4s forwards'
-              }}
-            >
-              
-              {/* Botão 1: Já sou Apoiador */}
-              <button
-                onClick={() => window.location.href = '/login'}
-                className="btn-glass-secondary"
-              >
-                <UserCheck size={20} color="#ffffff" style={{ marginRight: '8px' }} />
-                <span>Já sou Apoiador</span>
-              </button>
-
-              {/* Botão 2: Seja Apoiador */}
-              <button
-                onClick={() => setShowModal(true)}
-                className="btn-glow-pulse"
-              >
-                <UserPlus size={20} color="#0348d4" style={{ marginRight: '8px', position: 'relative', zIndex: 2 }} />
-                <span style={{ position: 'relative', zIndex: 2 }}>Seja Apoiador</span>
-                <ArrowRight size={18} color="#0348d4" strokeWidth={3} style={{ marginLeft: '8px', position: 'relative', zIndex: 2 }} />
-              </button>
-
-            </div>
-
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="desktop-logo">
+            <img src="/logo_time_sv.png" alt="Logo Time SV"
+              style={{ height: '36px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))' }}
+            />
           </div>
-
         </div>
 
-        {/* 3 CARDS SEGUIDOS DE BENEFÍCIOS */}
+        <div className="hero-grid" style={{
+          display: 'grid',
+          gridTemplateColumns: '52% 1fr',
+          flex: 1,
+          alignItems: 'end'
+        }}>
+          <div className="left-photo-col" style={{ 
+            display: 'flex', alignItems: 'flex-end',
+            marginLeft: '-50px', height: '100%', overflow: 'visible',
+            opacity: 0, animation: 'fadeInLeftNoticeable 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards'
+          }}>
+            <div style={{
+              WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 97%)',
+              maskImage: 'linear-gradient(to bottom, black 60%, transparent 97%)'
+            }}>
+              <img 
+                src="/senador/styveson_v3_nobg.png" 
+                alt="Senador Styveson Valim"
+                style={{ height: 'auto', maxHeight: '88vh', width: 'auto', maxWidth: '100%', objectFit: 'contain', display: 'block' }}
+              />
+            </div>
+          </div>
+
+          <div className="right-content-col" style={{ 
+            display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
+            alignItems: 'flex-end', alignSelf: 'flex-start', paddingTop: '8rem', paddingBottom: '1rem',
+            opacity: 0, animation: 'fadeInUpHeadline 1s ease-out 0.3s forwards'
+          }}>
+            <h1 style={{
+              fontFamily: "'Gilroy', 'Oswald', sans-serif",
+              fontSize: 'clamp(3.5rem, 6.5vw, 6.5rem)',
+              fontWeight: 800, fontStyle: 'italic',
+              lineHeight: 0.9, textTransform: 'uppercase',
+              letterSpacing: '-1px', margin: 0,
+              color: '#ffffff',
+              textShadow: '0 4px 24px rgba(0,0,0,0.5)',
+              textAlign: 'right'
+            }}>
+              <span className="desktop-text">#VEM PRO <br />NOSSO TIME</span>
+              <span className="mobile-text">#VEM PRO NOSSO <br />TIME</span>
+            </h1>
+          </div>
+        </div>
+
         <div 
           className="benefit-cards-container"
           style={{ 
             display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
-            gap: '1.25rem',
-            marginTop: '-210px',
+            gridTemplateColumns: 'repeat(3, 1fr)', 
+            gap: '1rem',
+            flexShrink: 0,
+            marginTop: '-100px',
             paddingBottom: '3rem',
             position: 'relative',
-            zIndex: 10,
-            animation: 'fadeInUpHeadline 1s ease-out 0.6s forwards'
+            zIndex: 10
           }}
         >
-          
-          {/* Card 1: Aplicativo Oficial */}
-          <div 
-            className="benefit-card-hover"
-            style={{
-              backgroundColor: '#ffffff',
-              color: '#0f172a',
-              borderRadius: '24px',
-              padding: '1.5rem 1.75rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1.25rem',
-              boxShadow: '0 12px 30px rgba(0,0,0,0.12)'
-            }}
-          >
-            <div style={{
-              width: '52px', height: '52px', borderRadius: '16px',
-              backgroundColor: '#0348d4',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              flexShrink: 0,
-              boxShadow: '0 8px 18px rgba(3, 72, 212, 0.3)'
-            }}>
-              <Smartphone size={26} color="#ffffff" />
+          <div className="benefit-card-hover" style={{ backgroundColor: '#ffffff', borderRadius: '20px', padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', boxShadow: '0 12px 30px rgba(0,0,0,0.12)', opacity: 0, animation: 'fadeInUpHeadline 0.8s ease-out 0.9s forwards' }}>
+            <div style={{ width: '44px', height: '44px', borderRadius: '14px', backgroundColor: '#0348d4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 8px 18px rgba(3, 72, 212, 0.3)' }}>
+              <Smartphone size={22} color="#ffffff" />
             </div>
             <div>
-              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
-                Aplicativo Exclusivo
-              </h3>
-              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.84rem', color: '#475569', margin: 0, lineHeight: 1.4, fontWeight: 500 }}>
-                Acesse o app oficial do mandato, acompanhe ações e vote em enquetes.
-              </p>
+              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '1rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2px 0', textTransform: 'uppercase' }}>Aplicativo exclusivo</h3>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.78rem', color: '#475569', margin: 0, lineHeight: 1.4, fontWeight: 500 }}>Receba novidades, materiais e notificações em primeira mão.</p>
             </div>
           </div>
 
-          {/* Card 2: Receber Notícias em Primeira Mão */}
-          <div 
-            className="benefit-card-hover"
-            style={{
-              backgroundColor: '#ffffff',
-              color: '#0f172a',
-              borderRadius: '24px',
-              padding: '1.5rem 1.75rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1.25rem',
-              boxShadow: '0 12px 30px rgba(0,0,0,0.12)'
-            }}
-          >
-            <div style={{
-              width: '52px', height: '52px', borderRadius: '16px',
-              backgroundColor: '#0348d4',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              flexShrink: 0,
-              boxShadow: '0 8px 18px rgba(3, 72, 212, 0.3)'
-            }}>
-              <Bell size={26} color="#ffffff" />
+          <div className="benefit-card-hover" style={{ backgroundColor: '#ffffff', borderRadius: '20px', padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', boxShadow: '0 12px 30px rgba(0,0,0,0.12)', opacity: 0, animation: 'fadeInUpHeadline 0.8s ease-out 1.1s forwards' }}>
+            <div style={{ width: '44px', height: '44px', borderRadius: '14px', backgroundColor: '#25D366', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 8px 18px rgba(37, 211, 102, 0.4)' }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill="#ffffff" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.461c-1.805 0-3.57-.485-5.114-1.402l-.366-.218-3.799.996 1.014-3.704-.239-.38c-1.008-1.603-1.541-3.468-1.54-5.378 0-5.586 4.545-10.13 10.133-10.13 2.705 0 5.247 1.054 7.159 2.968 1.912 1.913 2.965 4.457 2.964 7.163 0 5.588-4.546 10.133-10.137 10.133m0-22.016c-6.55 0-11.876 5.325-11.878 11.876 0 2.094.546 4.14 1.583 5.937l-1.68 6.136 6.279-1.647c1.733.944 3.69 1.442 5.69 1.444h.005c6.549 0 11.877-5.326 11.879-11.877 0-3.174-1.236-6.158-3.481-8.404-2.245-2.247-5.23-3.483-8.402-3.483"/></svg>
             </div>
             <div>
-              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
-                Notícias em Primeira Mão
-              </h3>
-              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.84rem', color: '#475569', margin: 0, lineHeight: 1.4, fontWeight: 500 }}>
-                Receba novidades oficiais, conquistas e avisos no WhatsApp da sua cidade.
-              </p>
+              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '1rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2px 0', textTransform: 'uppercase' }}>Grupo no WhatsApp</h3>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.78rem', color: '#475569', margin: 0, lineHeight: 1.4, fontWeight: 500 }}>Entre no canal oficial para quem acredita no RN.</p>
             </div>
           </div>
 
-          {/* Card 3: Ajude a Compartilhar Conteúdos */}
-          <div 
-            className="benefit-card-hover"
-            style={{
-              backgroundColor: '#ffffff',
-              color: '#0f172a',
-              borderRadius: '24px',
-              padding: '1.5rem 1.75rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1.25rem',
-              boxShadow: '0 12px 30px rgba(0,0,0,0.12)'
-            }}
-          >
-            <div style={{
-              width: '52px', height: '52px', borderRadius: '16px',
-              backgroundColor: '#0348d4',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              flexShrink: 0,
-              boxShadow: '0 8px 18px rgba(3, 72, 212, 0.3)'
-            }}>
-              <Share2 size={26} color="#ffffff" />
+          <div className="benefit-card-hover" style={{ backgroundColor: '#ffffff', borderRadius: '20px', padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', boxShadow: '0 12px 30px rgba(0,0,0,0.12)', opacity: 0, animation: 'fadeInUpHeadline 0.8s ease-out 1.3s forwards' }}>
+            <div style={{ width: '44px', height: '44px', borderRadius: '14px', backgroundColor: '#0348d4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 8px 18px rgba(3, 72, 212, 0.3)' }}>
+              <Users size={22} color="#ffffff" />
             </div>
             <div>
-              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
-                Compartilhe Conteúdos
-              </h3>
-              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.84rem', color: '#475569', margin: 0, lineHeight: 1.4, fontWeight: 500 }}>
-                Sua voz fortalece o mandato. Espalhe os resultados para todo o RN.
-              </p>
+              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '1rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2px 0', textTransform: 'uppercase' }}>Monte seu time</h3>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.78rem', color: '#475569', margin: 0, lineHeight: 1.4, fontWeight: 500 }}>Convide amigos, monte seu time e ajude o nosso RN.</p>
             </div>
           </div>
-
         </div>
 
       </section>
 
-      {/* MODAL / CAPTURA DE LEAD */}
       {showModal && (
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 100,
-          backgroundColor: 'rgba(0, 20, 50, 0.8)',
-          backdropFilter: 'blur(8px)',
+        <div className="modal-overlay" onClick={() => setShowModal(false)} style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0,20,60,0.85)', zIndex: 9999,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
+          backdropFilter: 'blur(8px)',
+          animation: 'wowModalOverlay 0.4s ease-out forwards',
           padding: '1rem'
         }}>
-          <div style={{
-            backgroundColor: '#ffffff',
-            color: '#0f172a',
-            borderRadius: '28px',
-            maxWidth: '480px',
-            width: '100%',
-            padding: '2rem 1.5rem',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+          <div className="modal-content" onClick={e => e.stopPropagation()} style={{
+            background: '#ffffff', borderRadius: '24px',
+            maxWidth: '650px', width: '100%', maxHeight: '95vh', overflowY: 'auto',
+            boxShadow: '0 25px 60px -10px rgba(0, 0, 0, 0.45)',
             position: 'relative',
-            maxHeight: '90vh',
-            overflowY: 'auto'
+            animation: 'wowModalContent 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards'
           }}>
-            
-            <button
-              type="button"
-              onClick={() => { setShowModal(false); setSubmitted(false); }}
-              style={{
-                position: 'absolute', top: '16px', right: '16px',
-                border: 'none', background: '#f1f5f9', borderRadius: '50%',
-                width: '32px', height: '32px', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center'
-              }}
-            >
-              <X size={18} color="#64748b" />
-            </button>
-
-            {!submitted ? (
-              <>
-                <div style={{ marginBottom: '1rem' }}>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#0348d4', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                    Mandato Styvenson Valentim
-                  </span>
-                  <h2 style={{ fontSize: '1.3rem', fontWeight: 900, color: '#0f172a', margin: '2px 0 2px 0' }}>
-                    Seja um Apoiador do Capitão
-                  </h2>
-                  <p style={{ fontSize: '0.78rem', color: '#64748b', margin: 0 }}>
-                    Cadastre-se para entrar no grupo de WhatsApp da sua cidade
-                  </p>
-                </div>
-
-                <form onSubmit={handleSubmit(onSubmit)} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
-                  
-                  <div>
-                    <label htmlFor="modal-nome" style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: '#334155', textTransform: 'uppercase', marginBottom: '4px' }}>
-                      Seu Nome Completo *
-                    </label>
-                    <input
-                      id="modal-nome"
-                      type="text"
-                      autoCapitalize="words"
-                      placeholder="Digite seu nome completo"
-                      className={`form-input ${errors.nome ? 'border-red-500' : ''}`}
-                      style={{ backgroundColor: '#f8fafc', color: '#0f172a', border: '1.5px solid #cbd5e1', borderRadius: '10px', padding: '0.7rem' }}
-                      {...register('nome', { required: 'Digite seu nome.', minLength: { value: 3, message: 'Digite seu nome completo.' } })}
-                    />
-                    {errors.nome && <p className="form-error">{errors.nome.message}</p>}
-                  </div>
-
-                  <div>
-                    <label htmlFor="modal-telefone" style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: '#334155', textTransform: 'uppercase', marginBottom: '4px' }}>
-                      WhatsApp (com DDD) *
-                    </label>
-                    <input
-                      id="modal-telefone"
-                      type="tel"
-                      placeholder="(84) 9 9999-9999"
-                      maxLength={15}
-                      className={`form-input ${errors.telefone ? 'border-red-500' : ''}`}
-                      style={{ backgroundColor: '#f8fafc', color: '#0f172a', border: '1.5px solid #cbd5e1', borderRadius: '10px', padding: '0.7rem' }}
-                      value={telefoneValue || ''}
-                      onChange={(e) => setValue('telefone', formatPhone(e.target.value), { shouldDirty: true })}
-                      {...register('telefone', { required: 'WhatsApp é obrigatório.', minLength: { value: 14, message: 'Digite o WhatsApp com DDD.' } })}
-                    />
-                    {errors.telefone && <p className="form-error">{errors.telefone.message}</p>}
-                  </div>
-
-                  <div>
-                    <label htmlFor="modal-cidade" style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: '#334155', textTransform: 'uppercase', marginBottom: '4px' }}>
-                      Sua Cidade no RN *
-                    </label>
-                    <select
-                      id="modal-cidade"
-                      className={`form-input ${errors.cidade ? 'border-red-500' : ''}`}
-                      style={{ backgroundColor: '#fff', color: '#0f172a', border: '1.5px solid #cbd5e1', borderRadius: '10px', padding: '0.7rem' }}
-                      {...register('cidade', { required: 'Selecione sua cidade.' })}
-                    >
-                      <option value="">Selecione a cidade no RN...</option>
-                      {cidades.map(c => (
-                        <option key={c} value={c}>{c}</option>
-                      ))}
-                    </select>
-                    {errors.cidade && <p className="form-error">{errors.cidade.message}</p>}
-                  </div>
-
-                  <div>
-                    <label htmlFor="modal-bairro" style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: '#334155', textTransform: 'uppercase', marginBottom: '4px' }}>
-                      Bairro (opcional)
-                    </label>
-                    <input
-                      id="modal-bairro"
-                      type="text"
-                      autoCapitalize="words"
-                      placeholder="Ex: Centro"
-                      className="form-input"
-                      style={{ backgroundColor: '#f8fafc', color: '#0f172a', border: '1.5px solid #cbd5e1', borderRadius: '10px', padding: '0.7rem' }}
-                      {...register('bairro')}
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="modal-senha" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.78rem', fontWeight: 800, color: '#0348d4', marginBottom: '4px' }}>
-                      <Lock size={12} /> Senha para Acesso ao App (Opcional)
-                    </label>
-                    <input
-                      id="modal-senha"
-                      type="password"
-                      placeholder="Crie uma senha de 6 dígitos"
-                      className="form-input"
-                      style={{ backgroundColor: '#f8fafc', color: '#0f172a', border: '1.5px solid #cbd5e1', borderRadius: '10px', padding: '0.6rem 0.7rem' }}
-                      {...register('senha')}
-                    />
-                  </div>
-
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
-                    <input
-                      id="modal-lgpd"
-                      type="checkbox"
-                      style={{ marginTop: '2px', width: '16px', height: '16px', accentColor: '#059669', cursor: 'pointer' }}
-                      {...register('consentimento_lgpd', { required: true })}
-                    />
-                    <label htmlFor="modal-lgpd" style={{ fontSize: '0.7rem', color: '#64748b', lineHeight: 1.3, cursor: 'pointer' }}>
-                      Autorizo o recebimento de mensagens e o tratamento de dados conforme a LGPD.
-                    </label>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    style={{
-                      marginTop: '0.5rem',
-                      width: '100%',
-                      padding: '0.9rem',
-                      borderRadius: '12px',
-                      border: 'none',
-                      backgroundColor: '#ccf600',
-                      color: '#0348d4',
-                      fontSize: '1rem',
-                      fontWeight: 900,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '8px',
-                      boxShadow: '0 8px 20px rgba(204, 246, 0, 0.4)'
-                    }}
-                  >
-                    {submitting ? (
-                      <><Loader2 size={18} className="animate-spin" /> Cadastrando...</>
-                    ) : (
-                      <>
-                        <MessageSquare size={18} />
-                        QUERO ENTRAR NO GRUPO
-                        <ArrowRight size={18} />
-                      </>
-                    )}
-                  </button>
-
-                </form>
-              </>
-            ) : (
-              <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                <div style={{ width: '60px', height: '60px', borderRadius: '50%', backgroundColor: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <CheckCircle2 size={36} color="#16a34a" />
-                </div>
-                <h3 style={{ fontSize: '1.3rem', fontWeight: 900, color: '#0f172a', margin: 0 }}>
-                  Cadastro Concluído!
-                </h3>
-                <p style={{ fontSize: '0.88rem', color: '#475569', margin: 0 }}>
-                  Parabéns <strong>{registeredData?.nome}</strong>! Você foi cadastrado na base oficial de {registeredData?.cidade}.
-                </p>
-
-                <a
-                  href={`https://api.whatsapp.com/send?phone=5584999999999&text=Ol%C3%A1!%20Acabei%20de%20me%20cadastrar%20no%20Time%20Styvenson%20em%20${encodeURIComponent(registeredData?.cidade || 'RN')}.%20Quero%20entrar%20no%20grupo!`}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{
-                    width: '100%',
-                    padding: '0.9rem',
-                    borderRadius: '12px',
-                    backgroundColor: '#25D366',
-                    color: '#ffffff',
-                    fontSize: '0.95rem',
-                    fontWeight: 900,
-                    textDecoration: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '8px',
-                    marginTop: '0.5rem'
-                  }}
-                >
-                  <MessageSquare size={20} />
-                  ENTRAR NO GRUPO DO WHATSAPP
-                </a>
-
-                <button
-                  onClick={() => window.location.href = '/login'}
-                  className="btn-secondary"
-                  style={{ width: '100%', padding: '0.65rem', fontSize: '0.82rem' }}
-                >
-                  Fazer Login no Aplicativo
-                </button>
-              </div>
-            )}
-
+            <CadastroApoiador isModal={true} onClose={() => setShowModal(false)} />
           </div>
         </div>
       )}

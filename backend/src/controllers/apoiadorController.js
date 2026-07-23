@@ -84,7 +84,7 @@ const list = async (req, res, next) => {
     params.push(parseInt(limit), offset);
     const { rows } = await db.query(
       `SELECT a.id, a.nome, a.email, a.telefone, a.cidade, a.bairro, a.status,
-              a.consentimento_lgpd, a.created_at, a.tipo,
+              a.consentimento_lgpd, a.created_at, a.tipo, a.origem,
               u.nome AS cadastrado_por_nome,
               m_user.nome AS multiplicador_nome,
               usr_acc.role AS acc_role,
@@ -188,8 +188,8 @@ const create = async (req, res, next) => {
       `INSERT INTO apoiadores
          (id, nome, email, telefone, cidade, bairro, interesse, observacoes,
           consentimento_lgpd, data_consentimento, status, multiplicador_id, cadastrado_por,
-          cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais, senha_inicial)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,now(),$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22)
+          cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais, senha_inicial, origem)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,now(),$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,'Painel Administrativo')
        RETURNING id`,
       [
         id, nome, email || null, telefone || null, cidade, bairro || null,
@@ -430,8 +430,8 @@ const createPublic = async (req, res, next) => {
       `INSERT INTO apoiadores
          (id, nome, email, telefone, cidade, bairro, interesse,
           consentimento_lgpd, data_consentimento, status, multiplicador_id, cadastrado_por,
-          cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais, senha_inicial)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, now(), 'pendente', $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)`,
+          cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais, senha_inicial, origem)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, now(), 'pendente', $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)`,
       [
         id, nome, email || null, telefone || null, cidade, bairro || null,
         interesse || null, consentimento_lgpd, multiplicadorId, cadastradoPor,
@@ -441,7 +441,8 @@ const createPublic = async (req, res, next) => {
         grupo_organizacao ? JSON.stringify(grupo_organizacao) : null,
         temas_interesse ? JSON.stringify(temas_interesse) : null,
         redes_sociais ? JSON.stringify(redes_sociais) : null,
-        senhaHash
+        senhaHash,
+        multiplicadorId ? 'Indicação (Link)' : 'Site / Landing Page'
       ]
     );
 

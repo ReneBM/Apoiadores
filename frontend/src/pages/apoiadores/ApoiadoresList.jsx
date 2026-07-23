@@ -82,6 +82,11 @@ function ApoiadorCard({ apoiador, onEdit }) {
             {apoiador.multiplicador_nome}
           </span>
         )}
+        {apoiador.origem && (
+          <span style={{ ...S.metaItem, fontWeight: 600, background: 'rgba(0,84,166,0.08)', padding: '2px 6px', borderRadius: '4px', fontSize: '0.65rem', textTransform: 'uppercase', color: 'var(--primary)' }}>
+            {apoiador.origem}
+          </span>
+        )}
       </div>
 
       <div style={S.divider}>

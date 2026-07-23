@@ -10,12 +10,13 @@ const pool = new Pool({
 
 async function runMigration() {
   try {
-    const sqlPath = path.join(__dirname, 'database', 'migrate_v5.sql');
+    const filename = process.argv[2] || 'migrate_v5.sql';
+    const sqlPath = path.join(__dirname, 'database', filename);
     const sql = fs.readFileSync(sqlPath, 'utf8');
     
-    console.log('Running migration...');
+    console.log(`Running migration: ${filename}...`);
     await pool.query(sql);
-    console.log('Migration migrate_v5.sql ran successfully!');
+    console.log(`Migration ${filename} ran successfully!`);
   } catch (err) {
     console.error('Error running migration:', err);
   } finally {
