@@ -195,7 +195,12 @@ export default function Header({ title }) {
       <header className="app-header" style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 100 }}>
         {/* Logo + título */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
-          <div className="header-logo">TS</div>
+          <img 
+            src="/logo_time_sv.png" 
+            alt="Logo Time SV" 
+            style={{ height: '30px', width: 'auto', objectFit: 'contain' }}
+            onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
+          />
           <span className="header-title" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{title}</span>
         </div>
 

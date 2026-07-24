@@ -323,13 +323,15 @@ export default function AppLayout() {
         {/* Sidebar Desktop */}
         <aside className="app-sidebar-desktop">
           {/* Logo Section */}
-          <div className="sidebar-logo-section">
-            <div className="sidebar-logo-icon">
-              TS
-            </div>
+          <div className="sidebar-logo-section" style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+            <img 
+              src="/logo_time_sv.png" 
+              alt="Logo Time SV" 
+              style={{ height: '36px', width: 'auto', objectFit: 'contain' }}
+              onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
+            />
             <div style={{ textAlign: 'left' }}>
-              <span style={{ fontSize: '0.95rem', fontWeight: 800, display: 'block', letterSpacing: '-0.2px' }}>Tô com Styvenson</span>
-              <span style={{ fontSize: '0.65rem', color: 'var(--lime)', fontWeight: 700, textTransform: 'uppercase' }}>
+              <span style={{ fontSize: '0.65rem', color: 'var(--lime)', fontWeight: 700, textTransform: 'uppercase', display: 'block' }}>
                 {user?.role === 'admin' ? 'Administrador' : user?.role === 'coordenador' ? 'Coordenador' : 'Multiplicador'}
               </span>
             </div>

@@ -206,16 +206,17 @@ export default function PrimeiroAcesso() {
           {/* Logo + Título */}
           <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
             <img 
-              src={getMediaUrl('/uploads/foto4_nobg.png')} 
-              alt="Senador Styvenson Valim" 
+              src="/logo_time_sv.png" 
+              alt="Logo Time SV" 
               style={{
-                height: '135px',
+                height: '42px',
                 width: 'auto',
                 objectFit: 'contain',
-                margin: '-45px auto 0.5rem',
+                margin: '0 auto 0.75rem',
                 display: 'block',
-                filter: 'drop-shadow(0 10px 16px rgba(0, 84, 166, 0.3))'
+                filter: 'drop-shadow(0 4px 12px rgba(0, 84, 166, 0.2))'
               }}
+              onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
             />
             <h1 style={{ margin: 0, color: '#002855', fontSize: '1.3rem', fontWeight: 800, letterSpacing: '-0.3px' }}>
               Definir sua senha
