@@ -190,9 +190,9 @@ export default function LandingPage() {
           font-weight: 800;
           color: #001a3d;
           background: linear-gradient(135deg, #FFF066 0%, #F7CE00 50%, #E0B400 100%);
-          border: 1px solid rgba(255, 255, 255, 0.4);
+          border: 1.5px solid rgba(255, 255, 255, 0.6);
           border-radius: 50px;
-          box-shadow: 0 10px 28px -4px rgba(247, 206, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.2);
+          box-shadow: none !important;
           transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
           cursor: pointer;
           outline: none;
@@ -212,7 +212,7 @@ export default function LandingPage() {
           height: 200%;
           background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.55), transparent);
           transform: rotate(25deg);
-          transition: all 0.6s ease;
+          transition: all 0.5s ease;
         }
 
         .btn-hero-primary:hover::after {
@@ -222,8 +222,17 @@ export default function LandingPage() {
         .btn-hero-primary:hover, 
         .btn-hero-primary:focus {
           color: #000f26;
-          transform: translateY(-3px) scale(1.03);
-          box-shadow: 0 14px 36px -2px rgba(247, 206, 0, 0.75), 0 6px 16px rgba(0, 0, 0, 0.25);
+          background: linear-gradient(135deg, #FFFF80 0%, #FFD600 50%, #F5C400 100%);
+          transform: translateY(-4px) scale(1.04);
+          box-shadow: none !important;
+        }
+
+        .btn-hero-primary:hover .arrow-icon {
+          transform: translateX(5px);
+        }
+
+        .arrow-icon {
+          transition: transform 0.25s ease-in-out;
         }
 
         .btn-hero-secondary {
@@ -238,12 +247,12 @@ export default function LandingPage() {
           letter-spacing: 0.8px;
           font-weight: 800;
           color: #ffffff;
-          background: rgba(255, 255, 255, 0.12);
+          background: rgba(255, 255, 255, 0.14);
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
           border: 1.5px solid rgba(255, 255, 255, 0.35);
           border-radius: 50px;
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+          box-shadow: none !important;
           transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
           cursor: pointer;
           outline: none;
@@ -252,11 +261,19 @@ export default function LandingPage() {
         }
 
         .btn-hero-secondary:hover {
-          background: rgba(255, 255, 255, 0.25);
+          background: rgba(255, 255, 255, 0.28);
           border-color: #ffffff;
           color: #ffffff;
-          transform: translateY(-3px) scale(1.02);
-          box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+          transform: translateY(-4px) scale(1.03);
+          box-shadow: none !important;
+        }
+
+        .btn-hero-secondary:hover .check-icon {
+          transform: scale(1.18);
+        }
+
+        .check-icon {
+          transition: transform 0.25s ease-in-out;
         }
 
         .benefit-card-hover {
@@ -543,18 +560,18 @@ export default function LandingPage() {
                   textTransform: 'uppercase',
                   letterSpacing: '0.8px',
                   color: '#ffffff',
-                  background: 'rgba(255, 255, 255, 0.15)',
+                  background: 'rgba(255, 255, 255, 0.14)',
                   backdropFilter: 'blur(12px)',
                   WebkitBackdropFilter: 'blur(12px)',
-                  border: '2px solid rgba(255, 255, 255, 0.45)',
+                  border: '1.5px solid rgba(255, 255, 255, 0.35)',
                   borderRadius: '50px',
-                  boxShadow: '0 8px 22px rgba(0, 0, 0, 0.2)',
+                  boxShadow: 'none',
                   padding: '12px 28px',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap'
                 }}
               >
-                <UserCheck size={18} color="#ffffff" style={{ marginRight: '8px' }} />
+                <UserCheck size={18} color="#ffffff" className="check-icon" style={{ marginRight: '8px' }} />
                 <span>Já sou Apoiador</span>
               </button>
 
@@ -575,7 +592,7 @@ export default function LandingPage() {
                   background: 'linear-gradient(135deg, #FFF066 0%, #F7CE00 50%, #E0B400 100%)',
                   border: '1.5px solid rgba(255, 255, 255, 0.6)',
                   borderRadius: '50px',
-                  boxShadow: '0 12px 30px -4px rgba(247, 206, 0, 0.6), 0 4px 14px rgba(0, 0, 0, 0.25)',
+                  boxShadow: 'none',
                   padding: '12px 32px',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap'
@@ -583,7 +600,7 @@ export default function LandingPage() {
               >
                 <UserPlus size={18} color="#001a3d" style={{ marginRight: '8px', position: 'relative', zIndex: 2 }} />
                 <span style={{ position: 'relative', zIndex: 2, color: '#001a3d' }}>Seja Apoiador</span>
-                <ArrowRight size={17} color="#001a3d" strokeWidth={3} style={{ marginLeft: '8px', position: 'relative', zIndex: 2 }} />
+                <ArrowRight size={17} color="#001a3d" strokeWidth={3} className="arrow-icon" style={{ marginLeft: '8px', position: 'relative', zIndex: 2 }} />
               </button>
             </div>
           </div>
