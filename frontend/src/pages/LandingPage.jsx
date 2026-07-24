@@ -535,14 +535,16 @@ export default function LandingPage() {
         }}>
           <div className="left-photo-col" style={{ 
             display: 'flex', alignItems: 'flex-end',
-            marginLeft: '-35px', height: '100%', overflow: 'visible',
+            marginLeft: '15px', height: '100%', overflow: 'visible',
             opacity: 0, animation: 'fadeInLeftNoticeable 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards'
           }}>
             <div style={{
               display: 'flex',
               alignItems: 'flex-end',
               overflow: 'visible',
-              width: '100%'
+              width: '100%',
+              WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 72%, transparent 97%)',
+              maskImage: 'linear-gradient(to bottom, black 0%, black 72%, transparent 97%)'
             }}>
               <img 
                 src="/senador/styveson_v3_nobg.png" 
