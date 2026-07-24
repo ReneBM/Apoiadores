@@ -60,6 +60,10 @@ const list = async (req, res, next) => {
       conditions.push(`a.status = $${idx++}`);
       params.push(status);
     }
+    if (req.query.origem) {
+      conditions.push(`a.origem = $${idx++}`);
+      params.push(req.query.origem);
+    }
     if (busca) {
       conditions.push(`(LOWER(a.nome) ILIKE $${idx} OR a.telefone ILIKE $${idx})`);
       params.push(`%${busca.toLowerCase()}%`);

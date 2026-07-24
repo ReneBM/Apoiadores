@@ -152,9 +152,16 @@ export default function AprovacoesPendentes() {
                 <div>
                   <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 700, color: '#0f172a' }}>{apoiador.nome}</h3>
                   {apoiador.multiplicador_nome && (
-                    <small style={{ color: '#0054A6', fontWeight: 600 }}>
+                    <small style={{ color: '#0054A6', fontWeight: 600, display: 'block' }}>
                       Indicado por: {apoiador.multiplicador_nome}
                     </small>
+                  )}
+                  {apoiador.origem && (
+                    <div style={{ marginTop: '4px' }}>
+                      <span style={{ fontWeight: 700, background: 'rgba(0,84,166,0.08)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.68rem', textTransform: 'uppercase', color: '#0054A6' }}>
+                        Origem: {apoiador.origem}
+                      </span>
+                    </div>
                   )}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: '#64748b', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>

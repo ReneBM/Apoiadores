@@ -129,7 +129,7 @@ export default function ApoiadoresList() {
   const [exporting, setExporting]   = useState(false);
 
   const [filters, setFilters] = useState({
-    busca: '', cidade: '', status: '', multiplicador_id: '',
+    busca: '', cidade: '', status: '', origem: '', multiplicador_id: '',
   });
   const [applied, setApplied] = useState({ ...filters });
 
@@ -142,6 +142,7 @@ export default function ApoiadoresList() {
       if (f.busca)           params.append('busca', f.busca);
       if (f.cidade)          params.append('cidade', f.cidade);
       if (f.status)          params.append('status', f.status);
+      if (f.origem)          params.append('origem', f.origem);
       if (f.multiplicador_id) params.append('multiplicador_id', f.multiplicador_id);
 
       const { data } = await api.get(`/apoiadores?${params}`);
@@ -164,7 +165,7 @@ export default function ApoiadoresList() {
   };
 
   const clearFilters = () => {
-    const empty = { busca: '', cidade: '', status: '', multiplicador_id: '' };
+    const empty = { busca: '', cidade: '', status: '', origem: '', multiplicador_id: '' };
     setFilters(empty);
     setApplied(empty);
     setShowFilter(false);
@@ -296,6 +297,22 @@ export default function ApoiadoresList() {
               <option value="ativo">Ativo</option>
               <option value="inativo">Inativo</option>
               <option value="pendente">Pendente</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="form-label" htmlFor="filter-origem">Origem de Cadastro</label>
+            <select
+              id="filter-origem"
+              value={filters.origem}
+              onChange={(e) => setFilters((p) => ({ ...p, origem: e.target.value }))}
+              className="form-input"
+              style={{ minHeight: '40px', height: '40px' }}
+            >
+              <option value="">Todas as Origens</option>
+              <option value="Site / Landing Page">Site / Landing Page</option>
+              <option value="Indicação (Link)">Indicação (Link)</option>
+              <option value="Painel Administrativo">Painel Administrativo</option>
             </select>
           </div>
 
