@@ -495,11 +495,11 @@ export default function LandingPage() {
 
           <div className="right-content-col" style={{ 
             display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
-            alignItems: 'center', alignSelf: 'flex-start', paddingTop: 'clamp(7.5rem, 16vh, 13rem)', paddingBottom: '1rem',
-            paddingRight: '1rem', paddingLeft: '1rem',
+            alignItems: 'flex-end', alignSelf: 'flex-start', paddingTop: 'clamp(7.5rem, 16vh, 13rem)', paddingBottom: '1rem',
+            paddingRight: '1.5rem', paddingLeft: '1rem',
             opacity: 0, animation: 'fadeInUpHeadline 1s ease-out 0.3s forwards'
           }}>
-            {/* Logo posicionada diretamente acima da Headline */}
+            {/* Logo posicionada diretamente acima da Headline (alinhada à direita) */}
             <img 
               src="/logo_time_sv.png" 
               alt="Logo Time SV"
@@ -508,7 +508,8 @@ export default function LandingPage() {
                 width: 'auto', 
                 objectFit: 'contain', 
                 filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.3))',
-                marginBottom: '1rem'
+                marginBottom: '1rem',
+                alignSelf: 'flex-end'
               }}
               onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
             />
@@ -516,18 +517,18 @@ export default function LandingPage() {
             <h1 style={{
               fontFamily: "'Gilroy', 'Oswald', sans-serif",
               fontSize: 'clamp(3.2rem, 6vw, 7rem)',
-              fontWeight: 800, fontStyle: 'italic',
+              fontWeight: 800, fontStyle: 'normal',
               lineHeight: 0.92, textTransform: 'uppercase',
               letterSpacing: '-1px', margin: '0 0 1.5rem 0',
               color: '#ffffff',
               textShadow: '0 4px 24px rgba(0,0,0,0.5)',
-              textAlign: 'center'
+              textAlign: 'right'
             }}>
               #VEM PRO <br />NOSSO TIME
             </h1>
 
             {/* Botões posicionados logo abaixo da Headline */}
-            <div className="buttons-container" style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: '0.75rem' }}>
+            <div className="buttons-container" style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', justifyContent: 'flex-end', width: '100%', marginTop: '0.75rem' }}>
               <button 
                 onClick={() => window.open('/login', '_blank')} 
                 className="btn-hero-secondary"
