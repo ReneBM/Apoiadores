@@ -532,12 +532,59 @@ export default function LandingPage() {
             </h1>
 
             {/* Botões posicionados logo abaixo da Headline */}
-            <div className="buttons-container" style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: '0.5rem' }}>
-              <button onClick={() => window.open('/login', '_blank')} className="btn-hero-secondary">
+            <div className="buttons-container" style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: '0.75rem' }}>
+              <button 
+                onClick={() => window.open('/login', '_blank')} 
+                className="btn-hero-secondary"
+                style={{
+                  minHeight: '48px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontFamily: "'Oswald', sans-serif",
+                  fontSize: '0.95rem',
+                  fontWeight: 800,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.8px',
+                  color: '#ffffff',
+                  background: 'rgba(255, 255, 255, 0.15)',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  border: '2px solid rgba(255, 255, 255, 0.45)',
+                  borderRadius: '50px',
+                  boxShadow: '0 8px 22px rgba(0, 0, 0, 0.2)',
+                  padding: '12px 28px',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap'
+                }}
+              >
                 <UserCheck size={18} color="#ffffff" style={{ marginRight: '8px' }} />
                 <span>Já sou Apoiador</span>
               </button>
-              <button onClick={() => setShowModal(true)} className="btn-hero-primary">
+
+              <button 
+                onClick={() => setShowModal(true)} 
+                className="btn-hero-primary"
+                style={{
+                  minHeight: '48px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontFamily: "'Oswald', sans-serif",
+                  fontSize: '1.02rem',
+                  fontWeight: 800,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.8px',
+                  color: '#001a3d',
+                  background: 'linear-gradient(135deg, #FFF066 0%, #F7CE00 50%, #E0B400 100%)',
+                  border: '1.5px solid rgba(255, 255, 255, 0.6)',
+                  borderRadius: '50px',
+                  boxShadow: '0 12px 30px -4px rgba(247, 206, 0, 0.6), 0 4px 14px rgba(0, 0, 0, 0.25)',
+                  padding: '12px 32px',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap'
+                }}
+              >
                 <UserPlus size={18} color="#001a3d" style={{ marginRight: '8px', position: 'relative', zIndex: 2 }} />
                 <span style={{ position: 'relative', zIndex: 2, color: '#001a3d' }}>Seja Apoiador</span>
                 <ArrowRight size={17} color="#001a3d" strokeWidth={3} style={{ marginLeft: '8px', position: 'relative', zIndex: 2 }} />
