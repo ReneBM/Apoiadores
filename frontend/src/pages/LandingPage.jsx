@@ -504,11 +504,11 @@ export default function LandingPage() {
               src="/logo_time_sv.png" 
               alt="Logo Time SV"
               style={{ 
-                height: '62px', 
+                height: '43px', 
                 width: 'auto', 
                 objectFit: 'contain', 
-                filter: 'drop-shadow(0 6px 20px rgba(0,0,0,0.35))',
-                marginBottom: '1.25rem'
+                filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.3))',
+                marginBottom: '1rem'
               }}
               onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
             />
