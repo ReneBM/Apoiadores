@@ -441,23 +441,6 @@ export default function LandingPage() {
         }
       `}</style>
 
-      <header className="top-header-mobile" style={{ position: 'relative', zIndex: 10, display: 'flex', justifyContent: 'center', paddingTop: '1.5rem' }}>
-        <img 
-          src="/logo_time_sv.png" 
-          alt="Logo Time SV"
-          style={{
-            height: '36px',
-            width: 'auto',
-            maxWidth: '90%',
-            objectFit: 'contain',
-            filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.2))'
-          }}
-          onError={(e) => {
-            e.currentTarget.src = '/logo_sv_2025.png';
-          }}
-        />
-      </header>
-
       <section style={{ 
         maxWidth: '1536px', 
         margin: '0 auto',
@@ -470,22 +453,24 @@ export default function LandingPage() {
         flexDirection: 'column'
       }}>
 
-        <div className="desktop-header-row" style={{
+        {/* Cabeçalho Topo */}
+        <header style={{
           display: 'flex',
           justifyContent: 'flex-end',
           alignItems: 'center',
           width: '100%',
-          padding: '1.2rem 0 0.8rem 0',
+          padding: '1.5rem 0 0.8rem 0',
           flexShrink: 0,
           opacity: 0,
           animation: 'fadeInDownBar 0.8s ease-out forwards'
         }}>
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="desktop-logo">
-            <img src="/logo_time_sv.png" alt="Logo Time SV"
-              style={{ height: '40px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))' }}
-            />
-          </div>
-        </div>
+          <img 
+            src="/logo_time_sv.png" 
+            alt="Logo Time SV"
+            style={{ height: '42px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))' }}
+            onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
+          />
+        </header>
 
         <div className="hero-grid" style={{
           display: 'grid',
@@ -516,22 +501,21 @@ export default function LandingPage() {
 
           <div className="right-content-col" style={{ 
             display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
-            alignItems: 'center', alignSelf: 'flex-start', paddingTop: 'clamp(7.5rem, 14vh, 12rem)', paddingBottom: '1rem',
-            paddingRight: '1.5rem', paddingLeft: '1rem',
+            alignItems: 'center', alignSelf: 'flex-start', paddingTop: 'clamp(5rem, 12vh, 10rem)', paddingBottom: '1rem',
+            paddingRight: '1rem', paddingLeft: '1rem',
             opacity: 0, animation: 'fadeInUpHeadline 1s ease-out 0.3s forwards'
           }}>
             <h1 style={{
               fontFamily: "'Gilroy', 'Oswald', sans-serif",
-              fontSize: 'clamp(3.5rem, 6.5vw, 7.5rem)',
+              fontSize: 'clamp(3.2rem, 6vw, 7rem)',
               fontWeight: 800, fontStyle: 'italic',
-              lineHeight: 0.9, textTransform: 'uppercase',
+              lineHeight: 0.92, textTransform: 'uppercase',
               letterSpacing: '-1px', margin: '0 0 1.5rem 0',
               color: '#ffffff',
               textShadow: '0 4px 24px rgba(0,0,0,0.5)',
               textAlign: 'center'
             }}>
-              <span className="desktop-text">#VEM PRO <br />NOSSO TIME</span>
-              <span className="mobile-text">#VEM PRO NOSSO <br />TIME</span>
+              #VEM PRO <br />NOSSO TIME
             </h1>
 
             {/* Botões posicionados logo abaixo da Headline */}
