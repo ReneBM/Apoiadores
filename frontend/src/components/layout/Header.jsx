@@ -192,13 +192,21 @@ export default function Header({ title }) {
 
   return (
     <>
+      <style>{`
+        @media (min-width: 1025px) {
+          .header-app-logo {
+            display: none !important;
+          }
+        }
+      `}</style>
       <header className="app-header" style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 100 }}>
         {/* Logo + título */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
           <img 
+            className="header-app-logo"
             src="/logo_time_sv.png" 
             alt="Logo Time SV" 
-            style={{ height: '30px', width: 'auto', objectFit: 'contain' }}
+            style={{ height: '28px', width: 'auto', objectFit: 'contain' }}
             onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
           />
           <span className="header-title" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{title}</span>
