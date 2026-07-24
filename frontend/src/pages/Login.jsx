@@ -253,22 +253,21 @@ export default function Login() {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              marginBottom: '1.2rem'
+              marginBottom: '0.75rem'
             }}>
               <img 
                 src="/logo_time_sv.png" 
                 alt="Logo Time SV" 
                 style={{
-                  height: '54px',
+                  height: '38px',
                   width: 'auto',
                   objectFit: 'contain',
-                  filter: 'drop-shadow(0 6px 14px rgba(0, 84, 166, 0.25))'
+                  filter: 'drop-shadow(0 4px 12px rgba(0, 84, 166, 0.2))'
                 }}
                 onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
               />
             </div>
-            <h1 style={{ fontSize: '1.45rem', fontWeight: 800, color: 'var(--texto)', margin: '0 0 4px 0' }}>Tô com Styvenson</h1>
-            <p style={{ fontSize: '0.8rem', color: 'var(--texto-claro)', margin: 0 }}>Aplicativo Oficial de Mobilização</p>
+            <p style={{ fontSize: '0.85rem', color: '#64748b', margin: 0, fontWeight: 500 }}>Aplicativo Oficial de Mobilização</p>
           </div>
 
           {/* Formulário */}

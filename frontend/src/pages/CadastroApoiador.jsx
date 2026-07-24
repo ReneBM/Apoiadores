@@ -444,26 +444,25 @@ export default function CadastroApoiador({ isModal = false, onClose }) {
           )}
           <div className="login-header" style={{ textAlign: 'center' }}>
             <div style={{
-              height: '115px',
-              overflow: 'hidden',
-              margin: isModal ? '0 auto 0.5rem' : '-50px auto 0.5rem',
               display: 'flex',
               justifyContent: 'center',
-              alignItems: 'flex-start'
+              alignItems: 'center',
+              marginBottom: '0.75rem',
+              marginTop: isModal ? '0' : '-10px'
             }}>
               <img 
-                src={getMediaUrl('/uploads/foto5_nobg.png')} 
-                alt="Senador Styvenson Valim" 
+                src="/logo_time_sv.png" 
+                alt="Logo Time SV" 
                 style={{
-                  height: '145px',
+                  height: '42px',
                   width: 'auto',
                   objectFit: 'contain',
-                  filter: 'drop-shadow(0 10px 16px rgba(0, 84, 166, 0.3))'
+                  filter: 'drop-shadow(0 4px 12px rgba(0, 84, 166, 0.2))'
                 }}
+                onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
               />
             </div>
-            <h1 style={{ fontSize: '1.45rem', fontWeight: 800, color: 'var(--texto)', margin: '0 0 4px 0', textAlign: 'center' }}>Tô com Styvenson</h1>
-            <p style={{ fontSize: '0.85rem', color: 'var(--texto-claro)', margin: '12px 0 0 0', textAlign: 'center' }}>Faça seu cadastro como apoiador</p>
+            <p style={{ fontSize: '0.9rem', color: '#475569', margin: '4px 0 0 0', textAlign: 'center', fontWeight: 600 }}>Faça seu cadastro como apoiador</p>
             {ref && (
               <div style={{ display: 'inline-block', backgroundColor: '#e0f2fe', border: '1px solid #bae6fd', padding: '0.4rem 0.8rem', borderRadius: '20px', marginTop: '0.75rem' }}>
                 <span style={{ color: '#0369a1', fontSize: '0.75rem', fontWeight: 700 }}>Você foi indicado por um multiplicador oficial</span>
