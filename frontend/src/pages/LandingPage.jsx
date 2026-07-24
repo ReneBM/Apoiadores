@@ -497,13 +497,13 @@ export default function LandingPage() {
 
         <div className="hero-grid" style={{
           display: 'grid',
-          gridTemplateColumns: '55% 1fr',
+          gridTemplateColumns: '50% 1fr',
           flex: 1,
           alignItems: 'end'
         }}>
           <div className="left-photo-col" style={{ 
             display: 'flex', alignItems: 'flex-end',
-            marginLeft: '-30px', height: '100%', overflow: 'visible',
+            marginLeft: '-35px', height: '100%', overflow: 'visible',
             opacity: 0, animation: 'fadeInLeftNoticeable 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards'
           }}>
             <div style={{
@@ -515,14 +515,14 @@ export default function LandingPage() {
               <img 
                 src="/senador/styveson_v3_nobg.png" 
                 alt="Senador Styveson Valim"
-                style={{ height: '92vh', maxHeight: '880px', width: 'auto', maxWidth: 'none', objectFit: 'contain', display: 'block' }}
+                style={{ height: '85vh', maxHeight: '780px', width: 'auto', maxWidth: '100%', objectFit: 'contain', display: 'block' }}
               />
             </div>
           </div>
 
           <div className="right-content-col" style={{ 
             display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
-            alignItems: 'flex-end', alignSelf: 'flex-start', paddingTop: '4rem', paddingBottom: '1rem',
+            alignItems: 'flex-end', alignSelf: 'flex-start', paddingTop: '5rem', paddingBottom: '1rem',
             opacity: 0, animation: 'fadeInUpHeadline 1s ease-out 0.3s forwards'
           }}>
             <h1 style={{
@@ -561,7 +561,7 @@ export default function LandingPage() {
             gridTemplateColumns: 'repeat(3, 1fr)', 
             gap: '1rem',
             flexShrink: 0,
-            marginTop: '1rem',
+            marginTop: '-65px',
             paddingBottom: '2.5rem',
             position: 'relative',
             zIndex: 10
