@@ -298,6 +298,30 @@ export default function LandingPage() {
           display: none;
         }
 
+        @media (min-width: 1025px) {
+          .right-content-col {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+            align-items: flex-end !important;
+            align-self: flex-start !important;
+            padding-top: clamp(7.5rem, 16vh, 13rem) !important;
+            padding-bottom: 1rem !important;
+            padding-right: 4.5rem !important;
+            padding-left: 1rem !important;
+          }
+          .hero-logo-header {
+            align-self: flex-end !important;
+            margin-bottom: 1rem !important;
+          }
+          .right-content-col h1 {
+            text-align: right !important;
+          }
+          .buttons-container {
+            justify-content: flex-end !important;
+          }
+        }
+
         @media (max-width: 1024px) {
           section {
             height: auto !important;
@@ -322,22 +346,25 @@ export default function LandingPage() {
             align-items: center !important;
             text-align: center !important;
             width: 100% !important;
+            align-self: center !important;
             position: relative !important;
             z-index: 20 !important;
           }
 
-          .right-content-col img {
+          .hero-logo-header {
             align-self: center !important;
-            margin: 0 auto 0.75rem auto !important;
+            margin: 0 auto 0.85rem auto !important;
             height: 38px !important;
+            display: block !important;
           }
 
           .right-content-col h1 {
             text-align: center !important;
-            font-size: clamp(2.3rem, 8vw, 3.2rem) !important;
+            font-size: clamp(2.2rem, 8vw, 3.2rem) !important;
             font-style: normal !important;
             margin: 0 0 1.25rem 0 !important;
             line-height: 0.95 !important;
+            width: 100% !important;
           }
 
           .buttons-container {
@@ -347,11 +374,13 @@ export default function LandingPage() {
             width: 100% !important;
             margin-top: 0.5rem !important;
             gap: 0.85rem !important;
+            padding: 0 !important;
           }
 
           .btn-hero-primary, .btn-hero-secondary {
             width: 100% !important;
             max-width: 320px !important;
+            box-sizing: border-box !important;
           }
 
           /* 2. Foto do Senador no MEIO */
@@ -507,22 +536,21 @@ export default function LandingPage() {
           </div>
 
           <div className="right-content-col" style={{ 
-            display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
-            alignItems: 'flex-end', alignSelf: 'flex-start', paddingTop: 'clamp(7.5rem, 16vh, 13rem)', paddingBottom: '1rem',
-            paddingRight: '4.5rem', paddingLeft: '1rem',
-            opacity: 0, animation: 'fadeInUpHeadline 1s ease-out 0.3s forwards'
+            display: 'flex', 
+            flexDirection: 'column',
+            opacity: 0, 
+            animation: 'fadeInUpHeadline 1s ease-out 0.3s forwards'
           }}>
-            {/* Logo posicionada diretamente acima da Headline (alinhada à direita) */}
+            {/* Logo posicionada diretamente acima da Headline */}
             <img 
+              className="hero-logo-header"
               src="/logo_time_sv.png" 
               alt="Logo Time SV"
               style={{ 
                 height: '43px', 
                 width: 'auto', 
                 objectFit: 'contain', 
-                filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.3))',
-                marginBottom: '1rem',
-                alignSelf: 'flex-end'
+                filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.3))'
               }}
               onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
             />
@@ -534,8 +562,7 @@ export default function LandingPage() {
               lineHeight: 0.92, textTransform: 'uppercase',
               letterSpacing: '-1px', margin: '0 0 1.5rem 0',
               color: '#ffffff',
-              textShadow: '0 4px 24px rgba(0,0,0,0.5)',
-              textAlign: 'right'
+              textShadow: '0 4px 24px rgba(0,0,0,0.5)'
             }}>
               #VEM PRO <br />NOSSO TIME
             </h1>
@@ -545,7 +572,6 @@ export default function LandingPage() {
               display: 'flex', 
               gap: '1.25rem', 
               alignItems: 'center', 
-              justifyContent: 'flex-end', 
               width: '100%', 
               marginTop: '0.75rem',
               position: 'relative',
