@@ -177,82 +177,42 @@ export default function LandingPage() {
           justify-content: center;
           text-transform: uppercase;
           text-align: center;
+        .btn-glow-pulse {
+          min-height: 40px;
+          display: inline-flex;
+          font-family: 'Oswald', sans-serif;
+          font-size: 0.88rem;
+          align-items: center;
+          justify-content: center;
+          text-transform: uppercase;
+          text-align: center;
           letter-spacing: 0.5px;
           font-weight: 800;
-          color: #0348d4;
-          background: linear-gradient(90deg, #d8ff1a 0%, #ccf600 100%);
+          color: #002855;
+          background: #F7CE00;
           border: none;
           border-radius: 1000px;
-          box-shadow: 0 10px 25px rgba(204, 246, 0, 0.45);
-          transition: all 0.3s ease-in-out;
+          box-shadow: none;
+          transition: all 0.25s ease-in-out;
           cursor: pointer;
           outline: none;
           position: relative;
-          padding: 8px 18px;
+          padding: 10px 24px;
           z-index: 1;
           white-space: nowrap;
         }
 
-        .btn-glow-pulse::before {
-          content: '';
-          border-radius: 1000px;
-          min-width: calc(100% + 10px);
-          min-height: calc(100% + 10px);
-          border: 3px solid #ccf600;
-          box-shadow: 0 0 30px rgba(204, 246, 0, 0.7);
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          opacity: 0;
-          transition: all .3s ease-in-out;
-          pointer-events: none;
-        }
-
         .btn-glow-pulse:hover, 
         .btn-glow-pulse:focus {
-          color: #023db5;
-          transform: translateY(-4px);
-          box-shadow: 0 14px 30px rgba(204, 246, 0, 0.65);
+          color: #001530;
+          background: #ffe54c;
+          transform: translateY(-2px);
+          box-shadow: none;
         }
 
-        .btn-glow-pulse:hover::before, 
-        .btn-glow-pulse:focus::before {
-          opacity: 1;
-        }
-
+        .btn-glow-pulse::before,
         .btn-glow-pulse::after {
-          content: '';
-          width: 20px; 
-          height: 20px;
-          border-radius: 100%;
-          border: 3px solid #ccf600;
-          position: absolute;
-          z-index: -1;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          animation: ringPulse 1.8s infinite;
-          pointer-events: none;
-        }
-
-        .btn-glow-pulse:hover::after, 
-        .btn-glow-pulse:focus::after {
-          animation: none;
-          display: none;
-        }
-
-        @keyframes ringPulse {
-          0% {
-            width: 20px;
-            height: 20px;
-            opacity: 1;
-          }
-          100% {
-            width: 220px;
-            height: 80px;
-            opacity: 0;
-          }
+          display: none !important;
         }
 
         .btn-glass-secondary {
@@ -556,7 +516,7 @@ export default function LandingPage() {
 
           <div className="right-content-col" style={{ 
             display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
-            alignItems: 'center', alignSelf: 'flex-start', paddingTop: 'clamp(5rem, 10vh, 9rem)', paddingBottom: '1rem',
+            alignItems: 'center', alignSelf: 'flex-start', paddingTop: 'clamp(7.5rem, 14vh, 12rem)', paddingBottom: '1rem',
             paddingRight: '1.5rem', paddingLeft: '1rem',
             opacity: 0, animation: 'fadeInUpHeadline 1s ease-out 0.3s forwards'
           }}>
@@ -581,9 +541,9 @@ export default function LandingPage() {
                 <span>Já sou Apoiador</span>
               </button>
               <button onClick={() => setShowModal(true)} className="btn-glow-pulse">
-                <UserPlus size={16} color="#0348d4" style={{ marginRight: '6px', position: 'relative', zIndex: 2 }} />
-                <span style={{ position: 'relative', zIndex: 2 }}>Seja Apoiador</span>
-                <ArrowRight size={15} color="#0348d4" strokeWidth={3} style={{ marginLeft: '6px', position: 'relative', zIndex: 2 }} />
+                <UserPlus size={16} color="#002855" style={{ marginRight: '6px', position: 'relative', zIndex: 2 }} />
+                <span style={{ position: 'relative', zIndex: 2, color: '#002855' }}>Seja Apoiador</span>
+                <ArrowRight size={15} color="#002855" strokeWidth={3} style={{ marginLeft: '6px', position: 'relative', zIndex: 2 }} />
               </button>
             </div>
           </div>
