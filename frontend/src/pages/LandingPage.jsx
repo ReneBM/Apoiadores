@@ -357,8 +357,8 @@ export default function LandingPage() {
             justify-content: center;
           }
           .left-photo-col img {
-            height: 350px !important;
-            max-height: 50vh !important;
+            height: 420px !important;
+            max-height: 60vh !important;
             width: auto !important;
             max-width: 100% !important;
             object-fit: contain !important;
@@ -419,8 +419,8 @@ export default function LandingPage() {
 
         @media (max-width: 1024px) and (min-width: 768px) {
           .left-photo-col img {
-            height: 480px !important;
-            max-height: 55vh !important;
+            height: 560px !important;
+            max-height: 65vh !important;
           }
           .right-content-col h1 {
             font-size: 3.5rem !important;
@@ -513,7 +513,7 @@ export default function LandingPage() {
               <img 
                 src="/senador/styveson_v3_nobg.png" 
                 alt="Senador Styveson Valim"
-                style={{ height: 'auto', maxHeight: '88vh', width: 'auto', maxWidth: '100%', objectFit: 'contain', display: 'block' }}
+                style={{ height: 'auto', maxHeight: '92vh', width: 'auto', maxWidth: '125%', objectFit: 'contain', display: 'block', transform: 'scale(1.08)', transformOrigin: 'bottom left' }}
               />
             </div>
           </div>
