@@ -250,22 +250,21 @@ export default function Login() {
           {/* Cabeçalho */}
           <div className="login-header">
             <div style={{
-              height: '115px',
-              overflow: 'hidden',
-              margin: '-50px auto 0.5rem',
               display: 'flex',
               justifyContent: 'center',
-              alignItems: 'flex-start'
+              alignItems: 'center',
+              marginBottom: '1.2rem'
             }}>
               <img 
-                src={getMediaUrl('/uploads/foto4_nobg.png')} 
-                alt="Senador Styvenson Valim" 
+                src="/logo_time_sv.png" 
+                alt="Logo Time SV" 
                 style={{
-                  height: '145px',
+                  height: '54px',
                   width: 'auto',
                   objectFit: 'contain',
-                  filter: 'drop-shadow(0 10px 16px rgba(0, 84, 166, 0.3))'
+                  filter: 'drop-shadow(0 6px 14px rgba(0, 84, 166, 0.25))'
                 }}
+                onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
               />
             </div>
             <h1 style={{ fontSize: '1.45rem', fontWeight: 800, color: 'var(--texto)', margin: '0 0 4px 0' }}>Tô com Styvenson</h1>
@@ -299,7 +298,16 @@ export default function Login() {
 
             {/* Senha */}
             <div className="login-form-group">
-              <label htmlFor="senha" className="login-label">Senha</label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                <label htmlFor="senha" className="login-label" style={{ margin: 0 }}>Senha</label>
+                <button
+                  type="button"
+                  onClick={() => toast.info('Para redefinir sua senha, entre em contato com a coordenação do Time Styvenson.', { duration: 5000 })}
+                  style={{ background: 'none', border: 'none', color: '#0054A6', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', padding: 0 }}
+                >
+                  Esqueceu a senha?
+                </button>
+              </div>
               <div className="login-input-wrap">
                 <input
                   id="senha"
@@ -341,11 +349,14 @@ export default function Login() {
 
           </form>
 
-          <p className="login-footer" style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center' }}>
-            <span>Sistema protegido · Dados sob LGPD</span>
-            <a href="/lp" style={{ color: '#0054A6', fontWeight: 700, textDecoration: 'none', fontSize: '0.8rem' }}>
-              🟢 Faça parte do Time Styvenson (Entrar no WhatsApp)
-            </a>
+          <p className="login-footer" style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center', marginTop: '1.5rem' }}>
+            <div style={{ fontSize: '0.85rem', color: '#475569' }}>
+              Não tem uma conta?{' '}
+              <a href="/lp" style={{ color: '#0054A6', fontWeight: 700, textDecoration: 'none' }}>
+                Quero me cadastrar
+              </a>
+            </div>
+            <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>Sistema protegido · Dados sob LGPD</span>
           </p>
         </div>
       </div>
