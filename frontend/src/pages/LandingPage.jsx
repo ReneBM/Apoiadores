@@ -357,8 +357,8 @@ export default function LandingPage() {
             justify-content: center;
           }
           .left-photo-col img {
-            height: 420px !important;
-            max-height: 60vh !important;
+            height: 380px !important;
+            max-height: 52vh !important;
             width: auto !important;
             max-width: 100% !important;
             object-fit: contain !important;
@@ -406,7 +406,7 @@ export default function LandingPage() {
         /* ── TABLET E NOTEBOOKS PEQUENOS ── */
         @media (max-width: 1200px) and (min-width: 1025px) {
           .hero-grid {
-            grid-template-columns: 45% 1fr !important;
+            grid-template-columns: 48% 1fr !important;
             gap: 1rem !important;
           }
           .right-content-col h1 {
@@ -419,8 +419,8 @@ export default function LandingPage() {
 
         @media (max-width: 1024px) and (min-width: 768px) {
           .left-photo-col img {
-            height: 560px !important;
-            max-height: 65vh !important;
+            height: 480px !important;
+            max-height: 58vh !important;
           }
           .right-content-col h1 {
             font-size: 3.5rem !important;
@@ -507,13 +507,16 @@ export default function LandingPage() {
             opacity: 0, animation: 'fadeInLeftNoticeable 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards'
           }}>
             <div style={{
-              WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 97%)',
-              maskImage: 'linear-gradient(to bottom, black 60%, transparent 97%)'
+              WebkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)',
+              maskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)',
+              display: 'flex',
+              alignItems: 'flex-end',
+              overflow: 'visible'
             }}>
               <img 
                 src="/senador/styveson_v3_nobg.png" 
                 alt="Senador Styveson Valim"
-                style={{ height: 'auto', maxHeight: '92vh', width: 'auto', maxWidth: '125%', objectFit: 'contain', display: 'block', transform: 'scale(1.08)', transformOrigin: 'bottom left' }}
+                style={{ height: '78vh', maxHeight: '720px', width: 'auto', maxWidth: '100%', objectFit: 'contain', display: 'block' }}
               />
             </div>
           </div>
