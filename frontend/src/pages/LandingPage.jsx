@@ -554,7 +554,8 @@ export default function LandingPage() {
 
           <div className="right-content-col" style={{ 
             display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
-            alignItems: 'flex-end', alignSelf: 'flex-start', paddingTop: 'clamp(5rem, 10vh, 9rem)', paddingBottom: '1rem',
+            alignItems: 'center', alignSelf: 'flex-start', paddingTop: 'clamp(5rem, 10vh, 9rem)', paddingBottom: '1rem',
+            paddingRight: '1.5rem', paddingLeft: '1rem',
             opacity: 0, animation: 'fadeInUpHeadline 1s ease-out 0.3s forwards'
           }}>
             <h1 style={{
@@ -565,14 +566,14 @@ export default function LandingPage() {
               letterSpacing: '-1px', margin: '0 0 1.5rem 0',
               color: '#ffffff',
               textShadow: '0 4px 24px rgba(0,0,0,0.5)',
-              textAlign: 'right'
+              textAlign: 'center'
             }}>
               <span className="desktop-text">#VEM PRO <br />NOSSO TIME</span>
               <span className="mobile-text">#VEM PRO NOSSO <br />TIME</span>
             </h1>
 
             {/* Botões posicionados logo abaixo da Headline */}
-            <div className="buttons-container" style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'flex-end', width: '100%', marginTop: '0.5rem' }}>
+            <div className="buttons-container" style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: '0.5rem' }}>
               <button onClick={() => window.open('/login', '_blank')} className="btn-glass-secondary">
                 <UserCheck size={16} color="#ffffff" style={{ marginRight: '6px' }} />
                 <span>Já sou Apoiador</span>
@@ -593,7 +594,7 @@ export default function LandingPage() {
             gridTemplateColumns: 'repeat(3, 1fr)', 
             gap: '1rem',
             flexShrink: 0,
-            marginTop: '-65px',
+            marginTop: '-110px',
             paddingBottom: '2.5rem',
             position: 'relative',
             zIndex: 10
