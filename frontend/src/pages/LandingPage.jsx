@@ -299,85 +299,45 @@ export default function LandingPage() {
         }
 
         @media (max-width: 1024px) {
-          .top-header-mobile {
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            width: 100% !important;
-            padding: 1rem 0 0.5rem !important;
-            text-align: center !important;
-          }
-          
-          .desktop-text {
-            display: none !important;
-          }
-          .mobile-text {
-            display: inline-block !important;
-          }
-          
           section {
             height: auto !important;
             min-height: 100vh;
             overflow: visible !important;
-          }
-
-          .desktop-header-row {
-            order: 3 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            padding: 1rem 0 !important;
-            align-items: center !important;
-            gap: 1rem !important;
-          }
-          
-          .desktop-logo {
-            display: none !important;
+            padding: 0 1rem !important;
           }
 
           .hero-grid {
-            order: 1 !important;
             display: flex !important;
             flex-direction: column !important;
             gap: 0 !important;
-            padding-top: 2rem !important;
+            padding-top: 1.5rem !important;
             align-items: center !important;
-          }
-
-          .left-photo-col {
-            order: 1 !important;
-            margin-top: 0 !important;
-            margin-bottom: -20px !important;
-            margin-left: 0 !important;
-            justify-content: center !important;
             width: 100% !important;
           }
-          .left-photo-col > div {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-          }
-          .left-photo-col img {
-            height: 380px !important;
-            max-height: 52vh !important;
-            width: auto !important;
-            max-width: 100% !important;
-            object-fit: contain !important;
-          }
 
+          /* 1. Bloco Principal (Logo + Headline + Botões) no TOPO */
           .right-content-col {
-            order: 2 !important;
-            margin-top: auto !important;
-            padding-top: 0 !important;
+            order: 1 !important;
+            padding: 0 !important;
             align-items: center !important;
             text-align: center !important;
             width: 100% !important;
             position: relative !important;
-            z-index: 10 !important;
+            z-index: 20 !important;
+          }
+
+          .right-content-col img {
+            align-self: center !important;
+            margin: 0 auto 0.75rem auto !important;
+            height: 38px !important;
           }
 
           .right-content-col h1 {
             text-align: center !important;
-            font-size: clamp(2.5rem, 8vw, 3rem) !important;
+            font-size: clamp(2.3rem, 8vw, 3.2rem) !important;
+            font-style: normal !important;
+            margin: 0 0 1.25rem 0 !important;
+            line-height: 0.95 !important;
           }
 
           .buttons-container {
@@ -394,12 +354,38 @@ export default function LandingPage() {
             max-width: 320px !important;
           }
 
+          /* 2. Foto do Senador no MEIO */
+          .left-photo-col {
+            order: 2 !important;
+            margin-top: 1rem !important;
+            margin-bottom: 0 !important;
+            margin-left: 0 !important;
+            justify-content: center !important;
+            width: 100% !important;
+          }
+          .left-photo-col > div {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+          }
+          .left-photo-col img {
+            height: 350px !important;
+            max-height: 48vh !important;
+            width: auto !important;
+            max-width: 100% !important;
+            object-fit: contain !important;
+            margin: 0 auto !important;
+          }
+
+          /* 3. Cards de Benefícios no RODAPÉ */
           .benefit-cards-container {
-            order: 4 !important;
+            order: 3 !important;
             margin-top: 1rem !important;
             width: 100% !important;
             display: flex !important;
             flex-direction: column !important;
+            gap: 0.85rem !important;
+            padding-bottom: 2.5rem !important;
           }
         }
 
