@@ -177,72 +177,85 @@ export default function LandingPage() {
           justify-content: center;
           text-transform: uppercase;
           text-align: center;
-        .btn-glow-pulse {
-          min-height: 40px;
+        .btn-hero-primary {
+          min-height: 48px;
           display: inline-flex;
-          font-family: 'Oswald', sans-serif;
-          font-size: 0.88rem;
+          font-family: 'Oswald', 'Inter', sans-serif;
+          font-size: 0.96rem;
           align-items: center;
           justify-content: center;
           text-transform: uppercase;
           text-align: center;
-          letter-spacing: 0.5px;
+          letter-spacing: 0.8px;
           font-weight: 800;
-          color: #002855;
-          background: #F7CE00;
-          border: none;
-          border-radius: 1000px;
-          box-shadow: none;
-          transition: all 0.25s ease-in-out;
+          color: #001a3d;
+          background: linear-gradient(135deg, #FFF066 0%, #F7CE00 50%, #E0B400 100%);
+          border: 1px solid rgba(255, 255, 255, 0.4);
+          border-radius: 50px;
+          box-shadow: 0 10px 28px -4px rgba(247, 206, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.2);
+          transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
           cursor: pointer;
           outline: none;
           position: relative;
-          padding: 10px 24px;
+          padding: 12px 28px;
           z-index: 1;
           white-space: nowrap;
+          overflow: hidden;
         }
 
-        .btn-glow-pulse:hover, 
-        .btn-glow-pulse:focus {
-          color: #001530;
-          background: #ffe54c;
-          transform: translateY(-2px);
-          box-shadow: none;
+        .btn-hero-primary::after {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -60%;
+          width: 50%;
+          height: 200%;
+          background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.55), transparent);
+          transform: rotate(25deg);
+          transition: all 0.6s ease;
         }
 
-        .btn-glow-pulse::before,
-        .btn-glow-pulse::after {
-          display: none !important;
+        .btn-hero-primary:hover::after {
+          left: 120%;
         }
 
-        .btn-glass-secondary {
-          min-height: 40px;
+        .btn-hero-primary:hover, 
+        .btn-hero-primary:focus {
+          color: #000f26;
+          transform: translateY(-3px) scale(1.03);
+          box-shadow: 0 14px 36px -2px rgba(247, 206, 0, 0.75), 0 6px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-hero-secondary {
+          min-height: 48px;
           display: inline-flex;
-          font-family: 'Oswald', sans-serif;
-          font-size: 0.88rem;
+          font-family: 'Oswald', 'Inter', sans-serif;
+          font-size: 0.92rem;
           align-items: center;
           justify-content: center;
           text-transform: uppercase;
           text-align: center;
-          letter-spacing: 0.5px;
+          letter-spacing: 0.8px;
           font-weight: 800;
           color: #ffffff;
-          background: rgba(255, 255, 255, 0.15);
-          backdrop-filter: blur(8px);
-          border: 2px solid rgba(255, 255, 255, 0.4);
-          border-radius: 1000px;
+          background: rgba(255, 255, 255, 0.12);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1.5px solid rgba(255, 255, 255, 0.35);
+          border-radius: 50px;
           box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-          transition: all 0.3s ease-in-out;
+          transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
           cursor: pointer;
           outline: none;
-          padding: 10px 24px;
+          padding: 12px 26px;
           white-space: nowrap;
         }
 
-        .btn-glass-secondary:hover {
-          background: rgba(255, 255, 255, 0.3);
+        .btn-hero-secondary:hover {
+          background: rgba(255, 255, 255, 0.25);
           border-color: #ffffff;
-          transform: translateY(-4px);
+          color: #ffffff;
+          transform: translateY(-3px) scale(1.02);
           box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
         }
 
@@ -349,7 +362,7 @@ export default function LandingPage() {
             gap: 0.85rem !important;
           }
 
-          .btn-glow-pulse, .btn-glass-secondary {
+          .btn-hero-primary, .btn-hero-secondary {
             width: 100% !important;
             max-width: 320px !important;
           }
@@ -405,10 +418,10 @@ export default function LandingPage() {
             height: 86vh !important;
             max-height: 850px !important;
           }
-          .btn-glow-pulse, .btn-glass-secondary {
-            font-size: 0.98rem !important;
-            padding: 12px 28px !important;
-            min-height: 48px !important;
+          .btn-hero-primary, .btn-hero-secondary {
+            font-size: 1.05rem !important;
+            padding: 14px 34px !important;
+            min-height: 52px !important;
           }
         }
 
@@ -426,7 +439,7 @@ export default function LandingPage() {
         }
 
         @media (max-width: 576px) {
-          .btn-glow-pulse, .btn-glass-secondary {
+          .btn-hero-primary, .btn-hero-secondary {
             width: 100% !important;
             min-width: 100% !important;
           }
@@ -519,15 +532,15 @@ export default function LandingPage() {
             </h1>
 
             {/* Botões posicionados logo abaixo da Headline */}
-            <div className="buttons-container" style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: '0.5rem' }}>
-              <button onClick={() => window.open('/login', '_blank')} className="btn-glass-secondary">
-                <UserCheck size={16} color="#ffffff" style={{ marginRight: '6px' }} />
+            <div className="buttons-container" style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: '0.5rem' }}>
+              <button onClick={() => window.open('/login', '_blank')} className="btn-hero-secondary">
+                <UserCheck size={18} color="#ffffff" style={{ marginRight: '8px' }} />
                 <span>Já sou Apoiador</span>
               </button>
-              <button onClick={() => setShowModal(true)} className="btn-glow-pulse">
-                <UserPlus size={16} color="#002855" style={{ marginRight: '6px', position: 'relative', zIndex: 2 }} />
-                <span style={{ position: 'relative', zIndex: 2, color: '#002855' }}>Seja Apoiador</span>
-                <ArrowRight size={15} color="#002855" strokeWidth={3} style={{ marginLeft: '6px', position: 'relative', zIndex: 2 }} />
+              <button onClick={() => setShowModal(true)} className="btn-hero-primary">
+                <UserPlus size={18} color="#001a3d" style={{ marginRight: '8px', position: 'relative', zIndex: 2 }} />
+                <span style={{ position: 'relative', zIndex: 2, color: '#001a3d' }}>Seja Apoiador</span>
+                <ArrowRight size={17} color="#001a3d" strokeWidth={3} style={{ marginLeft: '8px', position: 'relative', zIndex: 2 }} />
               </button>
             </div>
           </div>
