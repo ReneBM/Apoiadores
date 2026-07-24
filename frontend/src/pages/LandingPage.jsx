@@ -23,6 +23,8 @@ export default function LandingPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [registeredData, setRegisteredData] = useState(null);
+  const [hoverPrimary, setHoverPrimary] = useState(false);
+  const [hoverSecondary, setHoverSecondary] = useState(false);
 
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     defaultValues: {
@@ -545,9 +547,21 @@ export default function LandingPage() {
             </h1>
 
             {/* Botões posicionados logo abaixo da Headline */}
-            <div className="buttons-container" style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', justifyContent: 'flex-end', width: '100%', marginTop: '0.75rem' }}>
+            <div className="buttons-container" style={{ 
+              display: 'flex', 
+              gap: '1.25rem', 
+              alignItems: 'center', 
+              justifyContent: 'flex-end', 
+              width: '100%', 
+              marginTop: '0.75rem',
+              position: 'relative',
+              zIndex: 40,
+              pointerEvents: 'auto'
+            }}>
               <button 
                 onClick={() => window.open('/login', '_blank')} 
+                onMouseEnter={() => setHoverSecondary(true)}
+                onMouseLeave={() => setHoverSecondary(false)}
                 className="btn-hero-secondary"
                 style={{
                   minHeight: '48px',
@@ -560,23 +574,38 @@ export default function LandingPage() {
                   textTransform: 'uppercase',
                   letterSpacing: '0.8px',
                   color: '#ffffff',
-                  background: 'rgba(255, 255, 255, 0.14)',
+                  background: hoverSecondary ? 'rgba(255, 255, 255, 0.3)' : 'rgba(255, 255, 255, 0.14)',
                   backdropFilter: 'blur(12px)',
                   WebkitBackdropFilter: 'blur(12px)',
-                  border: '1.5px solid rgba(255, 255, 255, 0.35)',
+                  border: hoverSecondary ? '1.5px solid #ffffff' : '1.5px solid rgba(255, 255, 255, 0.35)',
                   borderRadius: '50px',
                   boxShadow: 'none',
                   padding: '12px 28px',
                   cursor: 'pointer',
-                  whiteSpace: 'nowrap'
+                  whiteSpace: 'nowrap',
+                  transform: hoverSecondary ? 'translateY(-4px) scale(1.03)' : 'translateY(0) scale(1)',
+                  transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  position: 'relative',
+                  zIndex: 40,
+                  pointerEvents: 'auto'
                 }}
               >
-                <UserCheck size={18} color="#ffffff" className="check-icon" style={{ marginRight: '8px' }} />
+                <UserCheck 
+                  size={18} 
+                  color="#ffffff" 
+                  style={{ 
+                    marginRight: '8px',
+                    transform: hoverSecondary ? 'scale(1.2)' : 'scale(1)',
+                    transition: 'transform 0.25s ease'
+                  }} 
+                />
                 <span>Já sou Apoiador</span>
               </button>
 
               <button 
                 onClick={() => setShowModal(true)} 
+                onMouseEnter={() => setHoverPrimary(true)}
+                onMouseLeave={() => setHoverPrimary(false)}
                 className="btn-hero-primary"
                 style={{
                   minHeight: '48px',
@@ -589,18 +618,36 @@ export default function LandingPage() {
                   textTransform: 'uppercase',
                   letterSpacing: '0.8px',
                   color: '#001a3d',
-                  background: 'linear-gradient(135deg, #FFF066 0%, #F7CE00 50%, #E0B400 100%)',
+                  background: hoverPrimary 
+                    ? 'linear-gradient(135deg, #FFFF99 0%, #FFE000 50%, #F5C400 100%)' 
+                    : 'linear-gradient(135deg, #FFF066 0%, #F7CE00 50%, #E0B400 100%)',
                   border: '1.5px solid rgba(255, 255, 255, 0.6)',
                   borderRadius: '50px',
                   boxShadow: 'none',
                   padding: '12px 32px',
                   cursor: 'pointer',
-                  whiteSpace: 'nowrap'
+                  whiteSpace: 'nowrap',
+                  transform: hoverPrimary ? 'translateY(-4px) scale(1.04)' : 'translateY(0) scale(1)',
+                  transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  position: 'relative',
+                  zIndex: 40,
+                  pointerEvents: 'auto'
                 }}
               >
                 <UserPlus size={18} color="#001a3d" style={{ marginRight: '8px', position: 'relative', zIndex: 2 }} />
                 <span style={{ position: 'relative', zIndex: 2, color: '#001a3d' }}>Seja Apoiador</span>
-                <ArrowRight size={17} color="#001a3d" strokeWidth={3} className="arrow-icon" style={{ marginLeft: '8px', position: 'relative', zIndex: 2 }} />
+                <ArrowRight 
+                  size={17} 
+                  color="#001a3d" 
+                  strokeWidth={3} 
+                  style={{ 
+                    marginLeft: '8px', 
+                    position: 'relative', 
+                    zIndex: 2,
+                    transform: hoverPrimary ? 'translateX(6px)' : 'translateX(0)',
+                    transition: 'transform 0.25s ease'
+                  }} 
+                />
               </button>
             </div>
           </div>
