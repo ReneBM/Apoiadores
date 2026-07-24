@@ -496,7 +496,7 @@ export default function LandingPage() {
           <div className="right-content-col" style={{ 
             display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
             alignItems: 'flex-end', alignSelf: 'flex-start', paddingTop: 'clamp(7.5rem, 16vh, 13rem)', paddingBottom: '1rem',
-            paddingRight: '1.5rem', paddingLeft: '1rem',
+            paddingRight: '4.5rem', paddingLeft: '1rem',
             opacity: 0, animation: 'fadeInUpHeadline 1s ease-out 0.3s forwards'
           }}>
             {/* Logo posicionada diretamente acima da Headline (alinhada à direita) */}
