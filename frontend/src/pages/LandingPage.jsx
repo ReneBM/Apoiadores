@@ -479,8 +479,8 @@ export default function LandingPage() {
       }}>
 
         <div className="desktop-header-row" style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr auto 1fr',
+          display: 'flex',
+          justifyContent: 'flex-end',
           alignItems: 'center',
           width: '100%',
           padding: '1.2rem 0 0.8rem 0',
@@ -488,20 +488,6 @@ export default function LandingPage() {
           opacity: 0,
           animation: 'fadeInDownBar 0.8s ease-out forwards'
         }}>
-          <div className="spacer-col"></div>
-          
-          <div className="buttons-container" style={{ display: 'flex', gap: '0.85rem', alignItems: 'center', justifyContent: 'center' }}>
-            <button onClick={() => window.open('/login', '_blank')} className="btn-glass-secondary">
-              <UserCheck size={16} color="#ffffff" style={{ marginRight: '6px' }} />
-              <span>Já sou Apoiador</span>
-            </button>
-            <button onClick={() => setShowModal(true)} className="btn-glow-pulse">
-              <UserPlus size={16} color="#0348d4" style={{ marginRight: '6px', position: 'relative', zIndex: 2 }} />
-              <span style={{ position: 'relative', zIndex: 2 }}>Seja Apoiador</span>
-              <ArrowRight size={15} color="#0348d4" strokeWidth={3} style={{ marginLeft: '6px', position: 'relative', zIndex: 2 }} />
-            </button>
-          </div>
-
           <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="desktop-logo">
             <img src="/logo_time_sv.png" alt="Logo Time SV"
               style={{ height: '36px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))' }}
@@ -534,7 +520,7 @@ export default function LandingPage() {
 
           <div className="right-content-col" style={{ 
             display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
-            alignItems: 'flex-end', alignSelf: 'flex-start', paddingTop: '8rem', paddingBottom: '1rem',
+            alignItems: 'flex-end', alignSelf: 'flex-start', paddingTop: '6rem', paddingBottom: '1rem',
             opacity: 0, animation: 'fadeInUpHeadline 1s ease-out 0.3s forwards'
           }}>
             <h1 style={{
@@ -542,7 +528,7 @@ export default function LandingPage() {
               fontSize: 'clamp(3.5rem, 6.5vw, 6.5rem)',
               fontWeight: 800, fontStyle: 'italic',
               lineHeight: 0.9, textTransform: 'uppercase',
-              letterSpacing: '-1px', margin: 0,
+              letterSpacing: '-1px', margin: '0 0 1.25rem 0',
               color: '#ffffff',
               textShadow: '0 4px 24px rgba(0,0,0,0.5)',
               textAlign: 'right'
@@ -550,6 +536,19 @@ export default function LandingPage() {
               <span className="desktop-text">#VEM PRO <br />NOSSO TIME</span>
               <span className="mobile-text">#VEM PRO NOSSO <br />TIME</span>
             </h1>
+
+            {/* Botões posicionados logo abaixo da Headline */}
+            <div className="buttons-container" style={{ display: 'flex', gap: '0.85rem', alignItems: 'center', justifyContent: 'flex-end', width: '100%', marginTop: '0.5rem' }}>
+              <button onClick={() => window.open('/login', '_blank')} className="btn-glass-secondary">
+                <UserCheck size={16} color="#ffffff" style={{ marginRight: '6px' }} />
+                <span>Já sou Apoiador</span>
+              </button>
+              <button onClick={() => setShowModal(true)} className="btn-glow-pulse">
+                <UserPlus size={16} color="#0348d4" style={{ marginRight: '6px', position: 'relative', zIndex: 2 }} />
+                <span style={{ position: 'relative', zIndex: 2 }}>Seja Apoiador</span>
+                <ArrowRight size={15} color="#0348d4" strokeWidth={3} style={{ marginLeft: '6px', position: 'relative', zIndex: 2 }} />
+              </button>
+            </div>
           </div>
         </div>
 
