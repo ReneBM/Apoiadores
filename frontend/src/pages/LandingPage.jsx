@@ -433,6 +433,38 @@ export default function LandingPage() {
           }
         }
 
+        /* ── TELAS GRANDES (FULL HD & MONITORES 1440p+) ── */
+        @media (min-width: 1440px) {
+          .right-content-col {
+            padding-top: 8.5rem !important;
+          }
+          .right-content-col h1 {
+            font-size: clamp(4.5rem, 6vw, 7.2rem) !important;
+          }
+          .left-photo-col img {
+            height: 86vh !important;
+            max-height: 850px !important;
+          }
+          .btn-glow-pulse, .btn-glass-secondary {
+            font-size: 0.98rem !important;
+            padding: 12px 28px !important;
+            min-height: 48px !important;
+          }
+        }
+
+        @media (min-width: 1920px) {
+          .right-content-col {
+            padding-top: 11rem !important;
+          }
+          .right-content-col h1 {
+            font-size: 7.8rem !important;
+          }
+          .left-photo-col img {
+            height: 88vh !important;
+            max-height: 940px !important;
+          }
+        }
+
         @media (max-width: 576px) {
           .btn-glow-pulse, .btn-glass-secondary {
             width: 100% !important;
@@ -467,9 +499,9 @@ export default function LandingPage() {
       </header>
 
       <section style={{ 
-        maxWidth: '1280px', 
+        maxWidth: '1536px', 
         margin: '0 auto',
-        padding: '0 1.5rem',
+        padding: '0 2rem',
         position: 'relative', 
         zIndex: 2,
         minHeight: '100vh',
@@ -490,7 +522,7 @@ export default function LandingPage() {
         }}>
           <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="desktop-logo">
             <img src="/logo_time_sv.png" alt="Logo Time SV"
-              style={{ height: '36px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))' }}
+              style={{ height: '40px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))' }}
             />
           </div>
         </div>
@@ -522,15 +554,15 @@ export default function LandingPage() {
 
           <div className="right-content-col" style={{ 
             display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
-            alignItems: 'flex-end', alignSelf: 'flex-start', paddingTop: '5rem', paddingBottom: '1rem',
+            alignItems: 'flex-end', alignSelf: 'flex-start', paddingTop: 'clamp(5rem, 10vh, 9rem)', paddingBottom: '1rem',
             opacity: 0, animation: 'fadeInUpHeadline 1s ease-out 0.3s forwards'
           }}>
             <h1 style={{
               fontFamily: "'Gilroy', 'Oswald', sans-serif",
-              fontSize: 'clamp(3.5rem, 6.5vw, 6.5rem)',
+              fontSize: 'clamp(3.5rem, 6.5vw, 7.5rem)',
               fontWeight: 800, fontStyle: 'italic',
               lineHeight: 0.9, textTransform: 'uppercase',
-              letterSpacing: '-1px', margin: '0 0 1.25rem 0',
+              letterSpacing: '-1px', margin: '0 0 1.5rem 0',
               color: '#ffffff',
               textShadow: '0 4px 24px rgba(0,0,0,0.5)',
               textAlign: 'right'
@@ -540,7 +572,7 @@ export default function LandingPage() {
             </h1>
 
             {/* Botões posicionados logo abaixo da Headline */}
-            <div className="buttons-container" style={{ display: 'flex', gap: '0.85rem', alignItems: 'center', justifyContent: 'flex-end', width: '100%', marginTop: '0.5rem' }}>
+            <div className="buttons-container" style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'flex-end', width: '100%', marginTop: '0.5rem' }}>
               <button onClick={() => window.open('/login', '_blank')} className="btn-glass-secondary">
                 <UserCheck size={16} color="#ffffff" style={{ marginRight: '6px' }} />
                 <span>Já sou Apoiador</span>
