@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -351,9 +351,9 @@ export default function Login() {
           <p className="login-footer" style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center', marginTop: '1.5rem' }}>
             <div style={{ fontSize: '0.85rem', color: '#475569' }}>
               Não tem uma conta?{' '}
-              <a href="/lp" style={{ color: '#0054A6', fontWeight: 700, textDecoration: 'none' }}>
+              <Link to="/cadastro" style={{ color: '#0054A6', fontWeight: 700, textDecoration: 'none' }}>
                 Quero me cadastrar
-              </a>
+              </Link>
             </div>
             <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>Sistema protegido · Dados sob LGPD</span>
           </p>

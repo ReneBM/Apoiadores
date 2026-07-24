@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import api, { getMediaUrl } from '../api/axios';
 import toast from 'react-hot-toast';
@@ -18,6 +19,7 @@ const formatPhone = (value) => {
 };
 
 export default function LandingPage() {
+  const [searchParams] = useSearchParams();
   const [cidades, setCidades] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -25,6 +27,12 @@ export default function LandingPage() {
   const [registeredData, setRegisteredData] = useState(null);
   const [hoverPrimary, setHoverPrimary] = useState(false);
   const [hoverSecondary, setHoverSecondary] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get('cadastro') === 'true' || searchParams.get('modal') === 'true') {
+      setShowModal(true);
+    }
+  }, [searchParams]);
 
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     defaultValues: {
