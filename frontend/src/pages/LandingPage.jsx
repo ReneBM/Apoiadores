@@ -466,25 +466,6 @@ export default function LandingPage() {
         flexDirection: 'column'
       }}>
 
-        {/* Cabeçalho Topo */}
-        <header style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-          width: '100%',
-          padding: '1.5rem 0 0.8rem 0',
-          flexShrink: 0,
-          opacity: 0,
-          animation: 'fadeInDownBar 0.8s ease-out forwards'
-        }}>
-          <img 
-            src="/logo_time_sv.png" 
-            alt="Logo Time SV"
-            style={{ height: '42px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))' }}
-            onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
-          />
-        </header>
-
         <div className="hero-grid" style={{
           display: 'grid',
           gridTemplateColumns: '50% 1fr',
@@ -514,10 +495,24 @@ export default function LandingPage() {
 
           <div className="right-content-col" style={{ 
             display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
-            alignItems: 'center', alignSelf: 'flex-start', paddingTop: 'clamp(5rem, 12vh, 10rem)', paddingBottom: '1rem',
+            alignItems: 'center', alignSelf: 'flex-start', paddingTop: 'clamp(7.5rem, 16vh, 13rem)', paddingBottom: '1rem',
             paddingRight: '1rem', paddingLeft: '1rem',
             opacity: 0, animation: 'fadeInUpHeadline 1s ease-out 0.3s forwards'
           }}>
+            {/* Logo posicionada diretamente acima da Headline */}
+            <img 
+              src="/logo_time_sv.png" 
+              alt="Logo Time SV"
+              style={{ 
+                height: '62px', 
+                width: 'auto', 
+                objectFit: 'contain', 
+                filter: 'drop-shadow(0 6px 20px rgba(0,0,0,0.35))',
+                marginBottom: '1.25rem'
+              }}
+              onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
+            />
+
             <h1 style={{
               fontFamily: "'Gilroy', 'Oswald', sans-serif",
               fontSize: 'clamp(3.2rem, 6vw, 7rem)',
