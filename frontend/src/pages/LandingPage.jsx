@@ -298,96 +298,55 @@ export default function LandingPage() {
           display: none;
         }
 
-        @media (min-width: 1025px) {
-          .right-content-col {
-            display: flex !important;
-            flex-direction: column !important;
-            justify-content: flex-start !important;
-            align-items: flex-end !important;
-            align-self: flex-start !important;
-            padding-top: clamp(7.5rem, 16vh, 13rem) !important;
-            padding-bottom: 1rem !important;
-            padding-right: 4.5rem !important;
-            padding-left: 1rem !important;
-          }
-          .hero-logo-header {
-            align-self: flex-end !important;
-            margin-bottom: 1rem !important;
-          }
-          .right-content-col h1 {
-            text-align: right !important;
-          }
-          .buttons-container {
-            justify-content: flex-end !important;
-          }
-        }
-
         @media (max-width: 1024px) {
+          .top-header-mobile {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            padding: 1rem 0 0.5rem !important;
+            text-align: center !important;
+          }
+          
+          .desktop-text {
+            display: none !important;
+          }
+          .mobile-text {
+            display: inline-block !important;
+          }
+          
           section {
             height: auto !important;
             min-height: 100vh;
             overflow: visible !important;
-            padding: 0 1rem !important;
+          }
+
+          .desktop-header-row {
+            order: 3 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            padding: 1rem 0 !important;
+            align-items: center !important;
+            gap: 1rem !important;
+          }
+          
+          .desktop-logo {
+            display: none !important;
           }
 
           .hero-grid {
+            order: 1 !important;
             display: flex !important;
             flex-direction: column !important;
             gap: 0 !important;
-            padding-top: 1.5rem !important;
+            padding-top: 2rem !important;
             align-items: center !important;
-            width: 100% !important;
           }
 
-          /* 1. Bloco Principal (Logo + Headline + Botões) no TOPO */
-          .right-content-col {
-            order: 1 !important;
-            padding: 0 !important;
-            align-items: center !important;
-            text-align: center !important;
-            width: 100% !important;
-            align-self: center !important;
-            position: relative !important;
-            z-index: 20 !important;
-          }
-
-          .hero-logo-header {
-            align-self: center !important;
-            margin: 0 auto 0.85rem auto !important;
-            height: 38px !important;
-            display: block !important;
-          }
-
-          .right-content-col h1 {
-            text-align: center !important;
-            font-size: clamp(2.2rem, 8vw, 3.2rem) !important;
-            font-style: normal !important;
-            margin: 0 0 1.25rem 0 !important;
-            line-height: 0.95 !important;
-            width: 100% !important;
-          }
-
-          .buttons-container {
-            flex-direction: column !important;
-            justify-content: center !important;
-            align-items: center !important;
-            width: 100% !important;
-            margin-top: 0.5rem !important;
-            gap: 0.85rem !important;
-            padding: 0 !important;
-          }
-
-          .btn-hero-primary, .btn-hero-secondary {
-            width: 100% !important;
-            max-width: 320px !important;
-            box-sizing: border-box !important;
-          }
-
-          /* 2. Foto do Senador no MEIO */
           .left-photo-col {
-            order: 2 !important;
-            margin-top: 1rem !important;
-            margin-bottom: 0 !important;
+            order: 1 !important;
+            margin-top: 0 !important;
+            margin-bottom: -20px !important;
             margin-left: 0 !important;
             justify-content: center !important;
             width: 100% !important;
@@ -398,23 +357,49 @@ export default function LandingPage() {
             justify-content: center;
           }
           .left-photo-col img {
-            height: 350px !important;
-            max-height: 48vh !important;
+            height: 380px !important;
+            max-height: 52vh !important;
             width: auto !important;
             max-width: 100% !important;
             object-fit: contain !important;
-            margin: 0 auto !important;
           }
 
-          /* 3. Cards de Benefícios no RODAPÉ */
+          .right-content-col {
+            order: 2 !important;
+            margin-top: auto !important;
+            padding-top: 0 !important;
+            align-items: center !important;
+            text-align: center !important;
+            width: 100% !important;
+            position: relative !important;
+            z-index: 10 !important;
+          }
+
+          .right-content-col h1 {
+            text-align: center !important;
+            font-size: clamp(2.5rem, 8vw, 3rem) !important;
+          }
+
+          .buttons-container {
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin-top: 0.5rem !important;
+            gap: 0.85rem !important;
+          }
+
+          .btn-hero-primary, .btn-hero-secondary {
+            width: 100% !important;
+            max-width: 320px !important;
+          }
+
           .benefit-cards-container {
-            order: 3 !important;
+            order: 4 !important;
             margin-top: 1rem !important;
             width: 100% !important;
             display: flex !important;
             flex-direction: column !important;
-            gap: 0.85rem !important;
-            padding-bottom: 2.5rem !important;
           }
         }
 
@@ -536,21 +521,22 @@ export default function LandingPage() {
           </div>
 
           <div className="right-content-col" style={{ 
-            display: 'flex', 
-            flexDirection: 'column',
-            opacity: 0, 
-            animation: 'fadeInUpHeadline 1s ease-out 0.3s forwards'
+            display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
+            alignItems: 'flex-end', alignSelf: 'flex-start', paddingTop: 'clamp(7.5rem, 16vh, 13rem)', paddingBottom: '1rem',
+            paddingRight: '4.5rem', paddingLeft: '1rem',
+            opacity: 0, animation: 'fadeInUpHeadline 1s ease-out 0.3s forwards'
           }}>
-            {/* Logo posicionada diretamente acima da Headline */}
+            {/* Logo posicionada diretamente acima da Headline (alinhada à direita) */}
             <img 
-              className="hero-logo-header"
               src="/logo_time_sv.png" 
               alt="Logo Time SV"
               style={{ 
                 height: '43px', 
                 width: 'auto', 
                 objectFit: 'contain', 
-                filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.3))'
+                filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.3))',
+                marginBottom: '1rem',
+                alignSelf: 'flex-end'
               }}
               onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
             />
@@ -562,7 +548,8 @@ export default function LandingPage() {
               lineHeight: 0.92, textTransform: 'uppercase',
               letterSpacing: '-1px', margin: '0 0 1.5rem 0',
               color: '#ffffff',
-              textShadow: '0 4px 24px rgba(0,0,0,0.5)'
+              textShadow: '0 4px 24px rgba(0,0,0,0.5)',
+              textAlign: 'right'
             }}>
               #VEM PRO <br />NOSSO TIME
             </h1>
@@ -572,6 +559,7 @@ export default function LandingPage() {
               display: 'flex', 
               gap: '1.25rem', 
               alignItems: 'center', 
+              justifyContent: 'flex-end', 
               width: '100%', 
               marginTop: '0.75rem',
               position: 'relative',
