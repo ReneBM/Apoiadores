@@ -235,6 +235,16 @@ export default function LandingPage() {
           transform: translateY(-7px);
           box-shadow: 0 22px 48px rgba(0,0,0,0.28);
         }
+        /* ── Media query específica para Desktop menor (1366x768, 1440x900) ── */
+        @media (min-width: 1024px) and (max-height: 820px) {
+          .senador-photo-img {
+            height: 72vh !important;
+            max-height: 560px !important;
+          }
+          .right-content-col {
+            padding-bottom: 3.8rem !important;
+          }
+        }
       `}</style>
 
       {/* ════════════════════════════════════════════════════════════
@@ -269,32 +279,33 @@ export default function LandingPage() {
           display: 'flex',
           alignItems: 'flex-end',
           justifyContent: 'flex-start',
-          paddingLeft: '0.5rem',
-          marginLeft: '0',
+          paddingLeft: '0',
+          marginLeft: '-3rem',
           height: '100%',
           overflow: 'visible',
           opacity: 0,
           animation: 'lpFadeInLeft 1.15s cubic-bezier(0.22,1,0.36,1) 0.15s forwards',
         }}>
           <img
+            className="senador-photo-img"
             src="/senador/styveson_v3_nobg.png"
             alt="Senador Styveson Valim"
             style={{
-              height: 'min(76vh, 660px)',
-              maxHeight: 'calc(100vh - 110px)',
+              height: 'min(82vh, 740px)',
+              maxHeight: '740px',
               maxWidth: '100%',
               width: 'auto',
               objectFit: 'contain',
               display: 'block',
               flexShrink: 0,
-              WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 74%, transparent 98%)',
-              maskImage: 'linear-gradient(to bottom, black 0%, black 74%, transparent 98%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 72%, transparent 98%)',
+              maskImage: 'linear-gradient(to bottom, black 0%, black 72%, transparent 98%)',
             }}
           />
         </div>
 
         {/* ── Coluna Direita: Conteúdo ─────────────────────────── */}
-        <div style={{
+        <div className="right-content-col" style={{
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
