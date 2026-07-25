@@ -149,11 +149,11 @@ export default function LandingPage() {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          gap: 9px;
-          min-height: 54px;
-          padding: 0 38px;
+          gap: 10px;
+          min-height: 58px;
+          padding: 0 42px;
           font-family: 'Oswald', sans-serif;
-          font-size: 1rem;
+          font-size: 1.05rem;
           font-weight: 800;
           letter-spacing: 1px;
           text-transform: uppercase;
@@ -196,11 +196,11 @@ export default function LandingPage() {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          gap: 9px;
-          min-height: 54px;
-          padding: 0 34px;
+          gap: 10px;
+          min-height: 58px;
+          padding: 0 38px;
           font-family: 'Oswald', sans-serif;
-          font-size: 0.95rem;
+          font-size: 1rem;
           font-weight: 800;
           letter-spacing: 0.8px;
           text-transform: uppercase;
@@ -305,7 +305,7 @@ export default function LandingPage() {
             alt="Logo Time Styveson Valim"
             onError={e => { e.currentTarget.src = '/logo_sv_2025.png'; }}
             style={{
-              height: 'clamp(40px, 4.5vh, 52px)',
+              height: 'clamp(46px, 5.5vh, 60px)',
               width: 'auto',
               objectFit: 'contain',
               marginBottom: 'clamp(1rem, 2vh, 1.8rem)',
@@ -316,7 +316,7 @@ export default function LandingPage() {
           {/* Headline principal */}
           <h1 style={{
             fontFamily: "'Gilroy', 'Oswald', 'Outfit', sans-serif",
-            fontSize: 'clamp(3.6rem, 5.8vw, 6.4rem)',
+            fontSize: 'clamp(4.2rem, 6.4vw, 7.2rem)',
             fontWeight: 900,
             fontStyle: 'normal',
             lineHeight: 0.9,
