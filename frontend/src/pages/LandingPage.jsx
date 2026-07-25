@@ -268,7 +268,7 @@ export default function LandingPage() {
           alignItems: 'flex-end',
           justifyContent: 'flex-start',
           paddingLeft: '0',
-          marginLeft: '-2.8rem',
+          marginLeft: '-4rem',
           overflow: 'visible',
           opacity: 0,
           animation: 'lpFadeInLeft 1.15s cubic-bezier(0.22,1,0.36,1) 0.15s forwards',
@@ -325,25 +325,11 @@ export default function LandingPage() {
             letterSpacing: '-1.5px',
             color: '#ffffff',
             textShadow: '0 4px 30px rgba(0,0,0,0.5)',
-            margin: '0 0 1.1rem 0',
+            margin: '0 0 2.2rem 0',
             whiteSpace: 'nowrap',
           }}>
             #VEM PRO<br />NOSSO TIME
           </h1>
-
-          {/* Subheadline / Texto de apoio */}
-          <p style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: '1.05rem',
-            fontWeight: 500,
-            lineHeight: 1.65,
-            color: 'rgba(255,255,255,0.72)',
-            margin: '0 0 2.5rem 0',
-            maxWidth: '370px',
-          }}>
-            Faça parte do time que está transformando o Rio Grande do Norte.
-            Juntos somos muito mais fortes!
-          </p>
 
           {/* Botões de ação */}
           <div style={{
