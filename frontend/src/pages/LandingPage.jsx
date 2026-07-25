@@ -235,41 +235,22 @@ export default function LandingPage() {
           transform: translateY(-7px);
           box-shadow: 0 22px 48px rgba(0,0,0,0.28);
         }
-        /* ── Media query específica para Desktop menor (1366x768, 1440x900) ── */
-        @media (min-width: 1024px) and (max-height: 820px) {
-          .senador-photo-img {
-            height: 72vh !important;
-            max-height: 560px !important;
-          }
-          .right-content-col {
-            padding-bottom: 3.8rem !important;
-          }
-        }
       `}</style>
 
       {/* ════════════════════════════════════════════════════════════
-          HERO SECTION — LAYOUT DESKTOP
-          
-          Estrutura horizontal:
-          ┌─────────────────┬────────────────────────────────┐
-          │  Foto Senador   │  Logo                          │
-          │  (esq. grande)  │  Headline                      │
-          │                 │  Subheadline                   │
-          │                 │  [Botão Primário] [Secundário] │
-          └─────────────────┴────────────────────────────────┘
-          ┌─── Card 1 ───┬──── Card 2 ────┬──── Card 3 ────┐  ← cintura
-          └──────────────┴────────────────┴────────────────┘
+          HERO SECTION — LAYOUT FLUIDO E RESPONSIVO (DESKTOP)
+          Sistema matemático baseado em clamp(), min(), max(), % e vh/vw
+          Zero media queries específicas por resolução.
       ════════════════════════════════════════════════════════════ */}
       <div className="lp-desktop-stage" style={{
         position: 'relative',
-        width: '100%',
-        maxWidth: '1440px',
+        width: 'min(1440px, 96vw)',
         margin: '0 auto',
         height: '100vh',
-        minHeight: '600px',
-        maxHeight: '960px',
+        minHeight: '620px',
+        maxHeight: '940px',
         display: 'grid',
-        gridTemplateColumns: '42% 1fr',
+        gridTemplateColumns: 'minmax(300px, 42%) 1fr',
         boxSizing: 'border-box',
       }}>
 
@@ -280,7 +261,7 @@ export default function LandingPage() {
           alignItems: 'flex-end',
           justifyContent: 'flex-start',
           paddingLeft: '0',
-          marginLeft: '-3rem',
+          marginLeft: '0',
           height: '100%',
           overflow: 'visible',
           opacity: 0,
@@ -291,8 +272,8 @@ export default function LandingPage() {
             src="/senador/styveson_v3_nobg.png"
             alt="Senador Styveson Valim"
             style={{
-              height: 'min(82vh, 740px)',
-              maxHeight: '740px',
+              height: 'clamp(460px, 76vh, 720px)',
+              maxHeight: 'calc(100vh - 110px)',
               maxWidth: '100%',
               width: 'auto',
               objectFit: 'contain',
@@ -311,9 +292,9 @@ export default function LandingPage() {
           justifyContent: 'center',
           alignItems: 'flex-end',
           textAlign: 'right',
-          paddingRight: '4rem',
-          paddingLeft: '2rem',
-          paddingBottom: '4.8rem',
+          paddingRight: 'clamp(1.5rem, 3.5vw, 4rem)',
+          paddingLeft: '1.5rem',
+          paddingBottom: 'clamp(3rem, 6vh, 4.8rem)',
           opacity: 0,
           animation: 'lpFadeInUp 0.9s ease-out 0.45s forwards',
         }}>
@@ -324,10 +305,10 @@ export default function LandingPage() {
             alt="Logo Time Styveson Valim"
             onError={e => { e.currentTarget.src = '/logo_sv_2025.png'; }}
             style={{
-              height: '48px',
+              height: 'clamp(36px, 4vh, 48px)',
               width: 'auto',
               objectFit: 'contain',
-              marginBottom: '1.8rem',
+              marginBottom: 'clamp(1rem, 2vh, 1.8rem)',
               filter: 'drop-shadow(0 4px 18px rgba(0,0,0,0.38))',
             }}
           />
@@ -335,7 +316,7 @@ export default function LandingPage() {
           {/* Headline principal */}
           <h1 style={{
             fontFamily: "'Gilroy', 'Oswald', 'Outfit', sans-serif",
-            fontSize: 'clamp(3.8rem, 4.5vw, 5.5rem)',
+            fontSize: 'clamp(3.2rem, 4.8vw, 5.5rem)',
             fontWeight: 900,
             fontStyle: 'normal',
             lineHeight: 0.9,
@@ -343,7 +324,7 @@ export default function LandingPage() {
             letterSpacing: '-1.5px',
             color: '#ffffff',
             textShadow: '0 4px 30px rgba(0,0,0,0.5)',
-            margin: '0 0 2.2rem 0',
+            margin: '0 0 clamp(1.2rem, 2.5vh, 2.2rem) 0',
             whiteSpace: 'nowrap',
           }}>
             #VEM PRO<br />NOSSO TIME
@@ -352,7 +333,7 @@ export default function LandingPage() {
           {/* Botões de ação */}
           <div style={{
             display: 'flex',
-            gap: '1rem',
+            gap: 'clamp(0.6rem, 1.2vw, 1rem)',
             alignItems: 'center',
             justifyContent: 'flex-end',
             flexWrap: 'nowrap',
@@ -383,12 +364,12 @@ export default function LandingPage() {
         {/* ── Cards — Flutuam na cintura do Senador ────────────── */}
         <div style={{
           position: 'absolute',
-          bottom: '2.5rem',
-          left: '3%',
-          right: '4rem',
+          bottom: 'clamp(1.5rem, 3.5vh, 2.5rem)',
+          left: '0',
+          right: 'clamp(1.5rem, 3.5vw, 4rem)',
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '1rem',
+          gap: 'clamp(0.75rem, 1.2vw, 1.25rem)',
           zIndex: 20,
           opacity: 0,
           animation: 'lpFadeInCards 0.85s ease-out 1.1s forwards',
