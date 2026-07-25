@@ -278,12 +278,14 @@ export default function LandingPage() {
             src="/senador/styveson_v3_nobg.png"
             alt="Senador Styveson Valim"
             style={{
-              height: 'min(84vh, 760px)',
-              maxHeight: '760px',
+              height: 'min(82vh, 740px)',
+              maxHeight: '740px',
               width: 'auto',
               objectFit: 'contain',
               display: 'block',
               flexShrink: 0,
+              WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 72%, transparent 98%)',
+              maskImage: 'linear-gradient(to bottom, black 0%, black 72%, transparent 98%)',
             }}
           />
         </div>
@@ -297,7 +299,7 @@ export default function LandingPage() {
           textAlign: 'right',
           paddingRight: '4rem',
           paddingLeft: '2rem',
-          paddingBottom: '9rem',
+          paddingBottom: '4.8rem',
           opacity: 0,
           animation: 'lpFadeInUp 0.9s ease-out 0.45s forwards',
         }}>
