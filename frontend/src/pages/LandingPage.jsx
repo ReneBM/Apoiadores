@@ -268,7 +268,7 @@ export default function LandingPage() {
           alignItems: 'flex-end',
           justifyContent: 'flex-start',
           paddingLeft: '0',
-          marginLeft: '-1rem',
+          marginLeft: '-2.8rem',
           overflow: 'visible',
           opacity: 0,
           animation: 'lpFadeInLeft 1.15s cubic-bezier(0.22,1,0.36,1) 0.15s forwards',
