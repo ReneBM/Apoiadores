@@ -43,7 +43,7 @@ const sendTempPasswordEmail = async (destinatario, nome, senhaTemp) => {
                     SV
                   </div>
                   <h1 style="margin:0;color:#fff;font-size:20px;font-weight:700;">
-                    Senador Styveson Valim
+                    Senador Styvenson Valentim
                   </h1>
                   <p style="margin:6px 0 0;color:rgba(255,255,255,0.75);font-size:13px;">
                     Sistema de Gestão de Apoiadores
@@ -63,7 +63,7 @@ const sendTempPasswordEmail = async (destinatario, nome, senhaTemp) => {
                   </h2>
                   <p style="margin:0 0 24px;color:#94a3b8;font-size:14px;line-height:1.6;">
                     Você foi cadastrado como <strong style="color:#60a5fa;">Multiplicador</strong>
-                    no sistema de gestão de apoiadores do Senador Styveson Valim.
+                    no sistema de gestão de apoiadores do Senador Styvenson Valentim.
                     Use os dados abaixo para fazer seu primeiro acesso.
                   </p>
 
@@ -128,7 +128,7 @@ const sendTempPasswordEmail = async (destinatario, nome, senhaTemp) => {
                   <p style="margin:0;color:#475569;font-size:11px;line-height:1.6;">
                     Este e-mail foi enviado automaticamente · Sistema protegido
                     <br />
-                    Dados sob proteção da LGPD · Senador Styveson Valim
+                    Dados sob proteção da LGPD · Senador Styvenson Valentim
                   </p>
                 </td>
               </tr>
@@ -143,7 +143,7 @@ const sendTempPasswordEmail = async (destinatario, nome, senhaTemp) => {
 
   try {
     await transporter.sendMail({
-      from: `"Sistema Senador Valim" <${process.env.MAIL_USER}>`,
+      from: `"Sistema Senador Valentim" <${process.env.MAIL_USER}>`,
       to: destinatario,
       subject: '🔐 Seu acesso ao sistema foi criado',
       html,

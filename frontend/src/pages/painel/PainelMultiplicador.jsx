@@ -103,7 +103,7 @@ export default function PainelMultiplicador() {
         </div>
         <img 
           src={getMediaUrl('/uploads/foto5_nobg.png')} 
-          alt="Senador Styvenson Valim" 
+          alt="Senador Styvenson Valentim" 
           style={{
             height: '102px',
             width: 'auto',

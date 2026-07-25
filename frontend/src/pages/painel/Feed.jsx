@@ -292,14 +292,14 @@ export default function FeedPerfil() {
                     <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#fff', border: '1.5px solid #fff', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <img 
                         src={getMediaUrl('/uploads/foto3_nobg.png')} 
-                        alt="Senador Styveson Valim"
+                        alt="Senador Styvenson Valentim"
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       />
                     </div>
                   </div>
                   <div style={{ flex: 1 }}>
                     <span style={{ fontSize: '14px', fontWeight: 600, color: '#262626', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      styvensonvalim 
+                      styvensonvalentim 
                       <span style={{ fontSize: '12px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '14px', height: '14px', backgroundColor: '#0095f6', color: '#fff', borderRadius: '50%' }}>✓</span>
                     </span>
                     {news.antecipada && <span style={{ fontSize: '12px', color: '#8e8e8e' }}>Exclusivo para Líderes</span>}
@@ -362,7 +362,7 @@ export default function FeedPerfil() {
 
                   {/* Caption */}
                   <div style={{ fontSize: '14px', color: '#262626', lineHeight: '1.5', marginBottom: '8px' }}>
-                    <span style={{ fontWeight: 600, marginRight: '6px' }}>styvensonvalim</span>
+                    <span style={{ fontWeight: 600, marginRight: '6px' }}>styvensonvalentim</span>
                     {news.conteudo}
                   </div>
 

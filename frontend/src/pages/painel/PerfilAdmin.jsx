@@ -236,7 +236,7 @@ export default function PerfilAdmin() {
           }}>
             <img 
               src={getMediaUrl('/uploads/foto3_nobg.png')} 
-              alt="Senador Styveson Valim"
+              alt="Senador Styvenson Valentim"
               style={{
                 width: '100%',
                 height: '100%',
@@ -542,7 +542,7 @@ export default function PerfilAdmin() {
                       }}>
                         <img 
                           src={getMediaUrl('/uploads/foto3_nobg.png')} 
-                          alt="Senador Styveson Valim"
+                          alt="Senador Styvenson Valentim"
                           style={{
                             width: '100%',
                             height: '100%',
@@ -552,7 +552,7 @@ export default function PerfilAdmin() {
                       </div>
                     </div>
                     <div style={{ textAlign: 'left' }}>
-                      <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0f172a', display: 'block' }}>styvensonvalim</span>
+                      <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0f172a', display: 'block' }}>styvensonvalentim</span>
                       <span style={{ fontSize: '0.65rem', color: '#64748b' }}>
                         {news.antecipada ? 'Exclusivo' : 'Oficial'}
                       </span>
@@ -599,7 +599,7 @@ export default function PerfilAdmin() {
                 {/* Body legend and comments */}
                 <div style={{ flex: 1, overflowY: 'auto', padding: '1rem', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                   <div>
-                    <span style={{ fontWeight: 800, color: '#0f172a', fontSize: '0.82rem', marginRight: '0.4rem' }}>styvensonvalim</span>
+                    <span style={{ fontWeight: 800, color: '#0f172a', fontSize: '0.82rem', marginRight: '0.4rem' }}>styvensonvalentim</span>
                     <strong style={{ display: 'block', margin: '0.2rem 0', color: '#0054A6', fontSize: '0.85rem' }}>{news.titulo}</strong>
                     <p style={{ margin: 0, fontSize: '0.82rem', color: '#1e293b', lineHeight: '1.4' }}>{news.conteudo}</p>
                   </div>

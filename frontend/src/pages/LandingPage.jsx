@@ -311,7 +311,7 @@ export default function LandingPage() {
           <img
             className="senador-photo-img"
             src="/senador/styveson_v3_nobg.png"
-            alt="Senador Styveson Valim"
+            alt="Senador Styvenson Valentim"
             style={{
               height: 'clamp(560px, 98vh, 920px)',
               maxHeight: '100%',
@@ -515,7 +515,7 @@ export default function LandingPage() {
         }}>
           <img
             src="/senador/styveson_v3_nobg.png"
-            alt="Senador Styveson Valim"
+            alt="Senador Styvenson Valentim"
             style={{
               maxHeight: 'clamp(365px, 58vh, 533px)',
               maxWidth: '100%',

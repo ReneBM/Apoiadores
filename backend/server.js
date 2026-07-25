@@ -154,7 +154,7 @@ app.get('*', (req, res, next) => {
     <!DOCTYPE html>
     <html>
       <head>
-        <title>Mandato Senador Styveson Valim - Backend API</title>
+        <title>Mandato Senador Styvenson Valentim - Backend API</title>
         <style>
           body { font-family: system-ui, sans-serif; background: #001a38; color: #fff; display: flex; height: 100vh; align-items: center; justify-content: center; margin: 0; text-align: center; }
           .card { background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); max-width: 500px; }
