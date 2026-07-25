@@ -4,8 +4,7 @@ import { useForm } from 'react-hook-form';
 import api, { getMediaUrl } from '../api/axios';
 import toast from 'react-hot-toast';
 import { 
-  MessageSquare, CheckCircle2, ArrowRight, Loader2,
-  X, Lock, UserCheck, UserPlus, Smartphone, Bell, Share2, Users
+  ArrowRight, X, UserCheck, UserPlus, Smartphone, Users
 } from 'lucide-react';
 import CadastroApoiador from './CadastroApoiador';
 
@@ -67,7 +66,6 @@ export default function LandingPage() {
       toast.error('O aceite da LGPD é obrigatório.');
       return;
     }
-
     setSubmitting(true);
     try {
       const payload = {
@@ -80,7 +78,6 @@ export default function LandingPage() {
         como_se_considera: 'Apoiador',
         observacoes: 'Cadastrado via Landing Page WhatsApp (Time Styvenson)'
       };
-
       const res = await api.post('/apoiadores/publico', payload);
       setRegisteredData({
         nome: data.nome,
@@ -106,615 +103,382 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div 
+    <div
       className="full-page-lp"
-      style={{ 
-        minHeight: '100vh', 
-        backgroundColor: '#0348d4', 
+      style={{
+        minHeight: '100vh',
+        backgroundColor: '#0348d4',
         backgroundImage: `url('/bg_bandeira_rn.jpg')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center center',
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'fixed',
-        color: '#ffffff', 
+        color: '#ffffff',
         fontFamily: "'Oswald', 'Outfit', 'Inter', system-ui, -apple-system, sans-serif",
         position: 'relative',
-        overflowX: 'hidden'
+        overflowX: 'hidden',
       }}
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700;800;900&family=Outfit:wght@800;900&display=swap');
         @import url('https://fonts.cdnfonts.com/css/gilroy-bold');
-        
-        @keyframes fadeInLeftNoticeable {
-          0% {
-            opacity: 0;
-            transform: translateX(-60px) scale(0.92);
-            filter: blur(8px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateX(0) scale(1);
-            filter: blur(0px);
-          }
+
+        @keyframes lpFadeInLeft {
+          0%   { opacity: 0; transform: translateX(-55px) scale(0.95); filter: blur(6px); }
+          100% { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); }
+        }
+        @keyframes lpFadeInUp {
+          0%   { opacity: 0; transform: translateY(30px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes lpFadeInCards {
+          0%   { opacity: 0; transform: translateY(20px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes lpModalOverlay {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        @keyframes lpModalContent {
+          0%   { opacity: 0; transform: scale(0.88) translateY(40px); }
+          100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        @keyframes fadeInUpHeadline {
-          0% {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes fadeInDownBar {
-          0% {
-            opacity: 0;
-            transform: translateY(-20px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes wowModalOverlay {
-          from { opacity: 0; backdrop-filter: blur(0px); }
-          to { opacity: 1; backdrop-filter: blur(8px); }
-        }
-
-        @keyframes wowModalContent {
-          0% { 
-            opacity: 0; 
-            transform: scale(0.8) translateY(60px);
-          }
-          100% { 
-            opacity: 1; 
-            transform: scale(1) translateY(0);
-          }
-        }
-
-        .btn-glow-pulse {
-          min-width: 160px;
-          min-height: 40px;
+        /* ── Botão Principal — Amarelo Dourado ── */
+        .lp-btn-primary {
           display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 9px;
+          min-height: 54px;
+          padding: 0 38px;
           font-family: 'Oswald', sans-serif;
-          font-size: 0.88rem;
-          align-items: center;
-          justify-content: center;
-          text-transform: uppercase;
-          text-align: center;
-        .btn-hero-primary {
-          min-height: 48px;
-          display: inline-flex;
-          font-family: 'Oswald', 'Inter', sans-serif;
-          font-size: 0.96rem;
-          align-items: center;
-          justify-content: center;
-          text-transform: uppercase;
-          text-align: center;
-          letter-spacing: 0.8px;
+          font-size: 1rem;
           font-weight: 800;
+          letter-spacing: 1px;
+          text-transform: uppercase;
           color: #001a3d;
-          background: linear-gradient(135deg, #FFF066 0%, #F7CE00 50%, #E0B400 100%);
-          border: 1.5px solid rgba(255, 255, 255, 0.6);
+          background: linear-gradient(135deg, #FFF066 0%, #F7CE00 55%, #E0B400 100%);
+          border: none;
           border-radius: 50px;
-          box-shadow: none !important;
-          transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
           cursor: pointer;
-          outline: none;
-          position: relative;
-          padding: 12px 28px;
-          z-index: 1;
           white-space: nowrap;
+          box-shadow: 0 8px 30px rgba(247,206,0,0.5);
+          transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+                      box-shadow 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+          position: relative;
           overflow: hidden;
         }
-
-        .btn-hero-primary::after {
+        .lp-btn-primary::after {
           content: '';
           position: absolute;
-          top: -50%;
-          left: -60%;
-          width: 50%;
-          height: 200%;
-          background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.55), transparent);
+          top: -50%; left: -65%;
+          width: 45%; height: 200%;
+          background: linear-gradient(to right, transparent, rgba(255,255,255,0.52), transparent);
           transform: rotate(25deg);
-          transition: all 0.5s ease;
+          transition: left 0.5s ease;
+          pointer-events: none;
+        }
+        .lp-btn-primary:hover::after { left: 120%; }
+        .lp-btn-primary:hover {
+          transform: translateY(-4px) scale(1.045);
+          box-shadow: 0 16px 38px rgba(247,206,0,0.6);
+        }
+        .lp-btn-primary .lp-arrow {
+          transition: transform 0.25s ease;
+        }
+        .lp-btn-primary:hover .lp-arrow {
+          transform: translateX(6px);
         }
 
-        .btn-hero-primary:hover::after {
-          left: 120%;
-        }
-
-        .btn-hero-primary:hover, 
-        .btn-hero-primary:focus {
-          color: #000f26;
-          background: linear-gradient(135deg, #FFFF80 0%, #FFD600 50%, #F5C400 100%);
-          transform: translateY(-4px) scale(1.04);
-          box-shadow: none !important;
-        }
-
-        .btn-hero-primary:hover .arrow-icon {
-          transform: translateX(5px);
-        }
-
-        .arrow-icon {
-          transition: transform 0.25s ease-in-out;
-        }
-
-        .btn-hero-secondary {
-          min-height: 48px;
+        /* ── Botão Secundário — Glass ── */
+        .lp-btn-secondary {
           display: inline-flex;
-          font-family: 'Oswald', 'Inter', sans-serif;
-          font-size: 0.92rem;
           align-items: center;
           justify-content: center;
-          text-transform: uppercase;
-          text-align: center;
+          gap: 9px;
+          min-height: 54px;
+          padding: 0 34px;
+          font-family: 'Oswald', sans-serif;
+          font-size: 0.95rem;
+          font-weight: 800;
           letter-spacing: 0.8px;
-          font-weight: 800;
-          color: #ffffff;
-          background: rgba(255, 255, 255, 0.14);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          border: 1.5px solid rgba(255, 255, 255, 0.35);
-          border-radius: 50px;
-          box-shadow: none !important;
-          transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-          cursor: pointer;
-          outline: none;
-          padding: 12px 26px;
-          white-space: nowrap;
-        }
-
-        .btn-hero-secondary:hover {
-          background: rgba(255, 255, 255, 0.28);
-          border-color: #ffffff;
-          color: #ffffff;
-          transform: translateY(-4px) scale(1.03);
-          box-shadow: none !important;
-        }
-
-        .btn-hero-secondary:hover .check-icon {
-          transform: scale(1.18);
-        }
-
-        .check-icon {
-          transition: transform 0.25s ease-in-out;
-        }
-
-        .benefit-card-hover {
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .benefit-card-hover:hover {
-          transform: translateY(-6px);
-          box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2) !important;
-        }
-
-        .mobile-text {
-          display: none;
-        }
-
-        /* ── ESTRUTURA BASE DESKTOP (telas > 1024px) ── */
-        .hero-grid {
-          display: grid;
-          grid-template-columns: 50% 1fr;
-          flex: 1;
-          align-items: end;
-          width: 100%;
-        }
-
-        .left-photo-col {
-          display: flex;
-          align-items: flex-end;
-          margin-left: 15px;
-          height: 100%;
-          overflow: visible;
-          opacity: 0;
-          animation: fadeInLeftNoticeable 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards;
-        }
-
-        .senador-photo-wrapper {
-          display: flex;
-          align-items: flex-end;
-          overflow: visible;
-          width: 100%;
-          -webkit-mask-image: linear-gradient(to bottom, black 0%, black 72%, transparent 97%);
-          mask-image: linear-gradient(to bottom, black 0%, black 72%, transparent 97%);
-        }
-
-        .senador-photo-wrapper img {
-          height: 85vh;
-          max-height: 780px;
-          width: auto;
-          max-width: 100%;
-          object-fit: contain;
-          display: block;
-        }
-
-        .right-content-col {
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;
-          align-items: flex-end;
-          align-self: flex-start;
-          padding-top: clamp(7.5rem, 16vh, 13rem);
-          padding-bottom: 1rem;
-          padding-right: 4.5rem;
-          padding-left: 1rem;
-          opacity: 0;
-          animation: fadeInUpHeadline 1s ease-out 0.3s forwards;
-        }
-
-        .lp-logo {
-          height: 43px;
-          width: auto;
-          object-fit: contain;
-          filter: drop-shadow(0 4px 14px rgba(0,0,0,0.3));
-          margin-bottom: 1rem;
-          align-self: flex-end;
-        }
-
-        .right-content-col h1 {
-          font-family: 'Gilroy', 'Oswald', sans-serif;
-          font-size: clamp(3.2rem, 6vw, 7rem);
-          font-weight: 800;
-          font-style: normal;
-          line-height: 0.92;
           text-transform: uppercase;
-          letter-spacing: -1px;
-          margin: 0 0 1.5rem 0;
           color: #ffffff;
-          text-shadow: 0 4px 24px rgba(0,0,0,0.5);
-          text-align: right;
+          background: rgba(255,255,255,0.1);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          border: 1.5px solid rgba(255,255,255,0.28);
+          border-radius: 50px;
+          cursor: pointer;
+          white-space: nowrap;
+          transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .lp-btn-secondary:hover {
+          background: rgba(255,255,255,0.2);
+          border-color: rgba(255,255,255,0.65);
+          transform: translateY(-4px) scale(1.03);
         }
 
-        .buttons-container {
+        /* ── Benefit Cards ── */
+        .lp-card {
+          background: rgba(255,255,255,0.97);
+          border-radius: 20px;
+          padding: 1.1rem 1.3rem;
           display: flex;
-          gap: 1.25rem;
           align-items: center;
-          justify-content: flex-end;
-          width: 100%;
-          margin-top: 0.75rem;
-          position: relative;
-          z-index: 40;
-          pointer-events: auto;
+          gap: 1rem;
+          box-shadow: 0 14px 36px rgba(0,0,0,0.2);
+          transition: transform 0.28s ease, box-shadow 0.28s ease;
         }
-
-        /* ── ESTRUTURA RESPONSIVA MOBILE (telas <= 1024px) ── */
-        @media (max-width: 1024px) {
-          section {
-            height: auto !important;
-            min-height: 100vh !important;
-            overflow: visible !important;
-            padding: 0 1rem !important;
-          }
-
-          .hero-grid {
-            display: flex !important;
-            flex-direction: column !important;
-            width: 100% !important;
-            padding-top: 1.5rem !important;
-            gap: 0 !important;
-            align-items: center !important;
-          }
-
-          /* 1. Bloco de Conteúdo (Logo + Headline + Botões) no TOPO */
-          .right-content-col {
-            order: 1 !important;
-            width: 100% !important;
-            padding: 0 !important;
-            align-items: center !important;
-            align-self: center !important;
-            text-align: center !important;
-            position: relative !important;
-            z-index: 20 !important;
-          }
-
-          .lp-logo {
-            display: none !important;
-          }
-
-          .right-content-col h1 {
-            text-align: center !important;
-            font-size: clamp(2rem, 7.5vw, 3.2rem) !important;
-            font-style: normal !important;
-            margin: 0 0 1.25rem 0 !important;
-            line-height: 0.95 !important;
-            width: 100% !important;
-          }
-
-          .buttons-container {
-            flex-direction: column !important;
-            justify-content: center !important;
-            align-items: center !important;
-            width: 100% !important;
-            margin-top: 0.5rem !important;
-            gap: 0.85rem !important;
-            padding: 0 !important;
-          }
-
-          .btn-hero-primary, .btn-hero-secondary {
-            width: 100% !important;
-            max-width: 320px !important;
-            box-sizing: border-box !important;
-          }
-
-          /* 2. Foto do Senador no MEIO */
-          .left-photo-col {
-            order: 2 !important;
-            margin: 1.25rem 0 0 0 !important;
-            height: auto !important;
-            width: 100% !important;
-            justify-content: center !important;
-          }
-
-          .senador-photo-wrapper {
-            width: 100% !important;
-            display: flex !important;
-            justify-content: center !important;
-          }
-
-          .senador-photo-wrapper img {
-            height: 105px !important;
-            max-height: 13vh !important;
-            width: auto !important;
-            max-width: 40% !important;
-            object-fit: contain !important;
-            margin: 0 auto !important;
-          }
-
-          /* 3. Cards de Benefícios no RODAPÉ */
-          .benefit-cards-container {
-            order: 3 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            width: 100% !important;
-            gap: 0.85rem !important;
-            margin-top: 1.25rem !important;
-            padding-bottom: 2.5rem !important;
-          }
-        }
-
-        /* ── TABLET E NOTEBOOKS PEQUENOS ── */
-        @media (max-width: 1200px) and (min-width: 1025px) {
-          .hero-grid {
-            grid-template-columns: 48% 1fr !important;
-            gap: 1rem !important;
-          }
-          .right-content-col h1 {
-            font-size: clamp(3rem, 5.5vw, 4.5rem) !important;
-          }
-          .left-photo-col {
-            margin-left: -20px !important;
-          }
-        }
-
-        /* ── TELAS GRANDES (FULL HD & MONITORES 1440p+) ── */
-        @media (min-width: 1440px) {
-          .right-content-col {
-            padding-top: 8.5rem !important;
-          }
-          .right-content-col h1 {
-            font-size: clamp(4.5rem, 6vw, 7.2rem) !important;
-          }
-          .senador-photo-wrapper img {
-            height: 86vh !important;
-            max-height: 850px !important;
-          }
-        }
-
-        @media (max-width: 576px) {
-          .btn-hero-primary, .btn-hero-secondary {
-            width: 100% !important;
-            min-width: 100% !important;
-          }
-
-          .senador-photo-wrapper img {
-            height: 90px !important;
-            max-height: 11vh !important;
-            max-width: 35% !important;
-          }
+        .lp-card:hover {
+          transform: translateY(-7px);
+          box-shadow: 0 22px 48px rgba(0,0,0,0.28);
         }
       `}</style>
 
-      <section style={{ 
-        maxWidth: '1536px', 
+      {/* ════════════════════════════════════════════════════════════
+          HERO SECTION — LAYOUT DESKTOP
+          
+          Estrutura horizontal:
+          ┌─────────────────┬────────────────────────────────┐
+          │  Foto Senador   │  Logo                          │
+          │  (esq. grande)  │  Headline                      │
+          │                 │  Subheadline                   │
+          │                 │  [Botão Primário] [Secundário] │
+          └─────────────────┴────────────────────────────────┘
+          ┌─── Card 1 ───┬──── Card 2 ────┬──── Card 3 ────┐  ← cintura
+          └──────────────┴────────────────┴────────────────┘
+      ════════════════════════════════════════════════════════════ */}
+      <div style={{
+        position: 'relative',
+        width: '100%',
+        maxWidth: '1440px',
         margin: '0 auto',
-        padding: '0 2rem',
-        position: 'relative', 
-        zIndex: 2,
-        minHeight: '100vh',
-        height: 'auto',
+        height: '100vh',
+        minHeight: '700px',
         display: 'flex',
-        flexDirection: 'column'
+        alignItems: 'stretch',
+        overflow: 'hidden',
       }}>
 
-        <div className="hero-grid">
-          <div className="left-photo-col">
-            <div className="senador-photo-wrapper">
-              <img 
-                src="/senador/styveson_v3_nobg.png" 
-                alt="Senador Styveson Valim"
-              />
-            </div>
-          </div>
+        {/* ── Coluna Esquerda: Foto do Senador ─────────────────── */}
+        <div style={{
+          width: '46%',
+          flexShrink: 0,
+          display: 'flex',
+          alignItems: 'flex-end',
+          justifyContent: 'flex-start',
+          paddingLeft: '2.5rem',
+          opacity: 0,
+          animation: 'lpFadeInLeft 1.15s cubic-bezier(0.22,1,0.36,1) 0.15s forwards',
+        }}>
+          <img
+            src="/senador/styveson_v3_nobg.png"
+            alt="Senador Styveson Valim"
+            style={{
+              height: '92vh',
+              maxHeight: '850px',
+              width: 'auto',
+              objectFit: 'contain',
+              objectPosition: 'bottom center',
+              display: 'block',
+              WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 66%, transparent 95%)',
+              maskImage: 'linear-gradient(to bottom, black 0%, black 66%, transparent 95%)',
+            }}
+          />
+        </div>
 
-          <div className="right-content-col">
-            {/* Logo posicionada diretamente acima da Headline */}
-            <img 
-              className="lp-logo"
-              src="/logo_time_sv.png" 
-              alt="Logo Time SV"
-              onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
-            />
+        {/* ── Coluna Direita: Conteúdo ─────────────────────────── */}
+        <div style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'flex-start',
+          paddingRight: '5.5rem',
+          paddingLeft: '0.5rem',
+          paddingBottom: '9rem', /* empurra o conteúdo acima dos cards */
+          opacity: 0,
+          animation: 'lpFadeInUp 0.9s ease-out 0.45s forwards',
+        }}>
 
-            <h1>
-              #VEM PRO <br />NOSSO TIME
-            </h1>
+          {/* Logo */}
+          <img
+            src="/logo_time_sv.png"
+            alt="Logo Time Styveson Valim"
+            onError={e => { e.currentTarget.src = '/logo_sv_2025.png'; }}
+            style={{
+              height: '48px',
+              width: 'auto',
+              objectFit: 'contain',
+              marginBottom: '1.8rem',
+              filter: 'drop-shadow(0 4px 18px rgba(0,0,0,0.38))',
+            }}
+          />
 
-            {/* Botões posicionados logo abaixo da Headline */}
-            <div className="buttons-container">
-              <button 
-                onClick={() => window.open('/login', '_blank')} 
-                onMouseEnter={() => setHoverSecondary(true)}
-                onMouseLeave={() => setHoverSecondary(false)}
-                className="btn-hero-secondary"
-                style={{
-                  minHeight: '48px',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontFamily: "'Oswald', sans-serif",
-                  fontSize: '0.95rem',
-                  fontWeight: 800,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.8px',
-                  color: '#ffffff',
-                  background: hoverSecondary ? 'rgba(255, 255, 255, 0.3)' : 'rgba(255, 255, 255, 0.14)',
-                  backdropFilter: 'blur(12px)',
-                  WebkitBackdropFilter: 'blur(12px)',
-                  border: hoverSecondary ? '1.5px solid #ffffff' : '1.5px solid rgba(255, 255, 255, 0.35)',
-                  borderRadius: '50px',
-                  boxShadow: 'none',
-                  padding: '12px 28px',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  transform: hoverSecondary ? 'translateY(-4px) scale(1.03)' : 'translateY(0) scale(1)',
-                  transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                  position: 'relative',
-                  zIndex: 40,
-                  pointerEvents: 'auto'
-                }}
-              >
-                <UserCheck 
-                  size={18} 
-                  color="#ffffff" 
-                  style={{ 
-                    marginRight: '8px',
-                    transform: hoverSecondary ? 'scale(1.2)' : 'scale(1)',
-                    transition: 'transform 0.25s ease'
-                  }} 
-                />
-                <span>Já sou Apoiador</span>
-              </button>
+          {/* Headline principal */}
+          <h1 style={{
+            fontFamily: "'Gilroy', 'Oswald', 'Outfit', sans-serif",
+            fontSize: 'clamp(3.6rem, 6.2vw, 7rem)',
+            fontWeight: 900,
+            fontStyle: 'normal',
+            lineHeight: 0.9,
+            textTransform: 'uppercase',
+            letterSpacing: '-1.5px',
+            color: '#ffffff',
+            textShadow: '0 4px 30px rgba(0,0,0,0.5)',
+            margin: '0 0 1.1rem 0',
+          }}>
+            #VEM PRO<br />NOSSO TIME
+          </h1>
 
-              <button 
-                onClick={() => setShowModal(true)} 
-                onMouseEnter={() => setHoverPrimary(true)}
-                onMouseLeave={() => setHoverPrimary(false)}
-                className="btn-hero-primary"
-                style={{
-                  minHeight: '48px',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontFamily: "'Oswald', sans-serif",
-                  fontSize: '1.02rem',
-                  fontWeight: 800,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.8px',
-                  color: '#001a3d',
-                  background: hoverPrimary 
-                    ? 'linear-gradient(135deg, #FFFF99 0%, #FFE000 50%, #F5C400 100%)' 
-                    : 'linear-gradient(135deg, #FFF066 0%, #F7CE00 50%, #E0B400 100%)',
-                  border: '1.5px solid rgba(255, 255, 255, 0.6)',
-                  borderRadius: '50px',
-                  boxShadow: 'none',
-                  padding: '12px 32px',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  transform: hoverPrimary ? 'translateY(-4px) scale(1.04)' : 'translateY(0) scale(1)',
-                  transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                  position: 'relative',
-                  zIndex: 40,
-                  pointerEvents: 'auto'
-                }}
-              >
-                <UserPlus size={18} color="#001a3d" style={{ marginRight: '8px', position: 'relative', zIndex: 2 }} />
-                <span style={{ position: 'relative', zIndex: 2, color: '#001a3d' }}>Seja Apoiador</span>
-                <ArrowRight 
-                  size={17} 
-                  color="#001a3d" 
-                  strokeWidth={3} 
-                  style={{ 
-                    marginLeft: '8px', 
-                    position: 'relative', 
-                    zIndex: 2,
-                    transform: hoverPrimary ? 'translateX(6px)' : 'translateX(0)',
-                    transition: 'transform 0.25s ease'
-                  }} 
-                />
-              </button>
-            </div>
+          {/* Subheadline / Texto de apoio */}
+          <p style={{
+            fontFamily: "'Inter', sans-serif",
+            fontSize: '1.05rem',
+            fontWeight: 500,
+            lineHeight: 1.65,
+            color: 'rgba(255,255,255,0.72)',
+            margin: '0 0 2.5rem 0',
+            maxWidth: '370px',
+          }}>
+            Faça parte do time que está transformando o Rio Grande do Norte.
+            Juntos somos muito mais fortes!
+          </p>
+
+          {/* Botões de ação */}
+          <div style={{
+            display: 'flex',
+            gap: '1rem',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+          }}>
+            <button
+              className="lp-btn-primary"
+              onClick={() => setShowModal(true)}
+              onMouseEnter={() => setHoverPrimary(true)}
+              onMouseLeave={() => setHoverPrimary(false)}
+            >
+              <UserPlus size={18} color="#001a3d" />
+              <span>Seja Apoiador</span>
+              <ArrowRight size={17} color="#001a3d" strokeWidth={3} className="lp-arrow" />
+            </button>
+
+            <button
+              className="lp-btn-secondary"
+              onClick={() => window.open('/login', '_blank')}
+              onMouseEnter={() => setHoverSecondary(true)}
+              onMouseLeave={() => setHoverSecondary(false)}
+            >
+              <UserCheck size={18} color="#ffffff" />
+              <span>Já sou Apoiador</span>
+            </button>
           </div>
         </div>
 
-        <div 
-          className="benefit-cards-container"
-          style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(3, 1fr)', 
-            gap: '1rem',
-            flexShrink: 0,
-            marginTop: '-110px',
-            paddingBottom: '2.5rem',
-            position: 'relative',
-            zIndex: 10
+        {/* ── Cards — Flutuam na cintura do Senador ────────────── */}
+        <div style={{
+          position: 'absolute',
+          bottom: '2.5rem',
+          left: '3%',
+          right: '4rem',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '1rem',
+          zIndex: 20,
+          opacity: 0,
+          animation: 'lpFadeInCards 0.85s ease-out 1.1s forwards',
+        }}>
+
+          {/* Card 1 — Aplicativo Exclusivo */}
+          <div className="lp-card">
+            <div style={{
+              width: '48px', height: '48px', borderRadius: '14px',
+              backgroundColor: '#0348d4', flexShrink: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 8px 20px rgba(3,72,212,0.38)',
+            }}>
+              <Smartphone size={23} color="#ffffff" />
+            </div>
+            <div>
+              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.4px' }}>
+                Aplicativo exclusivo
+              </h3>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.74rem', color: '#475569', margin: 0, lineHeight: 1.5, fontWeight: 500 }}>
+                Receba novidades, materiais e notificações em primeira mão.
+              </p>
+            </div>
+          </div>
+
+          {/* Card 2 — Grupo WhatsApp */}
+          <div className="lp-card">
+            <div style={{
+              width: '48px', height: '48px', borderRadius: '14px',
+              backgroundColor: '#25D366', flexShrink: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 8px 20px rgba(37,211,102,0.45)',
+            }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path fill="#ffffff" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.461c-1.805 0-3.57-.485-5.114-1.402l-.366-.218-3.799.996 1.014-3.704-.239-.38c-1.008-1.603-1.541-3.468-1.54-5.378 0-5.586 4.545-10.13 10.133-10.13 2.705 0 5.247 1.054 7.159 2.968 1.912 1.913 2.965 4.457 2.964 7.163 0 5.588-4.546 10.133-10.137 10.133m0-22.016c-6.55 0-11.876 5.325-11.878 11.876 0 2.094.546 4.14 1.583 5.937l-1.68 6.136 6.279-1.647c1.733.944 3.69 1.442 5.69 1.444h.005c6.549 0 11.877-5.326 11.879-11.877 0-3.174-1.236-6.158-3.481-8.404-2.245-2.247-5.23-3.483-8.402-3.483"/>
+              </svg>
+            </div>
+            <div>
+              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.4px' }}>
+                Grupo no WhatsApp
+              </h3>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.74rem', color: '#475569', margin: 0, lineHeight: 1.5, fontWeight: 500 }}>
+                Entre no canal oficial para quem acredita no RN.
+              </p>
+            </div>
+          </div>
+
+          {/* Card 3 — Monte seu Time */}
+          <div className="lp-card">
+            <div style={{
+              width: '48px', height: '48px', borderRadius: '14px',
+              backgroundColor: '#0348d4', flexShrink: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 8px 20px rgba(3,72,212,0.38)',
+            }}>
+              <Users size={23} color="#ffffff" />
+            </div>
+            <div>
+              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.4px' }}>
+                Monte seu time
+              </h3>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.74rem', color: '#475569', margin: 0, lineHeight: 1.5, fontWeight: 500 }}>
+                Convide amigos, monte seu time e ajude o nosso RN.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* ── Modal de Cadastro ── */}
+      {showModal && (
+        <div
+          onClick={() => setShowModal(false)}
+          style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            backgroundColor: 'rgba(0,20,60,0.85)', zIndex: 9999,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            backdropFilter: 'blur(8px)',
+            animation: 'lpModalOverlay 0.38s ease-out forwards',
+            padding: '1rem',
           }}
         >
-          <div className="benefit-card-hover" style={{ backgroundColor: '#ffffff', borderRadius: '20px', padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', boxShadow: '0 12px 30px rgba(0,0,0,0.12)', opacity: 0, animation: 'fadeInUpHeadline 0.8s ease-out 0.9s forwards' }}>
-            <div style={{ width: '44px', height: '44px', borderRadius: '14px', backgroundColor: '#0348d4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 8px 18px rgba(3, 72, 212, 0.3)' }}>
-              <Smartphone size={22} color="#ffffff" />
-            </div>
-            <div>
-              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '1rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2px 0', textTransform: 'uppercase' }}>Aplicativo exclusivo</h3>
-              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.78rem', color: '#475569', margin: 0, lineHeight: 1.4, fontWeight: 500 }}>Receba novidades, materiais e notificações em primeira mão.</p>
-            </div>
-          </div>
-
-          <div className="benefit-card-hover" style={{ backgroundColor: '#ffffff', borderRadius: '20px', padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', boxShadow: '0 12px 30px rgba(0,0,0,0.12)', opacity: 0, animation: 'fadeInUpHeadline 0.8s ease-out 1.1s forwards' }}>
-            <div style={{ width: '44px', height: '44px', borderRadius: '14px', backgroundColor: '#25D366', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 8px 18px rgba(37, 211, 102, 0.4)' }}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill="#ffffff" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.461c-1.805 0-3.57-.485-5.114-1.402l-.366-.218-3.799.996 1.014-3.704-.239-.38c-1.008-1.603-1.541-3.468-1.54-5.378 0-5.586 4.545-10.13 10.133-10.13 2.705 0 5.247 1.054 7.159 2.968 1.912 1.913 2.965 4.457 2.964 7.163 0 5.588-4.546 10.133-10.137 10.133m0-22.016c-6.55 0-11.876 5.325-11.878 11.876 0 2.094.546 4.14 1.583 5.937l-1.68 6.136 6.279-1.647c1.733.944 3.69 1.442 5.69 1.444h.005c6.549 0 11.877-5.326 11.879-11.877 0-3.174-1.236-6.158-3.481-8.404-2.245-2.247-5.23-3.483-8.402-3.483"/></svg>
-            </div>
-            <div>
-              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '1rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2px 0', textTransform: 'uppercase' }}>Grupo no WhatsApp</h3>
-              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.78rem', color: '#475569', margin: 0, lineHeight: 1.4, fontWeight: 500 }}>Entre no canal oficial para quem acredita no RN.</p>
-            </div>
-          </div>
-
-          <div className="benefit-card-hover" style={{ backgroundColor: '#ffffff', borderRadius: '20px', padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', boxShadow: '0 12px 30px rgba(0,0,0,0.12)', opacity: 0, animation: 'fadeInUpHeadline 0.8s ease-out 1.3s forwards' }}>
-            <div style={{ width: '44px', height: '44px', borderRadius: '14px', backgroundColor: '#0348d4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 8px 18px rgba(3, 72, 212, 0.3)' }}>
-              <Users size={22} color="#ffffff" />
-            </div>
-            <div>
-              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '1rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2px 0', textTransform: 'uppercase' }}>Monte seu time</h3>
-              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.78rem', color: '#475569', margin: 0, lineHeight: 1.4, fontWeight: 500 }}>Convide amigos, monte seu time e ajude o nosso RN.</p>
-            </div>
-          </div>
-        </div>
-
-      </section>
-
-      {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)} style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: 'rgba(0,20,60,0.85)', zIndex: 9999,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          backdropFilter: 'blur(8px)',
-          animation: 'wowModalOverlay 0.4s ease-out forwards',
-          padding: '1rem'
-        }}>
-          <div className="modal-content" onClick={e => e.stopPropagation()} style={{
-            background: '#ffffff', borderRadius: '24px',
-            maxWidth: '650px', width: '100%', maxHeight: '95vh', overflowY: 'auto',
-            boxShadow: '0 25px 60px -10px rgba(0, 0, 0, 0.45)',
-            position: 'relative',
-            animation: 'wowModalContent 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards'
-          }}>
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              background: '#ffffff', borderRadius: '24px',
+              maxWidth: '650px', width: '100%', maxHeight: '95vh', overflowY: 'auto',
+              boxShadow: '0 28px 65px -10px rgba(0,0,0,0.48)',
+              position: 'relative',
+              animation: 'lpModalContent 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+            }}
+          >
             <CadastroApoiador isModal={true} onClose={() => setShowModal(false)} />
           </div>
         </div>
