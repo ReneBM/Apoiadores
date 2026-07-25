@@ -589,27 +589,6 @@ export default function CadastroApoiador({ isModal = false, onClose }) {
               </div>
             </div>
 
-            <h3 className="section-title">2. Redes Sociais</h3>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
-              <div>
-                <label className="form-label">Instagram</label>
-                <input type="text" name="rs_instagram" placeholder="@seu.usuario" value={form.redes_sociais.instagram} onChange={handleChange} className="form-input" />
-              </div>
-              <div>
-                <label className="form-label">Facebook</label>
-                <input type="text" name="rs_facebook" placeholder="Perfil ou Página" value={form.redes_sociais.facebook} onChange={handleChange} className="form-input" />
-              </div>
-              <div>
-                <label className="form-label">TikTok</label>
-                <input type="text" name="rs_tiktok" placeholder="@seu.usuario" value={form.redes_sociais.tiktok} onChange={handleChange} className="form-input" />
-              </div>
-              <div>
-                <label className="form-label">YouTube</label>
-                <input type="text" name="rs_youtube" placeholder="Canal" value={form.redes_sociais.youtube} onChange={handleChange} className="form-input" />
-              </div>
-            </div>
-
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '1.5rem', textAlign: 'left', background: '#f8fafc', padding: '1rem', borderRadius: '10px', border: '1.5px solid #e2e8f0' }}>
               <input
                 type="checkbox"
@@ -626,7 +605,7 @@ export default function CadastroApoiador({ isModal = false, onClose }) {
             </div>
 
             {/* Campos de Senha */}
-            <h3 className="section-title">3. Crie sua Senha de Acesso</h3>
+            <h3 className="section-title">2. Crie sua Senha de Acesso</h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               <div className="form-group">
                 <label className="form-label">Senha *</label>
