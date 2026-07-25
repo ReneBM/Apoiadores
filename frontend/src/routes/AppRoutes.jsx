@@ -131,13 +131,13 @@ export default function AppRoutes() {
         </Route>
       </Route>
 
-      {/* Raiz — redireciona para destino correto */}
+      {/* Raiz — Landing Page pública. Usuários já autenticados vão para o app. */}
       <Route
         path="/"
         element={
           isAuthenticated
             ? <Navigate to={getHomeRedirect()} replace />
-            : <Navigate to="/login" replace />
+            : <LandingPage />
         }
       />
 
