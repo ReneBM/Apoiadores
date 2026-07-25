@@ -61,6 +61,7 @@ export default function FeedPerfil() {
     loadFeed();
   }, []);
 
+  // Inicializa curtidas/comentários com os dados reais vindos da API
   useEffect(() => {
     if (noticias.length > 0) {
       const initialLikes = {};
@@ -68,10 +69,14 @@ export default function FeedPerfil() {
 
       noticias.forEach((news) => {
         initialLikes[news.id] = {
-          liked: false,
-          count: 0
+          liked: !!news.curtiu,
+          count: news.curtidas_total || 0
         };
-        initialComments[news.id] = [];
+        initialComments[news.id] = {
+          itens: news.ultimos_comentarios || [],
+          total: news.comentarios_total || 0,
+          expandido: false
+        };
       });
 
       setLikes(initialLikes);
@@ -79,34 +84,65 @@ export default function FeedPerfil() {
     }
   }, [noticias]);
 
-  const toggleLike = (newsId) => {
-    setLikes((prev) => {
-      const current = prev[newsId] || { liked: false, count: 0 };
-      const liked = !current.liked;
-      const count = liked ? current.count + 1 : current.count - 1;
-      return {
+  const toggleLike = async (newsId) => {
+    // Update otimista + sincronização com o servidor
+    const previous = likes[newsId] || { liked: false, count: 0 };
+    setLikes((prev) => ({
+      ...prev,
+      [newsId]: {
+        liked: !previous.liked,
+        count: previous.liked ? Math.max(previous.count - 1, 0) : previous.count + 1
+      }
+    }));
+
+    try {
+      const res = await api.post(`/noticias/${newsId}/curtir`);
+      setLikes((prev) => ({
         ...prev,
-        [newsId]: { liked, count }
-      };
-    });
+        [newsId]: { liked: res.data.curtiu, count: res.data.total }
+      }));
+    } catch (err) {
+      console.error(err);
+      setLikes((prev) => ({ ...prev, [newsId]: previous }));
+      toast.error('Não foi possível registrar a curtida.');
+    }
   };
 
-  const handleAddComment = (newsId) => {
+  const handleAddComment = async (newsId) => {
     const text = newComment[newsId]?.trim();
     if (!text) return;
 
-    setComments((prev) => {
-      const current = prev[newsId] || [];
-      return {
-        ...prev,
-        [newsId]: [...current, { name: user?.nome || 'Você', text }]
-      };
-    });
+    try {
+      const res = await api.post(`/noticias/${newsId}/comentarios`, { texto: text });
+      setComments((prev) => {
+        const current = prev[newsId] || { itens: [], total: 0, expandido: false };
+        return {
+          ...prev,
+          [newsId]: {
+            ...current,
+            itens: [...current.itens, res.data],
+            total: current.total + 1
+          }
+        };
+      });
+      setNewComment((prev) => ({ ...prev, [newsId]: '' }));
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response?.data?.error || 'Não foi possível enviar o comentário.');
+    }
+  };
 
-    setNewComment((prev) => ({
-      ...prev,
-      [newsId]: ''
-    }));
+  const handleExpandComments = async (newsId) => {
+    try {
+      const res = await api.get(`/noticias/${newsId}/comentarios`);
+      setComments((prev) => ({
+        ...prev,
+        [newsId]: { itens: res.data, total: res.data.length, expandido: true }
+      }));
+    } catch (err) {
+      console.error(err);
+      toast.error('Não foi possível carregar os comentários.');
+    }
   };
 
   const handleShareWhatsApp = (text, url) => {
@@ -239,7 +275,7 @@ export default function FeedPerfil() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: isDesktop ? '2rem' : '1rem' }}>
           {noticias.map((news) => {
             const postLikes = likes[news.id] || { liked: false, count: 0 };
-            const postComments = comments[news.id] || [];
+            const postComments = comments[news.id] || { itens: [], total: 0, expandido: false };
             const commentText = newComment[news.id] || '';
 
             return (
@@ -331,19 +367,22 @@ export default function FeedPerfil() {
                   </div>
 
                   {/* Comments */}
-                  {postComments.length > 0 && (
+                  {postComments.total > 0 && (
                     <div style={{ marginTop: '8px' }}>
-                      {postComments.slice(0, 3).map((comm, idx) => (
-                        <div key={idx} style={{ fontSize: '14px', marginBottom: '4px' }}>
-                          <strong style={{ color: '#262626', marginRight: '6px' }}>{comm.name}</strong>
-                          <span style={{ color: '#262626' }}>{comm.text}</span>
+                      {!postComments.expandido && postComments.total > postComments.itens.length && (
+                        <button
+                          onClick={() => handleExpandComments(news.id)}
+                          style={{ background: 'none', border: 'none', padding: 0, color: '#8e8e8e', fontSize: '14px', cursor: 'pointer', marginBottom: '4px', display: 'block' }}
+                        >
+                          Ver todos os {postComments.total} comentários
+                        </button>
+                      )}
+                      {postComments.itens.map((comm) => (
+                        <div key={comm.id} style={{ fontSize: '14px', marginBottom: '4px' }}>
+                          <strong style={{ color: '#262626', marginRight: '6px' }}>{comm.nome}</strong>
+                          <span style={{ color: '#262626' }}>{comm.texto}</span>
                         </div>
                       ))}
-                      {postComments.length > 3 && (
-                        <span style={{ color: '#8e8e8e', fontSize: '14px', cursor: 'pointer' }}>
-                          Ver todos os {postComments.length} comentários
-                        </span>
-                      )}
                     </div>
                   )}
 

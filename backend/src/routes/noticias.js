@@ -1,5 +1,7 @@
 const router = require('express').Router();
-const { list, create, remove } = require('../controllers/noticiaController');
+const {
+  list, create, remove, toggleCurtida, listComentarios, createComentario, removeComentario,
+} = require('../controllers/noticiaController');
 const { authenticate } = require('../middleware/auth');
 const { requirePermission } = require('../middleware/rbac');
 const multer = require('multer');
@@ -50,6 +52,19 @@ router.post('/', requirePermission('Feed de Notícias', 'criar'), create);
 
 // DELETE /api/noticias/:id - deleta notícia
 router.delete('/:id', requirePermission('Feed de Notícias', 'excluir'), remove);
+
+// ── Interações (qualquer usuário com acesso ao feed) ──────────────────────
+// POST /api/noticias/:id/curtir - curtir/descurtir (toggle)
+router.post('/:id/curtir', requirePermission('Feed de Notícias', 'visualizar'), toggleCurtida);
+
+// GET /api/noticias/:id/comentarios - lista todos os comentários
+router.get('/:id/comentarios', requirePermission('Feed de Notícias', 'visualizar'), listComentarios);
+
+// POST /api/noticias/:id/comentarios - adiciona comentário
+router.post('/:id/comentarios', requirePermission('Feed de Notícias', 'visualizar'), createComentario);
+
+// DELETE /api/noticias/comentarios/:comentarioId - autor ou staff exclui
+router.delete('/comentarios/:comentarioId', removeComentario);
 
 // POST /api/noticias/upload - upload de mídia
 router.post(
