@@ -266,7 +266,7 @@ export default function LandingPage() {
           position: 'relative',
           display: 'flex',
           alignItems: 'flex-end',
-          justifyContent: 'center',
+          justifyContent: 'flex-start',
           paddingLeft: '1rem',
           overflow: 'visible',
           opacity: 0,
