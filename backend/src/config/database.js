@@ -89,8 +89,10 @@ const mockStore = {
   mensagens_disparadas: []
 };
 
-// Verifica se a conexão com o banco real deve ser usada
-const dbUrl = process.env.DATABASE_URL;
+// Verifica se a conexão com o banco real deve ser usada.
+// Em produção (Vercel), a integração do Supabase injeta POSTGRES_URL (pooler,
+// pronto para serverless) — preferimos ele. Localmente, usamos DATABASE_URL.
+const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
 const isPlaceholder = !dbUrl || dbUrl.includes('[PASSWORD]') || dbUrl.includes('[YOUR_PASSWORD]');
 
 if (isPlaceholder) {
