@@ -8,21 +8,25 @@ import { useAuth } from '../contexts/AuthContext';
  * @param {string}   redirectTo — destino se não autenticado
  */
 export function PrivateRoute({ roles = [], permission = null, redirectTo = '/login' }) {
-  const { isAuthenticated, user, hasPermission } = useAuth();
+  const { isAuthenticated, user, pesquisaConcluida, hasPermission } = useAuth();
 
   if (!isAuthenticated) {
     return <Navigate to={redirectTo} replace />;
   }
 
+  // Se o usuário está autenticado mas ainda não concluiu a pesquisa de engajamento no onboarding
+  if (!pesquisaConcluida) {
+    return <Navigate to="/pesquisa-engajamento" replace />;
+  }
+
+  const isStaff = ['admin', 'coordenador'].includes(user?.role);
+  const fallback = isStaff ? '/dashboard' : '/painel';
+
   if (roles.length > 0 && !roles.includes(user?.role)) {
-    // Redireciona para o painel correto conforme role
-    const fallback = user?.role === 'multiplicador' ? '/painel' : '/dashboard';
     return <Navigate to={fallback} replace />;
   }
 
   if (permission && !hasPermission(permission.func, permission.action)) {
-    // Redireciona se não tem permissão para a funcionalidade
-    const fallback = user?.role === 'multiplicador' ? '/painel' : '/dashboard';
     return <Navigate to={fallback} replace />;
   }
 

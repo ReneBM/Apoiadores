@@ -83,11 +83,21 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const completarPesquisa = useCallback(() => {
+    setUser((prev) => {
+      if (!prev) return null;
+      const updated = { ...prev, pesquisa_concluida: true };
+      localStorage.setItem('user', JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
   const isAdmin = user?.role === 'admin';
   const isCoordenador = user?.role === 'coordenador';
   const isMultiplicador = user?.role === 'multiplicador';
   const canManageAll = isAdmin || isCoordenador;
   const primeiroAcesso = user?.primeiro_acesso === true;
+  const pesquisaConcluida = user?.pesquisa_concluida === true || isAdmin || isCoordenador;
 
   const hasPermission = useCallback((funcionalidade, acao) => {
     if (user?.role === 'admin') return true;
@@ -105,12 +115,13 @@ export function AuthProvider({ children }) {
       isMultiplicador,
       canManageAll,
       primeiroAcesso,
+      pesquisaConcluida,
+      completarPesquisa,
       hasPermission,
       isAuthenticated: !!user,
     }}>
       {children}
     </AuthContext.Provider>
-
   );
 }
 

@@ -256,7 +256,7 @@ export default function DashboardAdmin() {
       </div>
 
       {/* Grid de 4 Cards de KPIs */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: 'clamp(0.5rem, 2vw, 0.75rem)' }}>
+      <div className="grid-kpi-tablet" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: 'clamp(0.5rem, 2vw, 0.75rem)' }}>
         <KpiCard
           icon={Users}
           label="Total de apoiadores"

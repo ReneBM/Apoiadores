@@ -262,7 +262,7 @@ export default function AppLayout() {
     '/apoiadores/novo':     'Novo Apoiador',
     '/equipe':              'Equipe',
     '/perfis':              'Perfis de Acesso',
-    '/painel':              'Meu Painel',
+    '/painel':              '',
     '/aprovacoes':          'Aprovações Pendentes',
     '/central-coordenador': 'Central Coordenador',
     '/feed':                'Feed de Notícias',
@@ -284,36 +284,47 @@ export default function AppLayout() {
     navigate('/login');
   };
 
+  const isStaff = ['admin', 'coordenador'].includes(user?.role);
   const sidebarLinks = [];
-  
-  // Painel - Sempre visível
-  sidebarLinks.push({ 
-    to: '/painel', 
-    icon: Shield, 
-    label: (user?.role === 'admin' || user?.role === 'coordenador') ? 'Painel de Controle' : 'Meu Painel' 
-  });
 
-  // Dashboard
-  if (hasPermission('Dashboard', 'visualizar')) {
-    sidebarLinks.push({ to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' });
-  }
+  if (isStaff) {
+    // Painel - Sempre visível para staff
+    sidebarLinks.push({ 
+      to: '/painel', 
+      icon: Shield, 
+      label: 'Painel de Controle' 
+    });
 
-  // Apoiadores
-  if (hasPermission('Apoiadores', 'visualizar')) {
-    sidebarLinks.push({ to: '/apoiadores', icon: Users, label: 'Apoiadores' });
-  }
+    // Dashboard
+    if (hasPermission('Dashboard', 'visualizar')) {
+      sidebarLinks.push({ to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' });
+    }
 
-  // Equipe (Integrantes e Perfis)
-  if (hasPermission('Equipe', 'visualizar')) {
-    sidebarLinks.push({ to: '/equipe', icon: Users, label: 'Equipe' });
-  }
-  if (hasPermission('Perfis de Acesso', 'visualizar')) {
-    sidebarLinks.push({ to: '/perfis', icon: Shield, label: 'Perfis de Acesso' });
-  }
+    // Apoiadores
+    if (hasPermission('Apoiadores', 'visualizar')) {
+      sidebarLinks.push({ to: '/apoiadores', icon: Users, label: 'Apoiadores' });
+    }
 
-  // Feed (Notícias)
-  if (hasPermission('Feed de Notícias', 'visualizar')) {
+    // Equipe (Integrantes e Perfis)
+    if (hasPermission('Equipe', 'visualizar')) {
+      sidebarLinks.push({ to: '/equipe', icon: Users, label: 'Equipe' });
+    }
+    if (hasPermission('Perfis de Acesso', 'visualizar')) {
+      sidebarLinks.push({ to: '/perfis', icon: Shield, label: 'Perfis de Acesso' });
+    }
+
+    // Feed (Notícias)
+    if (hasPermission('Feed de Notícias', 'visualizar')) {
+      sidebarLinks.push({ to: '/feed', icon: MessageSquare, label: 'Feed de Notícias' });
+    }
+
+    // Perfil
+    sidebarLinks.push({ to: '/perfil', icon: Grid, label: 'Perfil' });
+  } else {
+    // Apoiador comum: Apenas Painel, Feed de Notícias e Perfil
+    sidebarLinks.push({ to: '/painel', icon: Shield, label: 'Painel' });
     sidebarLinks.push({ to: '/feed', icon: MessageSquare, label: 'Feed de Notícias' });
+    sidebarLinks.push({ to: '/perfil', icon: Grid, label: 'Perfil' });
   }
 
   return (
@@ -356,12 +367,12 @@ export default function AppLayout() {
             <img 
               src="/logo_time_sv.png" 
               alt="Logo Time SV" 
-              style={{ height: '36px', width: 'auto', objectFit: 'contain' }}
+              style={{ height: '18px', width: 'auto', objectFit: 'contain' }}
               onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
             />
             <div style={{ textAlign: 'left' }}>
               <span style={{ fontSize: '0.65rem', color: 'var(--lime)', fontWeight: 700, textTransform: 'uppercase', display: 'block' }}>
-                {user?.role === 'admin' ? 'Administrador' : user?.role === 'coordenador' ? 'Coordenador' : 'Multiplicador'}
+                {user?.role === 'admin' ? 'Administrador' : user?.role === 'coordenador' ? 'Coordenador' : 'Apoiador'}
               </span>
             </div>
           </div>

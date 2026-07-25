@@ -76,7 +76,7 @@ export default function LandingPage() {
         senha: data.senha || null,
         consentimento_lgpd: true,
         como_se_considera: 'Apoiador',
-        observacoes: 'Cadastrado via Landing Page WhatsApp (Time Styvenson)'
+        observacoes: 'Cadastrado via Landing Page WhatsApp (TimeSV)'
       };
       const res = await api.post('/apoiadores/publico', payload);
       setRegisteredData({
@@ -144,18 +144,59 @@ export default function LandingPage() {
           100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
+        @media (min-width: 900px) {
+          .lp-desktop-stage { display: grid !important; }
+          .lp-mobile-stage  { display: none !important; }
+        }
+
+        @media (max-width: 899px) {
+          .lp-desktop-stage { display: none !important; }
+          .lp-mobile-stage  {
+            display: flex !important;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            min-height: 100vh;
+            padding: clamp(1.25rem, 4vh, 2rem) 1rem clamp(2rem, 5vh, 3.5rem);
+            box-sizing: border-box;
+            gap: clamp(1rem, 2.5vh, 1.5rem);
+          }
+        }
+
+        /* ── Cards posicionados exatamente na altura da cintura do Senador ── */
+        .lp-desktop-cards {
+          position: absolute;
+          bottom: clamp(2.8rem, 7vh, 5.5rem);
+          left: 0.5rem;
+          right: clamp(1rem, 2.5vw, 3rem);
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: clamp(0.75rem, 1.2vw, 1.25rem);
+          z-index: 20;
+          opacity: 0;
+          animation: lpFadeInCards 0.85s ease-out 1.1s forwards;
+        }
+
+        /* Ajuste específico para iPad / Tablets em modo paisagem (virados) */
+        @media (max-height: 850px) and (min-width: 900px) {
+          .lp-desktop-cards {
+            bottom: clamp(3.5rem, 9.5vh, 6.2rem) !important;
+          }
+        }
+
         /* ── Botão Principal — Amarelo Dourado ── */
         .lp-btn-primary {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          gap: 10px;
-          min-height: 58px;
-          padding: 0 42px;
+          gap: 8px;
+          min-height: 48px;
+          padding: 0 30px;
           font-family: 'Oswald', sans-serif;
-          font-size: 1.05rem;
+          font-size: 0.92rem;
           font-weight: 800;
-          letter-spacing: 1px;
+          letter-spacing: 0.8px;
           text-transform: uppercase;
           color: #001a3d;
           background: linear-gradient(135deg, #FFF066 0%, #F7CE00 55%, #E0B400 100%);
@@ -196,11 +237,11 @@ export default function LandingPage() {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          gap: 10px;
-          min-height: 58px;
-          padding: 0 38px;
+          gap: 8px;
+          min-height: 48px;
+          padding: 0 26px;
           font-family: 'Oswald', sans-serif;
-          font-size: 1rem;
+          font-size: 0.88rem;
           font-weight: 800;
           letter-spacing: 0.8px;
           text-transform: uppercase;
@@ -294,37 +335,37 @@ export default function LandingPage() {
           textAlign: 'right',
           paddingRight: 'clamp(1rem, 2.5vw, 3rem)',
           paddingLeft: '1rem',
-          paddingBottom: 'clamp(2.5rem, 5vh, 4rem)',
+          paddingBottom: 'clamp(5.5rem, 11vh, 8.5rem)',
           opacity: 0,
           animation: 'lpFadeInUp 0.9s ease-out 0.45s forwards',
         }}>
 
-          {/* Logo */}
+          {/* Logo (Subida com margem reduzida) */}
           <img
             src="/logo_time_sv.png"
-            alt="Logo Time Styveson Valim"
-            onError={e => { e.currentTarget.src = '/logo_sv_2025.png'; }}
+            alt="Logo Time SV"
+            onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
             style={{
-              height: 'clamp(46px, 5.5vh, 60px)',
+              height: 'clamp(58px, 7.5vh, 78px)',
               width: 'auto',
               objectFit: 'contain',
-              marginBottom: 'clamp(1rem, 2vh, 1.8rem)',
-              filter: 'drop-shadow(0 4px 18px rgba(0,0,0,0.38))',
+              marginBottom: 'clamp(0.75rem, 1.6vh, 1.4rem)',
+              filter: 'drop-shadow(0 6px 22px rgba(0,0,0,0.45))',
             }}
           />
 
-          {/* Headline principal */}
+          {/* Headline principal (Subida) */}
           <h1 style={{
             fontFamily: "'Gilroy', 'Oswald', 'Outfit', sans-serif",
-            fontSize: 'clamp(4.2rem, 6.4vw, 7.2rem)',
+            fontSize: 'clamp(5rem, 7.8vw, 8.8rem)',
             fontWeight: 900,
             fontStyle: 'normal',
-            lineHeight: 0.9,
+            lineHeight: 0.88,
             textTransform: 'uppercase',
-            letterSpacing: '-1.5px',
+            letterSpacing: '-2px',
             color: '#ffffff',
-            textShadow: '0 4px 30px rgba(0,0,0,0.5)',
-            margin: '0 0 clamp(1.2rem, 2.5vh, 2.2rem) 0',
+            textShadow: '0 6px 36px rgba(0,0,0,0.6)',
+            margin: '0 0 clamp(0.9rem, 2vh, 1.6rem) 0',
             whiteSpace: 'nowrap',
           }}>
             #VEM PRO<br />NOSSO TIME
@@ -361,19 +402,8 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* ── Cards — Flutuam na cintura do Senador ────────────── */}
-        <div style={{
-          position: 'absolute',
-          bottom: 'clamp(1.2rem, 3vh, 2.2rem)',
-          left: '0.5rem',
-          right: 'clamp(1rem, 2.5vw, 3rem)',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: 'clamp(0.75rem, 1.2vw, 1.25rem)',
-          zIndex: 20,
-          opacity: 0,
-          animation: 'lpFadeInCards 0.85s ease-out 1.1s forwards',
-        }}>
+        {/* ── Cards — Flutuam na altura da cintura do Senador ────────────── */}
+        <div className="lp-desktop-cards">
 
           {/* Card 1 — Aplicativo Exclusivo */}
           <div className="lp-card">
@@ -438,6 +468,196 @@ export default function LandingPage() {
           </div>
 
         </div>
+      </div>
+
+      {/* ════════════════════════════════════════════════════════════
+          HERO SECTION — MOBILE STAGE (< 900px)
+          Estrutura vertical exata:
+          1. Logo
+          2. Imagem do Senador
+          3. Headline
+          4. Botão Principal
+          5. Botão Secundário
+          6. Cards (1 Coluna Vertical)
+      ════════════════════════════════════════════════════════════ */}
+      <div className="lp-mobile-stage">
+        
+        {/* 1. Logo (Ajustada com redução exata de 5%) */}
+        <img
+          src="/logo_time_sv.png"
+          alt="Logo Time SV"
+          onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
+          style={{
+            height: 'clamp(53px, 9vh, 76px)',
+            maxWidth: 'min(94vw, 360px)',
+            width: 'auto',
+            objectFit: 'contain',
+            filter: 'drop-shadow(0 7px 20px rgba(0,0,0,0.46))',
+            margin: '0 auto',
+            display: 'block',
+            flexShrink: 0,
+            opacity: 0,
+            animation: 'lpFadeInUp 0.8s ease-out 0.1s forwards',
+          }}
+        />
+
+        {/* 2. Imagem do Senador + 3. Headline Principal (posicionada na altura da cintura) */}
+        <div style={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative',
+          margin: '0.2rem 0 0.5rem 0',
+        }}>
+          <img
+            src="/senador/styveson_v3_nobg.png"
+            alt="Senador Styveson Valim"
+            style={{
+              maxHeight: 'clamp(365px, 58vh, 533px)',
+              maxWidth: '100%',
+              width: 'auto',
+              objectFit: 'contain',
+              display: 'block',
+              margin: '0 auto',
+              filter: 'drop-shadow(0 8px 22px rgba(0,0,0,0.42))',
+              opacity: 0,
+              animation: 'lpFadeInLeft 1.0s cubic-bezier(0.22,1,0.36,1) 0.25s forwards',
+            }}
+          />
+
+          {/* Headline Extra Ampliada na Cintura do Senador (Sem sombra no mobile) */}
+          <h1 style={{
+            position: 'relative',
+            zIndex: 10,
+            fontFamily: "'Gilroy', 'Oswald', 'Outfit', sans-serif",
+            fontSize: 'clamp(3.6rem, 14vw, 5.8rem)',
+            fontWeight: 900,
+            fontStyle: 'normal',
+            lineHeight: 0.88,
+            textTransform: 'uppercase',
+            letterSpacing: '-2px',
+            color: '#ffffff',
+            textShadow: 'none',
+            textAlign: 'center',
+            margin: '-55px auto 0 auto',
+            width: '100%',
+            opacity: 0,
+            animation: 'lpFadeInUp 0.85s ease-out 0.45s forwards',
+          }}>
+            #VEM PRO<br />NOSSO TIME
+          </h1>
+        </div>
+
+        {/* 4. Botão Principal (90% - 100% largura) */}
+        <button
+          className="lp-btn-primary"
+          onClick={() => setShowModal(true)}
+          style={{
+            width: 'min(94%, 380px)',
+            minHeight: '54px',
+            fontSize: 'clamp(0.95rem, 4vw, 1.05rem)',
+            margin: '0.2rem auto 0',
+            opacity: 0,
+            animation: 'lpFadeInUp 0.8s ease-out 0.65s forwards',
+          }}
+        >
+          <UserPlus size={18} color="#001a3d" />
+          <span>Seja Apoiador</span>
+          <ArrowRight size={17} color="#001a3d" strokeWidth={3} className="lp-arrow" />
+        </button>
+
+        {/* 5. Botão Secundário (90% - 100% largura) */}
+        <button
+          className="lp-btn-secondary"
+          onClick={() => window.open('/login', '_blank')}
+          style={{
+            width: 'min(94%, 380px)',
+            minHeight: '54px',
+            fontSize: 'clamp(0.9rem, 3.8vw, 1rem)',
+            margin: '0 auto',
+            opacity: 0,
+            animation: 'lpFadeInUp 0.8s ease-out 0.8s forwards',
+          }}
+        >
+          <UserCheck size={18} color="#ffffff" />
+          <span>Já sou Apoiador</span>
+        </button>
+
+        {/* 6. Cards de Benefícios (1 Coluna Vertical, 100% largura container) */}
+        <div style={{
+          width: 'min(96%, 420px)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.85rem',
+          marginTop: '0.75rem',
+          opacity: 0,
+          animation: 'lpFadeInCards 0.85s ease-out 0.95s forwards',
+        }}>
+          {/* Card 1 — Aplicativo Exclusivo */}
+          <div className="lp-card" style={{ padding: '1rem 1.15rem' }}>
+            <div style={{
+              width: '44px', height: '44px', borderRadius: '12px',
+              backgroundColor: '#0348d4', flexShrink: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 8px 20px rgba(3,72,212,0.38)',
+            }}>
+              <Smartphone size={21} color="#ffffff" />
+            </div>
+            <div style={{ textAlign: 'left' }}>
+              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '0.9rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2px 0', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
+                Aplicativo exclusivo
+              </h3>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.74rem', color: '#475569', margin: 0, lineHeight: 1.4, fontWeight: 500 }}>
+                Receba novidades, materiais e notificações em primeira mão.
+              </p>
+            </div>
+          </div>
+
+          {/* Card 2 — Grupo WhatsApp */}
+          <div className="lp-card" style={{ padding: '1rem 1.15rem' }}>
+            <div style={{
+              width: '44px', height: '44px', borderRadius: '12px',
+              backgroundColor: '#25D366', flexShrink: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 8px 20px rgba(37,211,102,0.45)',
+            }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path fill="#ffffff" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.461c-1.805 0-3.57-.485-5.114-1.402l-.366-.218-3.799.996 1.014-3.704-.239-.38c-1.008-1.603-1.541-3.468-1.54-5.378 0-5.586 4.545-10.13 10.133-10.13 2.705 0 5.247 1.054 7.159 2.968 1.912 1.913 2.965 4.457 2.964 7.163 0 5.588-4.546 10.133-10.137 10.133m0-22.016c-6.55 0-11.876 5.325-11.878 11.876 0 2.094.546 4.14 1.583 5.937l-1.68 6.136 6.279-1.647c1.733.944 3.69 1.442 5.69 1.444h.005c6.549 0 11.877-5.326 11.879-11.877 0-3.174-1.236-6.158-3.481-8.404-2.245-2.247-5.23-3.483-8.402-3.483"/>
+              </svg>
+            </div>
+            <div style={{ textAlign: 'left' }}>
+              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '0.9rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2px 0', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
+                Grupo no WhatsApp
+              </h3>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.74rem', color: '#475569', margin: 0, lineHeight: 1.4, fontWeight: 500 }}>
+                Entre no canal oficial para quem acredita no RN.
+              </p>
+            </div>
+          </div>
+
+          {/* Card 3 — Monte seu Time */}
+          <div className="lp-card" style={{ padding: '1rem 1.15rem' }}>
+            <div style={{
+              width: '44px', height: '44px', borderRadius: '12px',
+              backgroundColor: '#0348d4', flexShrink: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 8px 20px rgba(3,72,212,0.38)',
+            }}>
+              <Users size={21} color="#ffffff" />
+            </div>
+            <div style={{ textAlign: 'left' }}>
+              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '0.9rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2px 0', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
+                Monte seu time
+              </h3>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.74rem', color: '#475569', margin: 0, lineHeight: 1.4, fontWeight: 500 }}>
+                Convide amigos, monte seu time e ajude o nosso RN.
+              </p>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       {/* ── Modal de Cadastro ── */}

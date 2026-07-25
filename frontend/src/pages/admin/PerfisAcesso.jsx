@@ -226,7 +226,7 @@ export default function PerfisAcesso() {
               />
               {isProtectedProfile && (
                 <small style={{ color: '#d97706', fontSize: '0.65rem', display: 'block', marginTop: '2px', fontWeight: 600 }}>
-                  ⚠️ Perfis nativos não podem ter o nome alterado.
+                  Perfis nativos não podem ter o nome alterado.
                 </small>
               )}
             </div>

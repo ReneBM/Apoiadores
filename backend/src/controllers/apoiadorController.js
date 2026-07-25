@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const db = require('../config/database');
 const logger = require('../utils/logger');
 const { validarCPF } = require('../utils/cpf');
+const { gerarSenhaTemporaria } = require('../utils/password');
+const { sendTempPasswordEmail } = require('../utils/mailer');
 
 // ── Helper: registra no audit_log ─────────────────────────────────────────
 const audit = async (userId, acao, entidade, entidadeId, detalhes, ip) => {
@@ -392,7 +394,11 @@ const createPublic = async (req, res, next) => {
     }
 
     if (cpf) {
-      const cpfCheck = await db.query('SELECT id FROM apoiadores WHERE cpf = $1', [cpf]);
+      const cleanCpf = cpf.replace(/\D/g, '');
+      const cpfCheck = await db.query(
+        'SELECT id FROM apoiadores WHERE cpf = $1 OR REPLACE(REPLACE(REPLACE(cpf, \'.\', \'\'), \'-\', \'\'), \' \', \'\') = $2',
+        [cpf, cleanCpf]
+      );
       if (cpfCheck.rows.length > 0) {
         return res.status(400).json({ error: 'Já existe um cadastro com este CPF.' });
       }
@@ -430,25 +436,32 @@ const createPublic = async (req, res, next) => {
     }
 
     const id = uuidv4();
-    await db.query(
-      `INSERT INTO apoiadores
-         (id, nome, email, telefone, cidade, bairro, interesse,
-          consentimento_lgpd, data_consentimento, status, multiplicador_id, cadastrado_por,
-          cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais, senha_inicial, origem)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, now(), 'pendente', $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)`,
-      [
-        id, nome, email || null, telefone || null, cidade, bairro || null,
-        interesse || null, consentimento_lgpd, multiplicadorId, cadastradoPor,
-        cpf || null, sexo || null, acao_impacto || null, como_se_considera || null,
-        como_ajudar ? JSON.stringify(como_ajudar) : null,
-        pessoas_mobilizar || null,
-        grupo_organizacao ? JSON.stringify(grupo_organizacao) : null,
-        temas_interesse ? JSON.stringify(temas_interesse) : null,
-        redes_sociais ? JSON.stringify(redes_sociais) : null,
-        senhaHash,
-        multiplicadorId ? 'Indicação (Link)' : 'Site / Landing Page'
-      ]
-    );
+    try {
+      await db.query(
+        `INSERT INTO apoiadores
+           (id, nome, email, telefone, cidade, bairro, interesse,
+            consentimento_lgpd, data_consentimento, status, multiplicador_id, cadastrado_por,
+            cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais, senha_inicial, origem)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, now(), 'pendente', $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)`,
+        [
+          id, nome, email || null, telefone || null, cidade, bairro || null,
+          interesse || null, consentimento_lgpd, multiplicadorId, cadastradoPor,
+          cpf || null, sexo || null, acao_impacto || null, como_se_considera || null,
+          como_ajudar ? JSON.stringify(como_ajudar) : null,
+          pessoas_mobilizar || null,
+          grupo_organizacao ? JSON.stringify(grupo_organizacao) : null,
+          temas_interesse ? JSON.stringify(temas_interesse) : null,
+          redes_sociais ? JSON.stringify(redes_sociais) : null,
+          senhaHash,
+          multiplicadorId ? 'Indicação (Link)' : 'Site / Landing Page'
+        ]
+      );
+    } catch (insertErr) {
+      if (insertErr.message && (insertErr.message.includes('UNIQUE') || insertErr.message.includes('unique') || insertErr.code === '23505')) {
+        return res.status(400).json({ error: 'Já existe um cadastro com este CPF ou E-mail.' });
+      }
+      throw insertErr;
+    }
 
     await audit(null, 'PUBLIC_SIGNUP_APOIADOR', 'apoiadores', id,
       { nome, cidade, ref }, req.ip);
@@ -480,6 +493,8 @@ const approve = async (req, res, next) => {
     );
 
     let userCreated = false;
+    let hasOwnPassword = false;
+    let senhaTemp = null; // senha temporária gerada (enviada por e-mail, nunca fixa)
 
     // 3. Se tiver e-mail, cria conta no users
     if (apoiador.email) {
@@ -487,20 +502,25 @@ const approve = async (req, res, next) => {
       const emailCheck = await db.query('SELECT id FROM users WHERE email = $1', [apoiador.email]);
       if (emailCheck.rows.length === 0) {
         const userId = uuidv4();
-        // Usa a senha que o apoiador definiu no cadastro (se disponível), caso contrário usa a padrão
-        const senhaFinal = apoiador.senha_inicial || await bcrypt.hash('SV@12345', 12);
-        // Se senha_inicial já é um hash, usa direto; se não é um hash, faz o hash
-        const senhaHash = apoiador.senha_inicial
-          ? apoiador.senha_inicial  // já está hasheada pelo createPublic
-          : await bcrypt.hash('SV@12345', 12);
+        hasOwnPassword = !!apoiador.senha_inicial;
+
+        let senhaHash;
+        if (hasOwnPassword) {
+          senhaHash = apoiador.senha_inicial; // já está hasheada pelo cadastro público
+        } else {
+          // Nunca usar senha padrão fixa: gera uma senha temporária aleatória
+          // e envia por e-mail; o usuário é forçado a trocá-la no primeiro acesso.
+          senhaTemp = gerarSenhaTemporaria();
+          senhaHash = await bcrypt.hash(senhaTemp, 12);
+        }
 
         // Perfil padrão: Operador (multiplicador) — c3c3c3c3 é o UUID do perfil Operador
         const PERFIL_OPERADOR_ID = 'c3c3c3c3-c3c3-c3c3-c3c3-c3c3c3c3c3c3';
-        
+
         await db.query(
           `INSERT INTO users (id, nome, email, senha_hash, role, ativo, primeiro_acesso, perfil_id)
            VALUES ($1, $2, $3, $4, 'multiplicador', true, $5, $6)`,
-          [userId, apoiador.nome, apoiador.email, senhaHash, !apoiador.senha_inicial, PERFIL_OPERADOR_ID]
+          [userId, apoiador.nome, apoiador.email, senhaHash, !hasOwnPassword, PERFIL_OPERADOR_ID]
         );
 
         // Cria o perfil correspondente em multiplicadores
@@ -516,11 +536,19 @@ const approve = async (req, res, next) => {
     }
 
     await audit(req.user.id, 'APPROVE_APOIADOR', 'apoiadores', id,
-      { nome: apoiador.nome, email: apoiador.email, userCreated }, req.ip);
+      { nome: apoiador.nome, email: apoiador.email, userCreated, hasOwnPassword }, req.ip);
 
-    res.json({ 
-      message: 'Apoiador aprovado com sucesso.', 
-      userCreated 
+    // Envia a senha temporária por e-mail (fire-and-forget; falha no e-mail não
+    // cancela a aprovação). Só quando geramos uma senha temporária.
+    if (senhaTemp && apoiador.email) {
+      sendTempPasswordEmail(apoiador.email, apoiador.nome, senhaTemp);
+    }
+
+    res.json({
+      message: 'Apoiador aprovado com sucesso.',
+      userCreated,
+      hasOwnPassword,
+      credenciaisEnviadas: !!senhaTemp,
     });
   } catch (err) {
     next(err);
@@ -534,6 +562,7 @@ const alterarTipo = async (req, res, next) => {
     await client.query('BEGIN');
     const { id } = req.params;
     const { tipo } = req.body; // 'Apoiador' | 'Mobilizador' | 'Líder de Base' | 'Coordenador' | 'Admin'
+    let senhaTempGerada = null; // senha temporária, definida só ao criar um novo usuário
 
     // 1. Buscar o apoiador
     const { rows: apRows } = await client.query('SELECT a.* FROM apoiadores a WHERE a.id = $1', [id]);
@@ -595,11 +624,11 @@ const alterarTipo = async (req, res, next) => {
           await client.query('DELETE FROM multiplicadores WHERE user_id = $1', [existingUser.id]);
         }
       } else {
-        // Cria um novo usuário
+        // Cria um novo usuário com senha temporária aleatória (nunca fixa),
+        // enviada por e-mail; forçamos a troca no primeiro acesso.
         const userId = uuidv4();
-        // Senha padrão SV@12345
-        const defaultPassword = 'SV@12345';
-        const senhaHash = await bcrypt.hash(defaultPassword, 12);
+        senhaTempGerada = gerarSenhaTemporaria();
+        const senhaHash = await bcrypt.hash(senhaTempGerada, 12);
 
         await client.query(
           `INSERT INTO users (id, nome, email, senha_hash, role, tipo, primeiro_acesso, ativo)
@@ -623,7 +652,16 @@ const alterarTipo = async (req, res, next) => {
     // Registrar ação no log de auditoria
     await audit(req.user.id, 'PROMOTE_APOIADOR', 'apoiadores', id, { tipo, email: emailNorm }, req.ip);
 
-    res.json({ message: 'Permissão/Tipo atualizado com sucesso.' });
+    // Se criamos um novo usuário, envia a senha temporária por e-mail
+    // (fire-and-forget; após o COMMIT para não segurar a transação).
+    if (senhaTempGerada && emailNorm) {
+      sendTempPasswordEmail(emailNorm, apoiador.nome, senhaTempGerada);
+    }
+
+    res.json({
+      message: 'Permissão/Tipo atualizado com sucesso.',
+      credenciaisEnviadas: !!senhaTempGerada,
+    });
   } catch (err) {
     await client.query('ROLLBACK');
     next(err);
@@ -632,4 +670,65 @@ const alterarTipo = async (req, res, next) => {
   }
 };
 
-module.exports = { list, getById, create, update, remove, listCidades, createPublic, approve, alterarTipo };
+// ── Salvar pesquisa de engajamento (Onboarding do primeiro acesso) ───────────
+const salvarPesquisaEngajamento = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    // O middleware `authenticate` injeta apenas id, role e nome em req.user —
+    // não o email. Buscamos o email pelo id para que a sincronização com a
+    // tabela `apoiadores` (WHERE LOWER(email) = ...) de fato ocorra.
+    const { rows: userRows } = await db.query('SELECT email FROM users WHERE id = $1', [userId]);
+    const userEmail = userRows[0]?.email || null;
+
+    const {
+      acao_impacto,
+      como_se_considera,
+      como_ajudar,
+      pessoas_mobilizar,
+      grupo_organizacao,
+      temas_interesse,
+      redes_sociais,
+    } = req.body;
+
+    // 1. Marca pesquisa como concluída na tabela users
+    await db.query(
+      'UPDATE users SET pesquisa_concluida = TRUE, updated_at = now() WHERE id = $1',
+      [userId]
+    );
+
+    // 2. Atualiza os dados da pesquisa na tabela apoiadores se houver correspondência de email
+    if (userEmail) {
+      await db.query(
+        `UPDATE apoiadores
+         SET acao_impacto = $1,
+             como_se_considera = $2,
+             como_ajudar = $3,
+             pessoas_mobilizar = $4,
+             grupo_organizacao = $5,
+             temas_interesse = $6,
+             redes_sociais = $7,
+             pesquisa_concluida = TRUE,
+             updated_at = now()
+         WHERE LOWER(email) = LOWER($8)`,
+        [
+          acao_impacto || null,
+          como_se_considera || null,
+          como_ajudar ? JSON.stringify(como_ajudar) : null,
+          pessoas_mobilizar || null,
+          grupo_organizacao ? JSON.stringify(grupo_organizacao) : null,
+          temas_interesse ? JSON.stringify(temas_interesse) : null,
+          redes_sociais ? JSON.stringify(redes_sociais) : null,
+          userEmail,
+        ]
+      );
+    }
+
+    await audit(userId, 'SUBMIT_PESQUISA_ENGAJAMENTO', 'users', userId, { email: userEmail }, req.ip);
+
+    res.json({ message: 'Pesquisa de engajamento concluída com sucesso!' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { list, getById, create, update, remove, listCidades, createPublic, approve, alterarTipo, salvarPesquisaEngajamento };

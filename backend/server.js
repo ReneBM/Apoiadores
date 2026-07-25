@@ -25,36 +25,79 @@ const PORT = process.env.PORT || 3001;
 app.set('trust proxy', 1);
 
 // ── Segurança ──────────────────────────────────────────────────────────────
+// CSP sob medida: endurece contra XSS (tokens ficam no localStorage) sem quebrar
+// o app. 'unsafe-inline' é mantido apenas onde é realmente necessário:
+//  - scriptSrc: o vite-plugin-pwa injeta um <script> inline de registro do SW;
+//  - styleSrc: o frontend usa estilos inline extensivamente + Google Fonts.
+// Imagens/mídia vêm de hosts externos (IBGE, senado.leg.br, placeholders), por
+// isso https:/data:/blob: são liberados nessas diretivas.
 app.use(helmet({
-  contentSecurityPolicy: false,
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      baseUri: ["'self'"],
+      objectSrc: ["'none'"],
+      frameAncestors: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+      fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
+      imgSrc: ["'self'", 'data:', 'blob:', 'https:'],
+      mediaSrc: ["'self'", 'data:', 'blob:', 'https:'],
+      connectSrc: ["'self'", 'https:'],
+      workerSrc: ["'self'", 'blob:'],
+      manifestSrc: ["'self'"],
+    },
+  },
   crossOriginResourcePolicy: { policy: 'cross-origin' },
   crossOriginEmbedderPolicy: false
 }));
 
+// CORS restrito à(s) origem(ns) definida(s) em FRONTEND_URL (lista separada por
+// vírgula). Requisições sem Origin (same-origin, apps mobile, curl) são aceitas.
+// Se FRONTEND_URL não estiver configurada, mantém o comportamento permissivo
+// anterior para não derrubar deploys ainda não parametrizados.
+const allowedOrigins = (process.env.FRONTEND_URL || '')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+if (process.env.NODE_ENV !== 'production') {
+  allowedOrigins.push('http://localhost:5173', 'http://localhost:3001');
+}
+
 app.use(cors({
   origin: (origin, callback) => {
-    // Permite qualquer origem em desenvolvimento/túneis
-    callback(null, true);
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    // Origem não autorizada: rejeita sem lançar erro — o navegador bloqueia a
+    // resposta pela ausência dos cabeçalhos CORS, sem gerar um 500 nos logs.
+    return callback(null, false);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-// Rate limiting global (desabilitado/aumentado para a apresentação)
+// Rate limiting global — protege contra abuso mantendo folga para uso legítimo.
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 999999,
+  max: 1000,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Muitas requisições. Tente novamente em instantes.' },
 });
 app.use(limiter);
 
-// Rate limiting mais restrito para rotas de autenticação (desabilitado/aumentado para a apresentação)
+// Rate limiting restrito para autenticação: só tentativas malsucedidas contam,
+// então logins válidos não penalizam o usuário, mas brute-force é barrado.
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 999999,
+  max: 10,
+  skipSuccessfulRequests: true,
+  standardHeaders: true,
+  legacyHeaders: false,
   message: { error: 'Muitas tentativas de login. Tente novamente em 15 minutos.' },
 });
 
@@ -149,8 +192,10 @@ app.use((err, _req, res, _next) => {
 });
 
 // ── Start ──────────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  logger.info(`Servidor rodando na porta ${PORT} [${process.env.NODE_ENV}]`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    logger.info(`Servidor rodando na porta ${PORT} [${process.env.NODE_ENV}]`);
+  });
+}
 
 module.exports = app;

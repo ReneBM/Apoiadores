@@ -94,6 +94,13 @@ const dbUrl = process.env.DATABASE_URL;
 const isPlaceholder = !dbUrl || dbUrl.includes('[PASSWORD]') || dbUrl.includes('[YOUR_PASSWORD]');
 
 if (isPlaceholder) {
+  // Segurança: o modo mock traz usuários de demonstração com credenciais
+  // conhecidas (ex.: admin@senadorvalim.com.br). Nunca deve rodar em produção.
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error(
+      'DATABASE_URL não configurada em produção. O MODO MOCK/SANDBOX (com credenciais de demonstração conhecidas) está desabilitado em produção por segurança. Configure DATABASE_URL.'
+    );
+  }
   useMock = true;
   logger.warn('⚠️ DATABASE_URL não configurada ou com placeholder. O sistema iniciará no MODO MOCK / SANDBOX (dados em memória).');
 } else {
@@ -244,19 +251,19 @@ const runMockQuery = async (text, params = []) => {
   // INSERT INTO apoiadores
   if (normalized.includes('insert into apoiadores')) {
     const [
-      id, nome, email, telefone, cidade, bairro, interesse, observacoes,
-      consentimento_lgpd, data_consentimento, status, multiplicador_id, cadastrado_por,
-      cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais
+      id, nome, email, telefone, cidade, bairro, interesse,
+      consentimento_lgpd, multiplicador_id, cadastrado_por,
+      cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais, senha_inicial, origem
     ] = params;
     
     // Check CPF unique in mock
-    if (cpf && mockStore.apoiadores.find(a => a.cpf === cpf)) {
+    if (cpf && mockStore.apoiadores.find(a => a.cpf && a.cpf.replace(/\D/g, '') === cpf.replace(/\D/g, ''))) {
       throw new Error('UNIQUE constraint failed: apoiadores.cpf');
     }
 
     const newApoiador = {
-      id, nome, email, telefone, cidade, bairro, interesse, observacoes, consentimento_lgpd, data_consentimento, status, multiplicador_id, cadastrado_por,
-      cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais,
+      id, nome, email, telefone, cidade, bairro, interesse, consentimento_lgpd, data_consentimento: new Date(), status: 'pendente', multiplicador_id, cadastrado_por,
+      cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais, senha_inicial, origem,
       created_at: new Date(),
       updated_at: new Date()
     };

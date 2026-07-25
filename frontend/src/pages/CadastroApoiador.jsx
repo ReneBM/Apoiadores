@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import api, { getMediaUrl } from '../api/axios';
 import { Loader2, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -25,6 +25,7 @@ const formatPhone = (value) => {
 
 export default function CadastroApoiador({ isModal = false, onClose }) {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const ref = searchParams.get('ref') || '';
 
   const [form, setForm] = useState({
@@ -260,7 +261,7 @@ export default function CadastroApoiador({ isModal = false, onClose }) {
       .login-logo {
         width: 68px;
         height: 68px;
-        background: #ccf600;
+        background: #FFB800;
         color: #000;
         border-radius: 18px;
         display: flex;
@@ -366,23 +367,23 @@ export default function CadastroApoiador({ isModal = false, onClose }) {
         cursor: not-allowed;
       }
 
+      .animated-success-logo {
+        height: 42px;
+        width: auto;
+        object-fit: contain;
+        margin: 0 auto 1.5rem;
+        display: block;
+        animation: logoPopGlow 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      @keyframes logoPopGlow {
+        0% { transform: scale(0.85); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+      }
+
       .success-box {
         text-align: center;
-        padding: 1rem;
-      }
-
-      .success-icon {
-        color: #059669;
-        margin: 0 auto 1.5rem;
-        filter: drop-shadow(0 4px 12px rgba(5, 150, 105, 0.2));
-      }
-
-      .temp-password-box {
-        background: #f8fafc;
-        padding: 1.25rem;
-        border-radius: 12px;
-        border: 1.5px dashed #cbd5e1;
-        margin-top: 1.5rem;
+        padding: 1.5rem 1rem;
       }
 
       .spin {
@@ -406,15 +407,45 @@ export default function CadastroApoiador({ isModal = false, onClose }) {
           <div className="signup-overlay" />
           <div className="signup-card">
             <div className="success-box">
-              <CheckCircle2 size={72} className="success-icon" />
-              <h2 style={{ color: '#002855', fontSize: '1.6rem', fontWeight: 800, marginBottom: '1rem' }}>Obrigado por se juntar a nós!</h2>
-              <p style={{ color: '#475569', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '1.5rem' }}>
-                Seu cadastro foi enviado com sucesso e está pendente de aprovação. Em breve, sua conta será analisada por um coordenador.
+              {/* Logo do Time SV */}
+              <img
+                src="/logo_time_sv.png"
+                alt="Logo Time SV"
+                className="animated-success-logo"
+                onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
+              />
+
+              <h2 style={{ color: '#002855', fontSize: '1.5rem', fontWeight: 800, marginBottom: '1rem', letterSpacing: '-0.3px' }}>
+                BEM-VINDO AO #TIME SV!
+              </h2>
+
+              <p style={{ color: '#475569', fontSize: '0.95rem', lineHeight: '1.65', marginBottom: '2rem', fontWeight: 500 }}>
+                Em breve você terá acesso completo à comunidade, conteúdos em primeira mão e à nossa plataforma oficial de mobilização!
               </p>
-              <div className="temp-password-box">
-                <span style={{ color: '#0054A6', fontWeight: 800, display: 'block', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.5px' }}>Sua Senha de Acesso</span>
-                <p style={{ color: '#0f172a', fontSize: '1.25rem', fontWeight: 800, margin: 0, letterSpacing: '1.5px' }}>{form.senha}</p>
-                <small style={{ color: '#64748b', display: 'block', marginTop: '0.75rem', fontWeight: 500 }}>Guarde esta senha! Você irá usá-la para acessar o aplicativo após seu cadastro ser aprovado.</small>
+
+              <div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (isModal && onClose) onClose();
+                    navigate('/login');
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '0.9rem',
+                    background: '#0054A6',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: '10px',
+                    fontSize: '0.95rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 14px rgba(0,84,166,0.25)',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  Ir para a Tela de Login
+                </button>
               </div>
             </div>
           </div>
@@ -447,17 +478,17 @@ export default function CadastroApoiador({ isModal = false, onClose }) {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              marginBottom: '0.75rem',
-              marginTop: isModal ? '0' : '-10px'
+              marginBottom: '1rem',
+              marginTop: isModal ? '0.5rem' : '0'
             }}>
               <img 
                 src="/logo_time_sv.png" 
                 alt="Logo Time SV" 
                 style={{
-                  height: '42px',
+                  height: isModal ? '32px' : '52px',
                   width: 'auto',
                   objectFit: 'contain',
-                  filter: 'drop-shadow(0 4px 12px rgba(0, 84, 166, 0.2))'
+                  filter: 'drop-shadow(0 4px 14px rgba(0, 84, 166, 0.25))'
                 }}
                 onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
               />
@@ -558,84 +589,7 @@ export default function CadastroApoiador({ isModal = false, onClose }) {
               </div>
             </div>
 
-            <h3 className="section-title">2. Pesquisa de Engajamento</h3>
-
-            <div className="form-group">
-              <label className="form-question">Qual foi a principal ação de Styvenson que impactou você ou sua cidade?</label>
-              <textarea
-                name="acao_impacto" rows={3} placeholder="Descreva brevemente..."
-                value={form.acao_impacto} onChange={handleChange} disabled={loading}
-                className="form-input" style={{ resize: 'vertical' }}
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-question">Como você se considera hoje?</label>
-              <div className="options-grid">
-                {['Simpatizante', 'Apoiador', 'Defensor', 'Multiplicador', 'Voluntário ativo'].map(opt => (
-                  <label key={opt} className="option-label">
-                    <input type="radio" name="como_se_considera" value={opt} checked={form.como_se_considera === opt} onChange={handleChange} className="option-input" />
-                    {opt}
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-question">Como você gostaria de ajudar?</label>
-              <div className="options-grid">
-                {['Compartilhando conteúdos', 'Participando de grupos', 'Mobilização de rua', 'Mobilização digital', 'Conseguindo mais apoiadores', 'Fiscalização eleitoral', 'Doações', 'Outro'].map(opt => (
-                  <label key={opt} className="option-label">
-                    <input type="checkbox" checked={form.como_ajudar.includes(opt)} onChange={(e) => handleArrayChange('como_ajudar', opt, e.target.checked)} className="option-input" />
-                    {opt}
-                  </label>
-                ))}
-                {form.como_ajudar.includes('Outro') && (
-                  <input type="text" name="como_ajudar_outro" placeholder="Qual?" value={form.como_ajudar_outro} onChange={handleChange} className="form-input" style={{ marginTop: '0.5rem' }} />
-                )}
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-question">Quantas pessoas você acredita conseguir mobilizar?</label>
-              <div className="options-grid">
-                {['Apenas eu', 'Até 10 pessoas', '10 a 50', '50 a 100', 'Mais de 100'].map(opt => (
-                  <label key={opt} className="option-label">
-                    <input type="radio" name="pessoas_mobilizar" value={opt} checked={form.pessoas_mobilizar === opt} onChange={handleChange} className="option-input" />
-                    {opt}
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-question">Você participa de algum grupo ou organização?</label>
-              <div className="options-grid">
-                {['Igreja', 'Associação', 'Sindicato', 'Grupo esportivo', 'Movimento social', 'Nenhum'].map(opt => (
-                  <label key={opt} className="option-label">
-                    <input type="checkbox" checked={form.grupo_organizacao.includes(opt)} onChange={(e) => handleArrayChange('grupo_organizacao', opt, e.target.checked)} className="option-input" />
-                    {opt}
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-question">Quais temas mais te interessam?</label>
-              <div className="options-grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
-                {['Saúde', 'Educação', 'Segurança', 'Infraestrutura', 'Combate à corrupção', 'Esporte', 'Agricultura', 'Assistência social', 'Empreendedorismo', 'Outro'].map(opt => (
-                  <label key={opt} className="option-label">
-                    <input type="checkbox" checked={form.temas_interesse.includes(opt)} onChange={(e) => handleArrayChange('temas_interesse', opt, e.target.checked)} className="option-input" />
-                    {opt}
-                  </label>
-                ))}
-              </div>
-              {form.temas_interesse.includes('Outro') && (
-                <input type="text" name="temas_interesse_outro" placeholder="Qual?" value={form.temas_interesse_outro} onChange={handleChange} className="form-input" style={{ marginTop: '0.5rem' }} />
-              )}
-            </div>
-
-            <h3 className="section-title">3. Redes Sociais</h3>
+            <h3 className="section-title">2. Redes Sociais</h3>
             
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
               <div>
@@ -672,7 +626,7 @@ export default function CadastroApoiador({ isModal = false, onClose }) {
             </div>
 
             {/* Campos de Senha */}
-            <h3 className="section-title">4. Crie sua Senha de Acesso</h3>
+            <h3 className="section-title">3. Crie sua Senha de Acesso</h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               <div className="form-group">
                 <label className="form-label">Senha *</label>
@@ -703,7 +657,7 @@ export default function CadastroApoiador({ isModal = false, onClose }) {
             </div>
             <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '8px', padding: '0.75rem 1rem', marginBottom: '0.5rem' }}>
               <p style={{ margin: 0, color: '#1e40af', fontSize: '0.82rem', fontWeight: 500 }}>
-                🔒 Esta senha será usada para você acessar o aplicativo após seu cadastro ser aprovado. Guarde-a em um lugar seguro!
+                Esta senha será usada para você acessar o aplicativo após seu cadastro ser aprovado. Guarde-a em um lugar seguro!
               </p>
             </div>
 

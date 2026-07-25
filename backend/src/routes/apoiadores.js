@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const {
-  list, getById, create, update, remove, listCidades, createPublic, approve, alterarTipo,
+  list, getById, create, update, remove, listCidades, createPublic, approve, alterarTipo, salvarPesquisaEngajamento,
 } = require('../controllers/apoiadorController');
 const { authenticate } = require('../middleware/auth');
 const { requireRole, ownResourceOnly, requirePermission } = require('../middleware/rbac');
@@ -32,6 +32,9 @@ const canViewApoiadoresList = async (req, res, next) => {
 
 // Todas as outras rotas exigem autenticação
 router.use(authenticate);
+
+// POST /api/apoiadores/pesquisa — salvar pesquisa de engajamento do onboarding
+router.post('/pesquisa', salvarPesquisaEngajamento);
 
 // GET /api/apoiadores/cidades — lista cidades para filtros (todos os roles)
 router.get('/cidades', listCidades);

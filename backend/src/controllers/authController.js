@@ -47,7 +47,7 @@ const login = async (req, res, next) => {
 
     // Busca usuário ativo
     const { rows } = await db.query(
-      'SELECT id, nome, email, senha_hash, role, tipo, ativo, primeiro_acesso, perfil_id FROM users WHERE email = $1',
+      'SELECT id, nome, email, senha_hash, role, tipo, ativo, primeiro_acesso, pesquisa_concluida, perfil_id FROM users WHERE email = $1',
       [email.toLowerCase().trim()]
     );
 
@@ -90,6 +90,8 @@ const login = async (req, res, next) => {
 
     logger.info(`Login bem-sucedido: ${user.email} [${user.role}]`);
 
+    const isPesquisaConcluida = user.pesquisa_concluida === true || user.role === 'admin' || user.role === 'coordenador';
+
     res.json({
       accessToken,
       refreshToken,
@@ -100,6 +102,7 @@ const login = async (req, res, next) => {
         role: user.role,
         tipo: user.tipo,
         primeiro_acesso: user.primeiro_acesso,
+        pesquisa_concluida: isPesquisaConcluida,
         perfil_id: user.perfil_id,
         multiplicadorId,
         permissoes,
@@ -145,7 +148,9 @@ const refresh = async (req, res, next) => {
     // Rotação: invalida o token antigo e gera um novo par
     await db.query('DELETE FROM refresh_tokens WHERE id = $1', [record.id]);
 
-    const newPayload = { id: record.user_id, role: record.role, tipo: record.tipo, nome: record.nome };
+    // Payload idêntico ao do login ({ id, role, nome }) para consistência —
+    // `tipo` não é lido a partir do token em nenhum lugar do backend.
+    const newPayload = { id: record.user_id, role: record.role, nome: record.nome };
     const newAccessToken = generateAccessToken(newPayload);
     const newRefreshToken = generateRefreshToken({ id: record.user_id });
 
@@ -180,7 +185,7 @@ const logout = async (req, res, next) => {
 const me = async (req, res, next) => {
   try {
     const { rows } = await db.query(
-      'SELECT id, nome, email, role, tipo, perfil_id, created_at FROM users WHERE id = $1',
+      'SELECT id, nome, email, role, tipo, perfil_id, primeiro_acesso, pesquisa_concluida, created_at FROM users WHERE id = $1',
       [req.user.id]
     );
 
@@ -191,8 +196,11 @@ const me = async (req, res, next) => {
     const user = rows[0];
     const permissoes = await loadUserPermissions(user.perfil_id);
 
+    const isPesquisaConcluida = user.pesquisa_concluida === true || user.role === 'admin' || user.role === 'coordenador';
+
     res.json({
       ...user,
+      pesquisa_concluida: isPesquisaConcluida,
       permissoes,
     });
   } catch (err) {

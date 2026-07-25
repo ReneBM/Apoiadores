@@ -249,7 +249,7 @@ export default function PerfilAdmin() {
         {/* Bio & Stats Info */}
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
-            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, margin: 0, color: '#002855' }}>Tô com Styvenson</h2>
+            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, margin: 0, color: '#002855' }}>TimeSV</h2>
             {canManageAll && (
               <button
                 onClick={() => setCreatePostOpen(true)}
@@ -635,7 +635,7 @@ export default function PerfilAdmin() {
                     </div>
                     <button
                       onClick={() => handleShareWhatsApp(
-                        `Confira o comunicado oficial no app "Tô com Styvenson": *${news.titulo}*\n\n${news.conteudo}\n\n`,
+                        `Confira o comunicado oficial no app "TimeSV": *${news.titulo}*\n\n${news.conteudo}\n\n`,
                         null
                       )}
                       style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center' }}

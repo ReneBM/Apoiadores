@@ -1,23 +1,11 @@
 const bcrypt = require('bcrypt');
-const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 const db = require('../config/database');
 const logger = require('../utils/logger');
 const { sendTempPasswordEmail } = require('../utils/mailer');
+const { gerarSenhaTemporaria } = require('../utils/password');
 
 const BCRYPT_ROUNDS = 12;
-
-/**
- * Gera uma senha temporária segura que passa na validação do Zod:
- * formato: Mult@XXXXXX (letra maiúscula + número + 6 chars aleatórios)
- */
-function gerarSenhaTemporaria() {
-  const chars = 'abcdefghijkmnopqrstuvwxyz';
-  const nums  = '23456789';
-  const rand  = crypto.randomBytes(6).toString('hex').slice(0, 6);
-  const num   = nums[Math.floor(Math.random() * nums.length)];
-  return `Mult@${num}${rand}`;
-}
 
 // ── Listar usuários ────────────────────────────────────────────────────────
 const list = async (req, res, next) => {

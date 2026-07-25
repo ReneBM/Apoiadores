@@ -9,8 +9,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'Tô com Styvenson',
-        short_name: 'Styvenson',
+        name: 'TimeSV',
+        short_name: 'TimeSV',
         description: 'Sistema de gestão de apoiadores políticos',
         theme_color: '#1e3a5f',
         background_color: '#0f172a',

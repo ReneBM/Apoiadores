@@ -87,7 +87,7 @@ export default function PerfilLider() {
         <div style={{
           width: '60px', height: '60px',
           borderRadius: '50%',
-          backgroundColor: '#ccf600',
+          backgroundColor: '#FFB800',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           color: '#002855'
         }}>

@@ -122,7 +122,7 @@ export default function PrimeiroAcesso() {
         .logo-box {
           width: 60px;
           height: 60px;
-          background: #ccf600;
+          background: #FFB800;
           color: #000;
           border-radius: 16px;
           display: flex;
@@ -131,7 +131,7 @@ export default function PrimeiroAcesso() {
           font-size: 1.4rem;
           font-weight: 900;
           margin: 0 auto 1rem;
-          box-shadow: 0 8px 20px rgba(204, 246, 0, 0.25);
+          box-shadow: 0 8px 20px rgba(255, 184, 0, 0.25);
           letter-spacing: -1px;
         }
 
@@ -220,12 +220,12 @@ export default function PrimeiroAcesso() {
               src="/logo_time_sv.png" 
               alt="Logo Time SV" 
               style={{
-                height: '42px',
+                height: '18px',
                 width: 'auto',
                 objectFit: 'contain',
                 margin: '0 auto 0.75rem',
                 display: 'block',
-                filter: 'drop-shadow(0 4px 12px rgba(0, 84, 166, 0.2))'
+                filter: 'drop-shadow(0 4px 10px rgba(0, 84, 166, 0.2))'
               }}
               onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
             />

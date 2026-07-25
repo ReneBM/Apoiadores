@@ -193,23 +193,28 @@ export default function Header({ title }) {
   return (
     <>
       <style>{`
-        @media (min-width: 1025px) {
+        @media (min-width: 1024px) {
           .header-app-logo {
             display: none !important;
           }
         }
       `}</style>
       <header className="app-header" style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 100 }}>
-        {/* Logo + título */}
+        {/* Logo TimeSV no Topo do App */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
           <img 
             className="header-app-logo"
             src="/logo_time_sv.png" 
             alt="Logo Time SV" 
-            style={{ height: '28px', width: 'auto', objectFit: 'contain' }}
+            style={{ 
+              height: '24px', 
+              width: 'auto', 
+              objectFit: 'contain',
+              display: 'block',
+              filter: 'brightness(1.15) drop-shadow(0 2px 8px rgba(0,0,0,0.4))'
+            }}
             onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
           />
-          <span className="header-title" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{title}</span>
         </div>
 
         {/* Inbox + Notificações */}
@@ -235,7 +240,7 @@ export default function Header({ title }) {
             >
               <Mail size={20} color="#fff" />
               {unreadMsgCount > 0 && (
-                <span style={{ ...badgeStyle, backgroundColor: '#ccf600', color: '#000' }}>{unreadMsgCount}</span>
+                <span style={{ ...badgeStyle, backgroundColor: '#FFB800', color: '#000' }}>{unreadMsgCount}</span>
               )}
             </button>
 
@@ -987,7 +992,7 @@ const chatInputStyle = {
 };
 
 const chatSendButtonStyle = {
-  backgroundColor: '#ccf600',
+  backgroundColor: '#FFB800',
   color: '#0a192f',
   border: 'none',
   borderRadius: '50%',

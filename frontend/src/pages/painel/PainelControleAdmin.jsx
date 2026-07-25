@@ -216,7 +216,7 @@ export default function PainelControleAdmin() {
       </div>
 
       {/* Grid de Atalhos Rápidos para Gestão */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '0.75rem', marginBottom: '0.5rem' }}>
+      <div className="grid-kpi-tablet" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '0.75rem', marginBottom: '0.5rem' }}>
         
         {/* Fila de Aprovações */}
         {hasPermission('Apoiadores', 'visualizar') && (

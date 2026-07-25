@@ -1,24 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-/* ── Variáveis IDV Senador Valim ──────────────────────────── */
+/* ── Variáveis IDV Senador Valim (#TIME SV Oficial) ────────── */
 :root {
   --primary:        #0054A6;
-  --primary-light:  #0066CC;
+  --primary-light:  #3B82F6;
   --primary-dark:   #003D7A;
-  --primary-deeper: #002855;
-  --lime:           #ccf600;
-  --accent:         #E8A838;
+  --primary-deeper: #001F3F;
+  
+  --lime:           #FFB800; /* Amarelo/Laranja Ouro Oficial do "SV" da Logo */
+  --gold:           #FFB800;
+  --accent:         #FF9900;
 
-  --bg:             #F5F7FA;
+  --bg:             #F4F7FA;
   --bg-card:        #FFFFFF;
   --bg-table:       #F0F4F8;
 
-  --texto:          #1B2A4A;
-  --texto-medio:    #5A6B8A;
-  --texto-claro:    #8899B0;
+  --texto:          #0F172A;
+  --texto-medio:    #475569;
+  --texto-claro:    #94A3B8;
 
-  --borda:          #DDE3ED;
-  --borda-forte:    #B8C4D6;
+  --borda:          #E2E8F0;
+  --borda-forte:    #CBD5E1;
 
   --sombra-sm:      0 1px 4px rgba(0,30,80,0.06), 0 2px 10px rgba(0,30,80,0.03);
   --sombra-md:      0 4px 20px rgba(0,30,80,0.10);
@@ -66,11 +68,13 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   min-height: 100dvh;
   overscroll-behavior: none;
+  overflow-x: hidden;
 }
 
 /* Impede zoom automático em inputs no iOS */
@@ -234,17 +238,6 @@ input, select, textarea {
 
 .nav-link.active {
   color: var(--lime);
-}
-
-.nav-link.active::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 20%;
-  right: 20%;
-  height: 2px;
-  background: var(--lime);
-  border-radius: 0 0 4px 4px;
 }
 
 .nav-icon-wrap {
@@ -574,7 +567,8 @@ select.form-input {
   letter-spacing: 0.3px;
 }
 
-.badge-green  { background: rgba(5,150,105,0.10); color: #059669; border: 1px solid rgba(5,150,105,0.2); }
+.badge-lime   { background: #FFB800; color: #001F3F; font-weight: 800; border: none; }
+.badge-yellow { background: #F7EB33; color: #001F3F; font-weight: 800; border: none; }
 .badge-yellow { background: rgba(217,119,6,0.10);  color: #d97706; border: 1px solid rgba(217,119,6,0.2); }
 .badge-gray   { background: rgba(90,107,138,0.10); color: var(--texto-medio); border: 1px solid var(--borda); }
 .badge-blue   { background: rgba(0,84,166,0.10);   color: var(--primary);     border: 1px solid rgba(0,84,166,0.2); }
@@ -661,8 +655,8 @@ select.form-input {
 
 @keyframes postHighlightPulse {
   0% {
-    box-shadow: 0 0 0 0px rgba(204, 246, 0, 0.8), 0 0 20px rgba(204, 246, 0, 0.4);
-    border-color: #ccf600 !important;
+    box-shadow: 0 0 0 0px rgba(255, 184, 0, 0.8), 0 0 20px rgba(255, 184, 0, 0.4);
+    border-color: #FFB800 !important;
     transform: scale(1.02);
   }
   30% {
@@ -726,57 +720,13 @@ body:has(.full-page-lp) #root, body:has(.login-page-wrap) #root, body:has(.prime
   overflow: visible !important;
 }
 
-/* ── Mobile View Emulator on Desktop ─────────────────────────── */
-@media (min-width: 480px) {
-  body {
-    background-color: #0c1524;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    padding: 0;
-  }
-
-  #root {
-    width: 100%;
-    max-width: 420px;
-    height: 90vh;
-    max-height: 850px;
-    border-radius: 40px;
-    overflow: hidden;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
-    border: 12px solid #1e293b; /* phone bezel */
-    background: var(--bg);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .app-layout {
-    min-height: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .main-content {
-    overflow-y: auto;
-    height: calc(100% - 60px - var(--nav-height));
-    box-sizing: border-box;
-  }
-
-  .bottom-nav {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    max-width: 100%;
-    transform: none;
-    z-index: 999;
-  }
+/* ── Layout Responsivo Base ──────────────────────────────────── */
+#root {
+  width: 100%;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
 }
 
 
@@ -997,5 +947,36 @@ body:has(.full-page-lp) #root, body:has(.login-page-wrap) #root, body:has(.prime
   .app-main-content {
     max-width: 1600px;
     padding: 4rem 5rem;
+  }
+}
+
+/* ── Responsividade para Tablets e iPads (768px a 1194px) ────────── */
+@media (min-width: 768px) and (max-width: 1194px) {
+  .main-content, .app-main-content {
+    padding: 1.75rem 2rem;
+    max-width: min(1100px, 94vw);
+    margin: 0 auto;
+  }
+
+  .login-card {
+    max-width: min(520px, 85vw) !important;
+    padding: 2.5rem !important;
+  }
+
+  .grid-kpi-tablet {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)) !important;
+    gap: 1.25rem !important;
+  }
+
+  .feed-container-tablet {
+    max-width: min(740px, 90vw) !important;
+    margin: 0 auto !important;
+  }
+
+  .table-responsive-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }

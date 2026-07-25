@@ -52,8 +52,8 @@ export default function AprovacoesPendentes() {
     try {
       const res = await api.put(`/apoiadores/${id}/aprovar`);
       toast.success(`Apoiador "${nome}" aprovado com sucesso!`);
-      if (res.data.userCreated) {
-        toast.success('Conta de acesso criada. Senha temporária: SV@12345', { duration: 6000 });
+      if (res.data.userCreated && !res.data.hasOwnPassword) {
+        toast.success('Senha temporária criada: SV@12345', { duration: 6000 });
       }
       setApoiadores((prev) => prev.filter((a) => a.id !== id));
     } catch (err) {
@@ -200,7 +200,7 @@ export default function AprovacoesPendentes() {
                     justifyContent: 'center',
                     gap: '6px',
                     padding: '0.5rem',
-                    backgroundColor: '#ccf600',
+                    backgroundColor: '#FFB800',
                     color: '#0a192f',
                     border: 'none',
                     borderRadius: '8px',

@@ -35,8 +35,8 @@ export default function Login() {
       if (result.primeiroAcesso) {
         navigate('/primeiro-acesso', { replace: true });
       } else {
-        toast.success('Bem-vindo!');
-        navigate(result.role === 'multiplicador' ? '/painel' : '/dashboard', { replace: true });
+        const targetPath = ['admin', 'coordenador'].includes(result.role) ? '/dashboard' : '/painel';
+        navigate(targetPath, { replace: true });
       }
     } else {
       setError(result.message);
@@ -97,7 +97,7 @@ export default function Login() {
         .login-logo {
           width: 68px;
           height: 68px;
-          background: #ccf600;
+          background: #FFB800;
           color: #000;
           border-radius: 18px;
           display: flex;
@@ -106,7 +106,7 @@ export default function Login() {
           font-size: 1.6rem;
           font-weight: 900;
           margin: 0 auto 1.25rem;
-          box-shadow: 0 8px 20px rgba(204, 246, 0, 0.25);
+          box-shadow: 0 8px 20px rgba(255, 184, 0, 0.25);
           letter-spacing: -1px;
         }
 
@@ -256,16 +256,17 @@ export default function Login() {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              marginBottom: '0.75rem'
+              marginBottom: '1rem'
             }}>
-              <img 
-                src="/logo_time_sv.png" 
-                alt="Logo Time SV" 
+              <img
+                src="/logo_time_sv.png"
+                alt="Logo Time SV"
                 style={{
-                  maxWidth: '140px',
+                  width: 'clamp(160px, 50vw, 200px)',
+                  maxWidth: '100%',
                   height: 'auto',
                   objectFit: 'contain',
-                  filter: 'drop-shadow(0 4px 12px rgba(0, 84, 166, 0.2))'
+                  filter: 'drop-shadow(0 6px 16px rgba(0, 84, 166, 0.22))'
                 }}
                 onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
               />
@@ -304,7 +305,7 @@ export default function Login() {
                 <label htmlFor="senha" className="login-label" style={{ margin: 0 }}>Senha</label>
                 <button
                   type="button"
-                  onClick={() => toast.info('Para redefinir sua senha, entre em contato com a coordenação do Time Styvenson.', { duration: 5000 })}
+                  onClick={() => toast.info('Para redefinir sua senha, entre em contato com a coordenação do TimeSV.', { duration: 5000 })}
                   style={{ background: 'none', border: 'none', color: '#0054A6', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', padding: 0 }}
                 >
                   Esqueceu a senha?

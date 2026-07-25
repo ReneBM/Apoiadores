@@ -11,7 +11,8 @@ export const getMediaUrl = (path) => {
   if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) {
     return path;
   }
-  const baseUrl = (import.meta.env.VITE_API_URL || '').replace(/\/api$/, '') || 'http://localhost:3001';
+  const defaultOrigin = typeof window !== 'undefined' ? window.location.origin : '';
+  const baseUrl = (import.meta.env.VITE_API_URL || '').replace(/\/api$/, '') || defaultOrigin;
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
   return `${baseUrl}${cleanPath}`;
 };

@@ -7,9 +7,10 @@ import { copyToClipboard } from '../../utils/clipboard';
 import { getMediaUrl } from '../../api/axios';
 
 export default function PainelMultiplicador() {
-  const { user } = useAuth();
+  const { user, hasPermission } = useAuth();
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
+  const isStaff = ['admin', 'coordenador'].includes(user?.role);
 
   const referralLink = `${window.location.origin}/cadastro?ref=${user?.id}`;
 
@@ -34,27 +35,29 @@ export default function PainelMultiplicador() {
   return (
     <div className="flex flex-col gap-4 pb-4" style={{ padding: '0 0.5rem', display: 'flex', flexDirection: 'column', gap: 'clamp(1rem, 3vw, 1.5rem)' }}>
       
-      {/* Banner de Engajamento */}
+      {/* Banner Principal de Boas-Vindas / Mobilização */}
       <div style={{
         background: 'linear-gradient(135deg, var(--primary-deeper) 0%, var(--primary-dark) 50%, var(--primary) 100%)',
-        borderRadius: '16px',
-        padding: 'clamp(1rem, 3vw, 1.5rem)',
+        borderRadius: '14px',
+        padding: '0.85rem 0.85rem 0 1rem',
         color: '#fff',
         display: 'flex',
-        alignItems: 'center',
-        gap: '1rem',
-        boxShadow: '0 8px 24px rgba(0, 84, 166, 0.2)',
+        alignItems: 'flex-end',
+        justifyContent: 'space-between',
+        gap: '0.75rem',
+        boxShadow: '0 6px 18px rgba(0, 84, 166, 0.16)',
         position: 'relative',
-        overflow: 'visible'
+        overflow: 'hidden',
+        minHeight: '98px'
       }}>
-        <div style={{ flex: 1, zIndex: 1, textAlign: 'left' }}>
-          <span style={{ fontSize: '0.62rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--lime)', display: 'block', marginBottom: '0.25rem' }}>
+        <div style={{ flex: 1, zIndex: 1, textAlign: 'left', paddingBottom: '0.85rem' }}>
+          <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.8px', color: 'var(--lime)', display: 'block', marginBottom: '0.15rem' }}>
             Nossa Mobilização
           </span>
-          <h3 style={{ fontSize: '1.05rem', fontWeight: 900, margin: '0 0 0.4rem 0', lineHeight: '1.3' }}>
-            Tô com Styvenson!
+          <h3 style={{ fontSize: '0.95rem', fontWeight: 900, margin: '0 0 0.25rem 0', lineHeight: '1.2' }}>
+            TimeSV
           </h3>
-          <p style={{ fontSize: '0.78rem', opacity: 0.85, margin: 0, lineHeight: '1.4' }}>
+          <p style={{ fontSize: '0.72rem', opacity: 0.88, margin: 0, lineHeight: '1.3' }}>
             Multiplique o nosso trabalho nas redes e nas ruas de forma oficial e segura.
           </p>
         </div>
@@ -62,13 +65,16 @@ export default function PainelMultiplicador() {
           src={getMediaUrl('/uploads/foto5_nobg.png')} 
           alt="Senador Styvenson Valim" 
           style={{
-            height: '115px',
+            height: '102px',
             width: 'auto',
-            objectFit: 'contain',
-            margin: '-25px -10px -25px 0',
+            objectFit: 'cover',
+            objectPosition: 'top center',
+            alignSelf: 'flex-end',
+            marginBottom: '0',
+            marginRight: '-4px',
             flexShrink: 0,
             zIndex: 1,
-            filter: 'drop-shadow(0 8px 12px rgba(0,0,0,0.3))'
+            filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.3))'
           }} 
         />
       </div>
@@ -77,11 +83,8 @@ export default function PainelMultiplicador() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.2rem' }}>
         <div>
           <h2 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, color: 'var(--texto)' }}>
-            Olá, {user?.nome?.split(' ')[0]}! 👋
+            Olá, {user?.nome?.split(' ')[0]}!
           </h2>
-          <p style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.78rem', color: 'var(--texto-medio)', margin: '0.2rem 0 0' }}>
-            Painel de Ações
-          </p>
         </div>
       </div>
 
@@ -119,7 +122,7 @@ export default function PainelMultiplicador() {
           </button>
           <button
             onClick={() => handleShareWhatsApp(
-              'Olá! Convido você a fazer parte da nossa rede de apoiadores "Tô com Styvenson"! Cadastre-se através do meu link oficial:',
+              'Olá! Convido você a fazer parte da nossa rede de apoiadores "TimeSV"! Cadastre-se através do meu link oficial:',
               referralLink
             )}
             style={{
@@ -222,67 +225,73 @@ export default function PainelMultiplicador() {
       )}
 
       {/* Ações Rápidas (Permissões) */}
-      <div className="card" style={{ padding: 'clamp(1rem, 3vw, 1.5rem)', backgroundColor: '#fff', borderRadius: '12px', border: '1px solid var(--borda)' }}>
-        <h3 style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--texto-medio)', margin: '0 0 0.75rem' }}>
-          Minhas Ferramentas
-        </h3>
-        
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 150px), 1fr))', gap: 'clamp(0.75rem, 2vw, 1rem)' }}>
-          {/* Cadastrar Apoiador */}
-          <button
-            onClick={() => navigate('/apoiadores/novo')}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              padding: '1rem 0.5rem',
-              borderRadius: '10px',
-              border: '1.5px solid rgba(0, 84, 166, 0.1)',
-              backgroundColor: 'rgba(0, 84, 166, 0.03)',
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-              color: 'var(--primary)',
-              minHeight: '44px'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 84, 166, 0.08)'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 84, 166, 0.03)'}
-          >
-            <div style={{ padding: '8px', backgroundColor: '#fff', borderRadius: '50%', border: '1px solid rgba(0, 84, 166, 0.1)' }}>
-              <Users size={18} />
-            </div>
-            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--texto)' }}>Cadastrar Apoiador</span>
-          </button>
+      {(isStaff || hasPermission('Apoiadores', 'criar') || hasPermission('Apoiadores', 'visualizar')) && (
+        <div className="card" style={{ padding: 'clamp(1rem, 3vw, 1.5rem)', backgroundColor: '#fff', borderRadius: '12px', border: '1px solid var(--borda)' }}>
+          <h3 style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--texto-medio)', margin: '0 0 0.75rem' }}>
+            Minhas Ferramentas
+          </h3>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 150px), 1fr))', gap: 'clamp(0.75rem, 2vw, 1rem)' }}>
+            {/* Cadastrar Apoiador */}
+            {(isStaff || hasPermission('Apoiadores', 'criar')) && (
+              <button
+                onClick={() => navigate('/apoiadores/novo')}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  padding: '1rem 0.5rem',
+                  borderRadius: '10px',
+                  border: '1.5px solid rgba(0, 84, 166, 0.1)',
+                  backgroundColor: 'rgba(0, 84, 166, 0.03)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  color: 'var(--primary)',
+                  minHeight: '44px'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 84, 166, 0.08)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 84, 166, 0.03)'}
+              >
+                <div style={{ padding: '8px', backgroundColor: '#fff', borderRadius: '50%', border: '1px solid rgba(0, 84, 166, 0.1)' }}>
+                  <Users size={18} />
+                </div>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--texto)' }}>Cadastrar Apoiador</span>
+              </button>
+            )}
 
-          {/* Minha Rede */}
-          <button
-            onClick={() => navigate('/apoiadores')}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              padding: '1rem 0.5rem',
-              borderRadius: '10px',
-              border: '1.5px solid rgba(5, 150, 105, 0.1)',
-              backgroundColor: 'rgba(5, 150, 105, 0.03)',
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-              color: '#059669',
-              minHeight: '44px'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(5, 150, 105, 0.08)'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(5, 150, 105, 0.03)'}
-          >
-            <div style={{ padding: '8px', backgroundColor: '#fff', borderRadius: '50%', border: '1px solid rgba(5, 150, 105, 0.1)' }}>
-              <MapPin size={18} />
-            </div>
-            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--texto)' }}>Ver Minha Rede</span>
-          </button>
+            {/* Minha Rede */}
+            {(isStaff || hasPermission('Apoiadores', 'visualizar')) && (
+              <button
+                onClick={() => navigate('/apoiadores')}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  padding: '1rem 0.5rem',
+                  borderRadius: '10px',
+                  border: '1.5px solid rgba(5, 150, 105, 0.1)',
+                  backgroundColor: 'rgba(5, 150, 105, 0.03)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  color: '#059669',
+                  minHeight: '44px'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(5, 150, 105, 0.08)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(5, 150, 105, 0.03)'}
+              >
+                <div style={{ padding: '8px', backgroundColor: '#fff', borderRadius: '50%', border: '1px solid rgba(5, 150, 105, 0.1)' }}>
+                  <MapPin size={18} />
+                </div>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--texto)' }}>Ver Minha Rede</span>
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

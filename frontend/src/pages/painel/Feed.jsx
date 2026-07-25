@@ -201,7 +201,7 @@ export default function FeedPerfil() {
 
   return (
     <>
-      <div style={{ maxWidth: 'min(680px, 100%)', margin: '0 auto', padding: isDesktop ? '2rem 1rem' : '0 0 2rem 0', fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" }}>
+      <div className="feed-container-tablet" style={{ maxWidth: 'min(680px, 100%)', margin: '0 auto', padding: isDesktop ? '2rem 1rem' : '0 0 2rem 0', fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" }}>
       
       {/* Create post button for admins */}
       {canManageAll && (

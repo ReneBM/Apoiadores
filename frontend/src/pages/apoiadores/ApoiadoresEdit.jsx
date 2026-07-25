@@ -502,7 +502,7 @@ export default function ApoiadoresEdit() {
                   color: '#047857',
                   lineHeight: '1.4'
                 }}>
-                  🔑 <strong>Acesso Habilitado:</strong> O apoiador poderá acessar o sistema usando seu e-mail e a senha temporária padrão <strong>SV@12345</strong>.
+                  <strong>Acesso Habilitado:</strong> O apoiador poderá acessar o sistema utilizando seu e-mail e a senha definida no cadastro.
                 </div>
               )}
             </div>
