@@ -415,10 +415,7 @@ export default function LandingPage() {
           }
 
           .lp-logo {
-            align-self: center !important;
-            margin: 0 auto 0.75rem auto !important;
-            height: 38px !important;
-            display: block !important;
+            display: none !important;
           }
 
           .right-content-col h1 {
