@@ -459,10 +459,10 @@ export default function LandingPage() {
           }
 
           .senador-photo-wrapper img {
-            height: 175px !important;
-            max-height: 21vh !important;
+            height: 105px !important;
+            max-height: 13vh !important;
             width: auto !important;
-            max-width: 65% !important;
+            max-width: 40% !important;
             object-fit: contain !important;
             margin: 0 auto !important;
           }
@@ -514,9 +514,9 @@ export default function LandingPage() {
           }
 
           .senador-photo-wrapper img {
-            height: 155px !important;
-            max-height: 18vh !important;
-            max-width: 60% !important;
+            height: 90px !important;
+            max-height: 11vh !important;
+            max-width: 35% !important;
           }
         }
       `}</style>
