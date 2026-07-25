@@ -250,7 +250,7 @@ export default function LandingPage() {
         minHeight: '640px',
         maxHeight: '960px',
         display: 'grid',
-        gridTemplateColumns: 'minmax(320px, 46%) 1fr',
+        gridTemplateColumns: 'minmax(340px, 50%) 1fr',
         boxSizing: 'border-box',
       }}>
 
@@ -260,8 +260,8 @@ export default function LandingPage() {
           display: 'flex',
           alignItems: 'flex-end',
           justifyContent: 'flex-start',
-          paddingLeft: '2.5rem',
-          marginLeft: '0',
+          paddingLeft: '1rem',
+          marginLeft: '-1rem',
           height: '100%',
           overflow: 'visible',
           opacity: 0,
@@ -272,8 +272,8 @@ export default function LandingPage() {
             src="/senador/styveson_v3_nobg.png"
             alt="Senador Styveson Valim"
             style={{
-              height: 'clamp(540px, 94vh, 880px)',
-              maxHeight: 'calc(100vh - 35px)',
+              height: 'clamp(560px, 98vh, 920px)',
+              maxHeight: '100%',
               maxWidth: '100%',
               width: 'auto',
               objectFit: 'contain',
