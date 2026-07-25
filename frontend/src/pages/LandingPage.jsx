@@ -257,20 +257,18 @@ export default function LandingPage() {
         margin: '0 auto',
         height: '100vh',
         minHeight: '700px',
-        display: 'flex',
-        alignItems: 'stretch',
+        display: 'grid',
+        gridTemplateColumns: '42% 1fr',
         overflow: 'hidden',
       }}>
 
         {/* ── Coluna Esquerda: Foto do Senador ─────────────────── */}
         <div style={{
-          width: '38%',
-          flexShrink: 0,
+          position: 'relative',
+          overflow: 'hidden',
           display: 'flex',
           alignItems: 'flex-end',
           justifyContent: 'flex-start',
-          paddingLeft: '0',
-          marginLeft: '-2rem',
           opacity: 0,
           animation: 'lpFadeInLeft 1.15s cubic-bezier(0.22,1,0.36,1) 0.15s forwards',
         }}>
@@ -280,9 +278,9 @@ export default function LandingPage() {
             style={{
               height: '92vh',
               maxHeight: '850px',
-              width: 'auto',
-              objectFit: 'contain',
-              objectPosition: 'bottom center',
+              width: '100%',
+              objectFit: 'cover',
+              objectPosition: 'top center',
               display: 'block',
               WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 66%, transparent 95%)',
               maskImage: 'linear-gradient(to bottom, black 0%, black 66%, transparent 95%)',
@@ -292,13 +290,12 @@ export default function LandingPage() {
 
         {/* ── Coluna Direita: Conteúdo ─────────────────────────── */}
         <div style={{
-          flex: 1,
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'flex-start',
-          paddingRight: '6rem',
-          paddingLeft: '7rem',
+          paddingRight: '5rem',
+          paddingLeft: '4rem',
           paddingBottom: '9rem',
           opacity: 0,
           animation: 'lpFadeInUp 0.9s ease-out 0.45s forwards',
