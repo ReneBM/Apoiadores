@@ -267,6 +267,7 @@ export default function LandingPage() {
           display: 'flex',
           alignItems: 'flex-end',
           justifyContent: 'flex-start',
+          paddingLeft: '2.5rem',
           overflow: 'visible',
           opacity: 0,
           animation: 'lpFadeInLeft 1.15s cubic-bezier(0.22,1,0.36,1) 0.15s forwards',
@@ -275,7 +276,7 @@ export default function LandingPage() {
             src="/senador/styveson_v3_nobg.png"
             alt="Senador Styveson Valim"
             style={{
-              height: '78vh',
+              height: '84vh',
               width: 'auto',
               objectFit: 'contain',
               display: 'block',
