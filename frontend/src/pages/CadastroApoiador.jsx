@@ -485,8 +485,11 @@ export default function CadastroApoiador({ isModal = false, onClose }) {
                 src="/logo_time_sv.png" 
                 alt="Logo Time SV" 
                 style={{
-                  height: isModal ? '32px' : '52px',
-                  width: 'auto',
+                  // Wordmark bem horizontal (~7,6:1): dimensionar pela largura
+                  // evita que ele estoure a área útil do card no mobile.
+                  width: isModal ? 'clamp(170px, 52vw, 220px)' : 'clamp(180px, 52vw, 240px)',
+                  maxWidth: '100%',
+                  height: 'auto',
                   objectFit: 'contain',
                   filter: 'drop-shadow(0 4px 14px rgba(0, 84, 166, 0.25))'
                 }}
