@@ -298,86 +298,136 @@ export default function LandingPage() {
           display: none;
         }
 
+        /* ── ESTRUTURA BASE DESKTOP (telas > 1024px) ── */
+        .hero-grid {
+          display: grid;
+          grid-template-columns: 50% 1fr;
+          flex: 1;
+          align-items: end;
+          width: 100%;
+        }
+
+        .left-photo-col {
+          display: flex;
+          align-items: flex-end;
+          margin-left: 15px;
+          height: 100%;
+          overflow: visible;
+          opacity: 0;
+          animation: fadeInLeftNoticeable 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards;
+        }
+
+        .senador-photo-wrapper {
+          display: flex;
+          align-items: flex-end;
+          overflow: visible;
+          width: 100%;
+          -webkit-mask-image: linear-gradient(to bottom, black 0%, black 72%, transparent 97%);
+          mask-image: linear-gradient(to bottom, black 0%, black 72%, transparent 97%);
+        }
+
+        .senador-photo-wrapper img {
+          height: 85vh;
+          max-height: 780px;
+          width: auto;
+          max-width: 100%;
+          object-fit: contain;
+          display: block;
+        }
+
+        .right-content-col {
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: flex-end;
+          align-self: flex-start;
+          padding-top: clamp(7.5rem, 16vh, 13rem);
+          padding-bottom: 1rem;
+          padding-right: 4.5rem;
+          padding-left: 1rem;
+          opacity: 0;
+          animation: fadeInUpHeadline 1s ease-out 0.3s forwards;
+        }
+
+        .lp-logo {
+          height: 43px;
+          width: auto;
+          object-fit: contain;
+          filter: drop-shadow(0 4px 14px rgba(0,0,0,0.3));
+          margin-bottom: 1rem;
+          align-self: flex-end;
+        }
+
+        .right-content-col h1 {
+          font-family: 'Gilroy', 'Oswald', sans-serif;
+          font-size: clamp(3.2rem, 6vw, 7rem);
+          font-weight: 800;
+          font-style: normal;
+          line-height: 0.92;
+          text-transform: uppercase;
+          letter-spacing: -1px;
+          margin: 0 0 1.5rem 0;
+          color: #ffffff;
+          text-shadow: 0 4px 24px rgba(0,0,0,0.5);
+          text-align: right;
+        }
+
+        .buttons-container {
+          display: flex;
+          gap: 1.25rem;
+          align-items: center;
+          justify-content: flex-end;
+          width: 100%;
+          margin-top: 0.75rem;
+          position: relative;
+          z-index: 40;
+          pointer-events: auto;
+        }
+
+        /* ── ESTRUTURA RESPONSIVA MOBILE (telas <= 1024px) ── */
         @media (max-width: 1024px) {
-          .top-header-mobile {
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            width: 100% !important;
-            padding: 1rem 0 0.5rem !important;
-            text-align: center !important;
-          }
-          
-          .desktop-text {
-            display: none !important;
-          }
-          .mobile-text {
-            display: inline-block !important;
-          }
-          
           section {
             height: auto !important;
-            min-height: 100vh;
+            min-height: 100vh !important;
             overflow: visible !important;
-          }
-
-          .desktop-header-row {
-            order: 3 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            padding: 1rem 0 !important;
-            align-items: center !important;
-            gap: 1rem !important;
-          }
-          
-          .desktop-logo {
-            display: none !important;
+            padding: 0 1rem !important;
           }
 
           .hero-grid {
-            order: 1 !important;
             display: flex !important;
             flex-direction: column !important;
+            width: 100% !important;
+            padding-top: 1.5rem !important;
             gap: 0 !important;
-            padding-top: 2rem !important;
             align-items: center !important;
           }
 
-          .left-photo-col {
-            order: 1 !important;
-            margin-top: 0 !important;
-            margin-bottom: -20px !important;
-            margin-left: 0 !important;
-            justify-content: center !important;
-            width: 100% !important;
-          }
-          .left-photo-col > div {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-          }
-          .left-photo-col img {
-            height: 380px !important;
-            max-height: 52vh !important;
-            width: auto !important;
-            max-width: 100% !important;
-            object-fit: contain !important;
-          }
-
+          /* 1. Bloco de Conteúdo (Logo + Headline + Botões) no TOPO */
           .right-content-col {
-            order: 2 !important;
-            margin-top: auto !important;
-            padding-top: 0 !important;
-            align-items: center !important;
-            text-align: center !important;
+            order: 1 !important;
             width: 100% !important;
+            padding: 0 !important;
+            align-items: center !important;
+            align-self: center !important;
+            text-align: center !important;
             position: relative !important;
-            z-index: 10 !important;
+            z-index: 20 !important;
+          }
+
+          .lp-logo {
+            align-self: center !important;
+            margin: 0 auto 0.75rem auto !important;
+            height: 38px !important;
+            display: block !important;
           }
 
           .right-content-col h1 {
             text-align: center !important;
-            font-size: clamp(2.5rem, 8vw, 3rem) !important;
+            font-size: clamp(2rem, 7.5vw, 3.2rem) !important;
+            font-style: normal !important;
+            margin: 0 0 1.25rem 0 !important;
+            line-height: 0.95 !important;
+            width: 100% !important;
           }
 
           .buttons-container {
@@ -387,19 +437,48 @@ export default function LandingPage() {
             width: 100% !important;
             margin-top: 0.5rem !important;
             gap: 0.85rem !important;
+            padding: 0 !important;
           }
 
           .btn-hero-primary, .btn-hero-secondary {
             width: 100% !important;
             max-width: 320px !important;
+            box-sizing: border-box !important;
           }
 
-          .benefit-cards-container {
-            order: 4 !important;
-            margin-top: 1rem !important;
+          /* 2. Foto do Senador no MEIO */
+          .left-photo-col {
+            order: 2 !important;
+            margin: 1.25rem 0 0 0 !important;
+            height: auto !important;
+            width: 100% !important;
+            justify-content: center !important;
+          }
+
+          .senador-photo-wrapper {
             width: 100% !important;
             display: flex !important;
+            justify-content: center !important;
+          }
+
+          .senador-photo-wrapper img {
+            height: auto !important;
+            max-height: 44vh !important;
+            width: auto !important;
+            max-width: 90% !important;
+            object-fit: contain !important;
+            margin: 0 auto !important;
+          }
+
+          /* 3. Cards de Benefícios no RODAPÉ */
+          .benefit-cards-container {
+            order: 3 !important;
+            display: flex !important;
             flex-direction: column !important;
+            width: 100% !important;
+            gap: 0.85rem !important;
+            margin-top: 1.25rem !important;
+            padding-bottom: 2.5rem !important;
           }
         }
 
@@ -417,22 +496,6 @@ export default function LandingPage() {
           }
         }
 
-        @media (max-width: 1024px) and (min-width: 768px) {
-          .left-photo-col img {
-            height: 480px !important;
-            max-height: 58vh !important;
-          }
-          .right-content-col h1 {
-            font-size: 3.5rem !important;
-          }
-        }
-
-        @media (min-width: 1025px) {
-          .top-header-mobile {
-            display: none !important;
-          }
-        }
-
         /* ── TELAS GRANDES (FULL HD & MONITORES 1440p+) ── */
         @media (min-width: 1440px) {
           .right-content-col {
@@ -441,27 +504,9 @@ export default function LandingPage() {
           .right-content-col h1 {
             font-size: clamp(4.5rem, 6vw, 7.2rem) !important;
           }
-          .left-photo-col img {
+          .senador-photo-wrapper img {
             height: 86vh !important;
             max-height: 850px !important;
-          }
-          .btn-hero-primary, .btn-hero-secondary {
-            font-size: 1.05rem !important;
-            padding: 14px 34px !important;
-            min-height: 52px !important;
-          }
-        }
-
-        @media (min-width: 1920px) {
-          .right-content-col {
-            padding-top: 11rem !important;
-          }
-          .right-content-col h1 {
-            font-size: 7.8rem !important;
-          }
-          .left-photo-col img {
-            height: 88vh !important;
-            max-height: 940px !important;
           }
         }
 
@@ -471,12 +516,8 @@ export default function LandingPage() {
             min-width: 100% !important;
           }
 
-          .top-header-mobile img {
-            height: 28px !important;
-          }
-
-          .left-photo-col img {
-            height: 300px !important;
+          .senador-photo-wrapper img {
+            max-height: 38vh !important;
           }
         }
       `}</style>
@@ -493,79 +534,31 @@ export default function LandingPage() {
         flexDirection: 'column'
       }}>
 
-        <div className="hero-grid" style={{
-          display: 'grid',
-          gridTemplateColumns: '50% 1fr',
-          flex: 1,
-          alignItems: 'end'
-        }}>
-          <div className="left-photo-col" style={{ 
-            display: 'flex', alignItems: 'flex-end',
-            marginLeft: '15px', height: '100%', overflow: 'visible',
-            opacity: 0, animation: 'fadeInLeftNoticeable 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards'
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'flex-end',
-              overflow: 'visible',
-              width: '100%',
-              WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 72%, transparent 97%)',
-              maskImage: 'linear-gradient(to bottom, black 0%, black 72%, transparent 97%)'
-            }}>
+        <div className="hero-grid">
+          <div className="left-photo-col">
+            <div className="senador-photo-wrapper">
               <img 
                 src="/senador/styveson_v3_nobg.png" 
                 alt="Senador Styveson Valim"
-                style={{ height: '85vh', maxHeight: '780px', width: 'auto', maxWidth: '100%', objectFit: 'contain', display: 'block' }}
               />
             </div>
           </div>
 
-          <div className="right-content-col" style={{ 
-            display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
-            alignItems: 'flex-end', alignSelf: 'flex-start', paddingTop: 'clamp(7.5rem, 16vh, 13rem)', paddingBottom: '1rem',
-            paddingRight: '4.5rem', paddingLeft: '1rem',
-            opacity: 0, animation: 'fadeInUpHeadline 1s ease-out 0.3s forwards'
-          }}>
-            {/* Logo posicionada diretamente acima da Headline (alinhada à direita) */}
+          <div className="right-content-col">
+            {/* Logo posicionada diretamente acima da Headline */}
             <img 
+              className="lp-logo"
               src="/logo_time_sv.png" 
               alt="Logo Time SV"
-              style={{ 
-                height: '43px', 
-                width: 'auto', 
-                objectFit: 'contain', 
-                filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.3))',
-                marginBottom: '1rem',
-                alignSelf: 'flex-end'
-              }}
               onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
             />
 
-            <h1 style={{
-              fontFamily: "'Gilroy', 'Oswald', sans-serif",
-              fontSize: 'clamp(3.2rem, 6vw, 7rem)',
-              fontWeight: 800, fontStyle: 'normal',
-              lineHeight: 0.92, textTransform: 'uppercase',
-              letterSpacing: '-1px', margin: '0 0 1.5rem 0',
-              color: '#ffffff',
-              textShadow: '0 4px 24px rgba(0,0,0,0.5)',
-              textAlign: 'right'
-            }}>
+            <h1>
               #VEM PRO <br />NOSSO TIME
             </h1>
 
             {/* Botões posicionados logo abaixo da Headline */}
-            <div className="buttons-container" style={{ 
-              display: 'flex', 
-              gap: '1.25rem', 
-              alignItems: 'center', 
-              justifyContent: 'flex-end', 
-              width: '100%', 
-              marginTop: '0.75rem',
-              position: 'relative',
-              zIndex: 40,
-              pointerEvents: 'auto'
-            }}>
+            <div className="buttons-container">
               <button 
                 onClick={() => window.open('/login', '_blank')} 
                 onMouseEnter={() => setHoverSecondary(true)}
