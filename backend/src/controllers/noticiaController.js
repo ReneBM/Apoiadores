@@ -39,6 +39,7 @@ const list = async (req, res, next) => {
               ) AS curtiu,
               COALESCE(ult.itens, '[]'::json) AS ultimos_comentarios
        FROM noticias n
+       -- (ver LATERAL abaixo: traz os comentários mais recentes de TODOS os usuários)
        LEFT JOIN (
          SELECT noticia_id, COUNT(*) AS total FROM noticia_curtidas GROUP BY noticia_id
        ) l ON l.noticia_id = n.id
@@ -52,7 +53,7 @@ const list = async (req, res, next) => {
            LEFT JOIN users u ON u.id = nc.user_id
            WHERE nc.noticia_id = n.id
            ORDER BY nc.created_at DESC
-           LIMIT 3
+           LIMIT 20
          ) x
        ) ult ON true
        ${where}
