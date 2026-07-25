@@ -256,10 +256,11 @@ export default function LandingPage() {
         maxWidth: '1440px',
         margin: '0 auto',
         height: '100vh',
-        minHeight: '700px',
+        minHeight: '600px',
         maxHeight: '960px',
         display: 'grid',
         gridTemplateColumns: '42% 1fr',
+        boxSizing: 'border-box',
       }}>
 
         {/* ── Coluna Esquerda: Foto do Senador ─────────────────── */}
@@ -268,8 +269,9 @@ export default function LandingPage() {
           display: 'flex',
           alignItems: 'flex-end',
           justifyContent: 'flex-start',
-          paddingLeft: '0',
-          marginLeft: '-3rem',
+          paddingLeft: '0.5rem',
+          marginLeft: '0',
+          height: '100%',
           overflow: 'visible',
           opacity: 0,
           animation: 'lpFadeInLeft 1.15s cubic-bezier(0.22,1,0.36,1) 0.15s forwards',
@@ -278,14 +280,15 @@ export default function LandingPage() {
             src="/senador/styveson_v3_nobg.png"
             alt="Senador Styveson Valim"
             style={{
-              height: 'min(82vh, 740px)',
-              maxHeight: '740px',
+              height: 'min(76vh, 660px)',
+              maxHeight: 'calc(100vh - 110px)',
+              maxWidth: '100%',
               width: 'auto',
               objectFit: 'contain',
               display: 'block',
               flexShrink: 0,
-              WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 72%, transparent 98%)',
-              maskImage: 'linear-gradient(to bottom, black 0%, black 72%, transparent 98%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 74%, transparent 98%)',
+              maskImage: 'linear-gradient(to bottom, black 0%, black 74%, transparent 98%)',
             }}
           />
         </div>
