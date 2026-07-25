@@ -259,16 +259,15 @@ export default function LandingPage() {
         minHeight: '700px',
         display: 'grid',
         gridTemplateColumns: '42% 1fr',
-        overflow: 'hidden',
       }}>
 
         {/* ── Coluna Esquerda: Foto do Senador ─────────────────── */}
         <div style={{
           position: 'relative',
-          overflow: 'hidden',
           display: 'flex',
           alignItems: 'flex-end',
           justifyContent: 'flex-start',
+          overflow: 'visible',
           opacity: 0,
           animation: 'lpFadeInLeft 1.15s cubic-bezier(0.22,1,0.36,1) 0.15s forwards',
         }}>
@@ -276,14 +275,11 @@ export default function LandingPage() {
             src="/senador/styveson_v3_nobg.png"
             alt="Senador Styveson Valim"
             style={{
-              height: '92vh',
-              maxHeight: '850px',
-              width: '100%',
-              objectFit: 'cover',
-              objectPosition: 'top center',
+              height: '90vh',
+              width: 'auto',
+              objectFit: 'contain',
               display: 'block',
-              WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 66%, transparent 95%)',
-              maskImage: 'linear-gradient(to bottom, black 0%, black 66%, transparent 95%)',
+              flexShrink: 0,
             }}
           />
         </div>
@@ -293,9 +289,10 @@ export default function LandingPage() {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          alignItems: 'flex-start',
-          paddingRight: '5rem',
-          paddingLeft: '4rem',
+          alignItems: 'flex-end',
+          textAlign: 'right',
+          paddingRight: '3rem',
+          paddingLeft: '60%',
           paddingBottom: '9rem',
           opacity: 0,
           animation: 'lpFadeInUp 0.9s ease-out 0.45s forwards',
@@ -327,6 +324,7 @@ export default function LandingPage() {
             color: '#ffffff',
             textShadow: '0 4px 30px rgba(0,0,0,0.5)',
             margin: '0 0 1.1rem 0',
+            whiteSpace: 'nowrap',
           }}>
             #VEM PRO<br />NOSSO TIME
           </h1>
@@ -350,7 +348,8 @@ export default function LandingPage() {
             display: 'flex',
             gap: '1rem',
             alignItems: 'center',
-            flexWrap: 'wrap',
+            justifyContent: 'flex-end',
+            flexWrap: 'nowrap',
           }}>
             <button
               className="lp-btn-primary"
