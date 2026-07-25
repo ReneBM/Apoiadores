@@ -264,12 +264,13 @@ export default function LandingPage() {
 
         {/* ── Coluna Esquerda: Foto do Senador ─────────────────── */}
         <div style={{
-          width: '46%',
+          width: '42%',
           flexShrink: 0,
           display: 'flex',
           alignItems: 'flex-end',
           justifyContent: 'flex-start',
-          paddingLeft: '2.5rem',
+          paddingLeft: '0',
+          marginLeft: '-1rem',
           opacity: 0,
           animation: 'lpFadeInLeft 1.15s cubic-bezier(0.22,1,0.36,1) 0.15s forwards',
         }}>
@@ -296,8 +297,8 @@ export default function LandingPage() {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'flex-start',
-          paddingRight: '5.5rem',
-          paddingLeft: '0.5rem',
+          paddingRight: '4.5rem',
+          paddingLeft: '3.5rem',
           paddingBottom: '9rem', /* empurra o conteúdo acima dos cards */
           opacity: 0,
           animation: 'lpFadeInUp 0.9s ease-out 0.45s forwards',
