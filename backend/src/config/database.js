@@ -107,14 +107,23 @@ if (isPlaceholder) {
   logger.warn('⚠️ DATABASE_URL não configurada ou com placeholder. O sistema iniciará no MODO MOCK / SANDBOX (dados em memória).');
 } else {
   try {
+    // A URL do pooler do Supabase vem com `sslmode=require`, que o pg trata como
+    // verify-full e rejeita o certificado ("self-signed certificate in chain").
+    // Removemos o parâmetro e controlamos o SSL explicitamente abaixo.
+    let cleanUrl = dbUrl.replace(/([?&])sslmode=[^&]*/gi, '$1');
+    cleanUrl = cleanUrl.replace(/\?&/, '?').replace(/&&/g, '&').replace(/[?&]$/, '');
+
+    // Usa SSL (sem verificar a cadeia) quando o banco é remoto — em produção ou
+    // quando a URL aponta para um host gerenciado. Localhost não usa SSL.
+    const isRemote = /supabase|pooler|neon\.tech|amazonaws|render\.com|railway/i.test(dbUrl);
+    const useSsl = process.env.NODE_ENV === 'production' || isRemote;
+
     pool = new Pool({
-      connectionString: dbUrl,
-      ssl: process.env.NODE_ENV === 'production'
-        ? { rejectUnauthorized: false }
-        : false,
+      connectionString: cleanUrl,
+      ssl: useSsl ? { rejectUnauthorized: false } : false,
       max: 10,
       idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 5000,
+      connectionTimeoutMillis: 10000,
     });
 
     pool.on('error', (err) => {
