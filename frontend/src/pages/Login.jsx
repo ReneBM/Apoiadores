@@ -52,6 +52,7 @@ export default function Login() {
           position: absolute;
           inset: 0;
           overflow-y: auto;
+          overflow-x: hidden;
           background: url('/page-bg.jpg') no-repeat center center;
           background-size: cover;
           display: flex;
@@ -72,12 +73,12 @@ export default function Login() {
           position: relative;
           z-index: 1;
           width: 100%;
-          max-width: 400px;
+          max-width: min(420px, 92vw);
           background: rgba(255, 255, 255, 0.88);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
           border-radius: 24px;
-          padding: 3rem 2.5rem;
+          padding: clamp(1.5rem, 5vw, 2.5rem);
           box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.45);
           border: 1px solid rgba(255, 255, 255, 0.5);
           animation: loginFadeIn 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
@@ -143,11 +144,12 @@ export default function Login() {
 
         .login-input {
           width: 100%;
+          min-height: 48px;
           padding: 0.72rem 1rem;
           background: #f8fafc;
           border: 1.5px solid #e2e8f0;
           border-radius: 10px;
-          font-size: 0.95rem;
+          font-size: 16px;
           color: #1e293b;
           font-family: inherit;
           transition: all 0.2s ease;
@@ -198,6 +200,7 @@ export default function Login() {
 
         .login-btn {
           width: 100%;
+          min-height: 48px;
           padding: 0.9rem;
           background: #0054A6;
           color: #fff;
@@ -259,8 +262,8 @@ export default function Login() {
                 src="/logo_time_sv.png" 
                 alt="Logo Time SV" 
                 style={{
-                  height: '38px',
-                  width: 'auto',
+                  maxWidth: '140px',
+                  height: 'auto',
                   objectFit: 'contain',
                   filter: 'drop-shadow(0 4px 12px rgba(0, 84, 166, 0.2))'
                 }}

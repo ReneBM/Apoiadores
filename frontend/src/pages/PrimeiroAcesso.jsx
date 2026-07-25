@@ -79,6 +79,7 @@ export default function PrimeiroAcesso() {
         .primeiro-acesso-page {
           position: absolute;
           inset: 0;
+          overflow-x: hidden;
           background: url('/page-bg.jpg') no-repeat center center;
           background-size: cover;
           display: flex;
@@ -100,12 +101,12 @@ export default function PrimeiroAcesso() {
           position: relative;
           z-index: 1;
           width: 100%;
-          max-width: 420px;
+          max-width: min(480px, 94vw);
           background: rgba(255, 255, 255, 0.88);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
           border-radius: 24px;
-          padding: 2.5rem 2.25rem;
+          padding: clamp(1.5rem, 5vw, 2.5rem);
           box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.45);
           border: 1px solid rgba(255, 255, 255, 0.5);
           animation: cardFadeIn 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
@@ -187,6 +188,16 @@ export default function PrimeiroAcesso() {
 
         .input-btn-right:hover {
           color: #0054A6;
+        }
+
+        .form-input {
+          min-height: 48px;
+          font-size: 16px;
+        }
+
+        .btn-primary.w-full {
+          width: 100%;
+          min-height: 48px;
         }
 
         /* Customize scrollbar inside card if it overflows */

@@ -195,13 +195,16 @@ export default function ApoiadoresEdit() {
 
   return (
     <div className="flex flex-col gap-5 pb-32">
+      <style>{`
+        .form-input { min-height: 44px !important; width: 100% !important; }
+      `}</style>
       {/* Cabeçalho */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
             className="btn-secondary"
-            style={{ minHeight: '40px', minWidth: '40px', width: '40px', height: '40px', padding: 0 }}
+            style={{ minHeight: '44px', minWidth: '44px', width: '44px', height: '44px', padding: 0 }}
           >
             <ChevronLeft size={20} />
           </button>
@@ -218,7 +221,7 @@ export default function ApoiadoresEdit() {
             disabled={deleting}
             className="flex items-center gap-1.5 transition-all duration-150 rounded-xl"
             style={{
-              minHeight: '40px', height: '40px', padding: '0 1rem', fontSize: '0.8rem', fontWeight: 700,
+              minHeight: '44px', height: '44px', padding: '0 1rem', fontSize: '0.8rem', fontWeight: 700,
               backgroundColor: confirmDel ? '#dc2626' : 'rgba(220, 38, 38, 0.08)',
               border: confirmDel ? 'none' : '1.5px solid rgba(220, 38, 38, 0.25)',
               color: confirmDel ? '#fff' : '#dc2626',
@@ -248,7 +251,7 @@ export default function ApoiadoresEdit() {
             {errors.nome && <p className="form-error">{errors.nome.message}</p>}
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label htmlFor="cpf" className="form-label">CPF</label>
               <input
@@ -270,7 +273,7 @@ export default function ApoiadoresEdit() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label htmlFor="telefone" className="form-label">Celular / WhatsApp *</label>
               <input 
@@ -290,7 +293,7 @@ export default function ApoiadoresEdit() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="col-span-2">
               <label htmlFor="cep" className="form-label">CEP</label>
               <input
@@ -399,7 +402,7 @@ export default function ApoiadoresEdit() {
         {/* Bloco 3: Redes Sociais */}
         <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--primary)', margin: 0 }}>3. Redes Sociais</h3>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="form-label">Instagram</label>
               <input type="text" className="form-input" value={formRedes.instagram || ''} onChange={(e) => handleNetworkChange('instagram', e.target.value)} />
@@ -511,6 +514,7 @@ export default function ApoiadoresEdit() {
           type="submit"
           disabled={submitting}
           className="btn-primary w-full mt-2"
+          style={{ minHeight: '44px' }}
         >
           {submitting ? (
             <><Loader2 size={16} className="animate-spin" /> Salvando...</>

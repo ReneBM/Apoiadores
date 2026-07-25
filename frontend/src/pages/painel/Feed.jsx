@@ -201,7 +201,7 @@ export default function FeedPerfil() {
 
   return (
     <>
-      <div style={{ maxWidth: '600px', margin: '0 auto', padding: isDesktop ? '2rem 1rem' : '0 0 2rem 0', fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" }}>
+      <div style={{ maxWidth: 'min(680px, 100%)', margin: '0 auto', padding: isDesktop ? '2rem 1rem' : '0 0 2rem 0', fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" }}>
       
       {/* Create post button for admins */}
       {canManageAll && (
@@ -220,7 +220,8 @@ export default function FeedPerfil() {
               alignItems: 'center',
               justifyContent: 'center',
               gap: '0.5rem',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              minHeight: '44px'
             }}
           >
             <Plus size={18} /> Nova Publicação
@@ -250,7 +251,7 @@ export default function FeedPerfil() {
                 paddingBottom: '1rem'
               }}>
                 {/* Post Header */}
-                <div style={{ display: 'flex', alignItems: 'center', padding: '14px', gap: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', padding: '14px', gap: '10px', flexWrap: 'wrap' }}>
                   <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(45deg, #f99f1b, #d82d7e, #962fbf, #4f5bd5)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#fff', border: '1.5px solid #fff', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <img 
@@ -279,7 +280,9 @@ export default function FeedPerfil() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        transition: 'opacity 0.2s'
+                        transition: 'opacity 0.2s',
+                        minHeight: '44px',
+                        minWidth: '44px'
                       }}
                       onMouseEnter={(e) => e.currentTarget.style.opacity = '0.7'}
                       onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
@@ -293,9 +296,9 @@ export default function FeedPerfil() {
                 <div style={{ width: '100%', backgroundColor: '#000', display: 'flex', justifyContent: 'center' }}>
                   {news.imagem_url ? (
                     isVideoUrl(news.imagem_url) ? (
-                      <video src={getMediaUrl(news.imagem_url)} controls playsInline style={{ width: '100%', maxHeight: '600px', objectFit: 'contain' }} />
+                      <video src={getMediaUrl(news.imagem_url)} controls playsInline style={{ maxWidth: '100%', width: '100%', maxHeight: '600px', objectFit: 'contain', height: 'auto' }} />
                     ) : (
-                      <img src={getMediaUrl(news.imagem_url)} alt={news.titulo} style={{ width: '100%', maxHeight: '600px', objectFit: 'contain' }} />
+                      <img src={getMediaUrl(news.imagem_url)} alt={news.titulo} style={{ maxWidth: '100%', width: '100%', maxHeight: '600px', objectFit: 'contain', height: 'auto' }} />
                     )
                   ) : (
                     <div style={{ width: '100%', aspectRatio: '1/1', background: 'linear-gradient(135deg, #002855 0%, #0054A6 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
@@ -306,14 +309,14 @@ export default function FeedPerfil() {
 
                 {/* Actions */}
                 <div style={{ padding: '12px 14px' }}>
-                  <div style={{ display: 'flex', gap: '16px', marginBottom: '10px' }}>
-                    <button onClick={() => toggleLike(news.id)} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+                  <div style={{ display: 'flex', gap: '16px', marginBottom: '10px', flexWrap: 'wrap' }}>
+                    <button onClick={() => toggleLike(news.id)} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', minHeight: '44px', minWidth: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Heart size={26} color={postLikes.liked ? '#ed4956' : '#262626'} fill={postLikes.liked ? '#ed4956' : 'none'} />
                     </button>
-                    <button style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }} onClick={() => document.getElementById(`comment-${news.id}`).focus()}>
+                    <button style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', minHeight: '44px', minWidth: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => document.getElementById(`comment-${news.id}`).focus()}>
                       <MessageCircle size={26} color="#262626" />
                     </button>
-                    <button onClick={() => handleShareWhatsApp(news.titulo, news.imagem_url)} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+                    <button onClick={() => handleShareWhatsApp(news.titulo, news.imagem_url)} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', minHeight: '44px', minWidth: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Share2 size={26} color="#262626" />
                     </button>
                   </div>
@@ -350,7 +353,7 @@ export default function FeedPerfil() {
                 </div>
 
                 {/* Add comment */}
-                <div style={{ borderTop: '1px solid #efefef', padding: '10px 14px', display: 'flex', alignItems: 'center' }}>
+                <div style={{ borderTop: '1px solid #efefef', padding: '10px 14px', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                   <input 
                     id={`comment-${news.id}`}
                     type="text" 
@@ -358,7 +361,7 @@ export default function FeedPerfil() {
                     value={commentText}
                     onChange={(e) => setNewComment(prev => ({ ...prev, [news.id]: e.target.value }))}
                     onKeyDown={(e) => { if (e.key === 'Enter') handleAddComment(news.id); }}
-                    style={{ flex: 1, border: 'none', outline: 'none', fontSize: '14px', color: '#262626' }}
+                    style={{ flex: '1 1 200px', border: 'none', outline: 'none', fontSize: '14px', color: '#262626', minHeight: '44px', width: '100%' }}
                   />
                   <button 
                     onClick={() => handleAddComment(news.id)}
@@ -370,7 +373,8 @@ export default function FeedPerfil() {
                       fontWeight: 600, 
                       fontSize: '14px', 
                       cursor: commentText.trim() ? 'pointer' : 'default',
-                      opacity: commentText.trim() ? 1 : 0.5 
+                      opacity: commentText.trim() ? 1 : 0.5,
+                      minHeight: '44px' 
                     }}
                   >
                     Publicar
@@ -411,7 +415,7 @@ export default function FeedPerfil() {
               backgroundColor: '#fff',
               borderRadius: '16px',
               width: '100%',
-              maxWidth: '520px',
+              maxWidth: 'min(600px, 95vw)',
               boxShadow: '0 15px 40px rgba(0,0,0,0.3)',
               overflow: 'hidden',
               display: 'flex',
@@ -440,7 +444,9 @@ export default function FeedPerfil() {
                   padding: '4px',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
+                  minHeight: '44px',
+                  minWidth: '44px'
                 }}
               >
                 <X size={20} />
@@ -467,7 +473,8 @@ export default function FeedPerfil() {
                     fontSize: '0.88rem',
                     outline: 'none',
                     backgroundColor: '#fff',
-                    transition: 'border-color 0.2s'
+                    transition: 'border-color 0.2s',
+                    minHeight: '44px'
                   }}
                   onFocus={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
                   onBlur={(e) => e.currentTarget.style.borderColor = '#cbd5e1'}
@@ -519,7 +526,8 @@ export default function FeedPerfil() {
                       backgroundColor: dragActive ? 'rgba(0,84,166,0.03)' : '#f8fafc',
                       cursor: 'pointer',
                       transition: 'all 0.2s',
-                      position: 'relative'
+                      position: 'relative',
+                      minHeight: '44px'
                     }}
                   >
                     <input
@@ -607,7 +615,9 @@ export default function FeedPerfil() {
                         alignItems: 'center',
                         justifyContent: 'center',
                         cursor: 'pointer',
-                        transition: 'background-color 0.2s'
+                        transition: 'background-color 0.2s',
+                        minHeight: '44px',
+                        minWidth: '44px'
                       }}
                       onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#ef4444'}
                       onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.6)'}
@@ -639,7 +649,7 @@ export default function FeedPerfil() {
               </div>
 
               {/* Botões de Ação */}
-              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.75rem', justifyContent: 'flex-end', borderTop: '1px solid #f1f5f9', paddingTop: '1rem' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.75rem', justifyContent: 'flex-end', borderTop: '1px solid #f1f5f9', paddingTop: '1rem', flexWrap: 'wrap' }}>
                 <button
                   type="button"
                   onClick={() => setCreatePostOpen(false)}
@@ -653,7 +663,8 @@ export default function FeedPerfil() {
                     fontSize: '0.82rem',
                     fontWeight: 700,
                     cursor: 'pointer',
-                    transition: 'all 0.2s'
+                    transition: 'all 0.2s',
+                    minHeight: '44px'
                   }}
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8fafc'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#fff'}
@@ -676,7 +687,8 @@ export default function FeedPerfil() {
                     alignItems: 'center',
                     gap: '0.4rem',
                     boxShadow: 'var(--sombra-sm)',
-                    transition: 'background-color 0.2s'
+                    transition: 'background-color 0.2s',
+                    minHeight: '44px'
                   }}
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--primary-light)'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--primary)'}

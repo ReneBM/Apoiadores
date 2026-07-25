@@ -683,8 +683,13 @@ export default function Header({ title }) {
                   color: '#8e8e8e',
                   fontSize: '1.1rem',
                   cursor: 'pointer',
-                  padding: '4px',
-                  fontWeight: 'bold'
+                  padding: '6px',
+                  fontWeight: 'bold',
+                  minWidth: '36px',
+                  minHeight: '36px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
                 ×
@@ -807,6 +812,8 @@ const iconButtonStyle = {
   borderRadius: '8px',
   transition: 'background-color 0.2s',
   outline: 'none',
+  minWidth: '36px',
+  minHeight: '36px',
 };
 
 const badgeStyle = {
@@ -837,8 +844,10 @@ const backdropStyle = {
 const dropdownStyle = {
   position: 'absolute',
   right: 0,
+  left: 'auto',
   top: '36px',
   width: '280px',
+  maxWidth: 'min(380px, 95vw)',
   backgroundColor: '#fff',
   border: '1px solid #e2e8f0',
   borderRadius: '14px',
@@ -869,7 +878,8 @@ const headerActionStyle = {
   fontWeight: 700,
   cursor: 'pointer',
   fontSize: '0.72rem',
-  padding: 0,
+  padding: '6px',
+  minHeight: '36px',
 };
 
 const dropdownBodyStyle = {
@@ -934,7 +944,8 @@ const backButtonStyle = {
   fontSize: '0.75rem',
   fontWeight: 700,
   cursor: 'pointer',
-  padding: '4px 0',
+  padding: '6px 8px',
+  minHeight: '36px',
 };
 
 const chatBoxStyle = {
@@ -980,8 +991,10 @@ const chatSendButtonStyle = {
   color: '#0a192f',
   border: 'none',
   borderRadius: '50%',
-  width: '28px',
-  height: '28px',
+  width: '36px',
+  height: '36px',
+  minWidth: '36px',
+  minHeight: '36px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',

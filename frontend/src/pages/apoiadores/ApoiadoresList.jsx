@@ -98,7 +98,7 @@ function ApoiadorCard({ apoiador, onEdit }) {
             fontSize: '0.78rem', fontWeight: 700, color: 'var(--primary)',
             background: 'rgba(0,84,166,0.06)', border: 'none',
             borderRadius: '8px', padding: '0.35rem 0.75rem',
-            minHeight: '34px', cursor: 'pointer', transition: 'background 0.2s',
+            minHeight: '44px', cursor: 'pointer', transition: 'background 0.2s',
           }}
         >
           Editar <ChevronRight size={13} />
@@ -200,9 +200,9 @@ export default function ApoiadoresList() {
   return (
     <div style={S.page}>
       {/* Barra de ações */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.5rem', width: '100%' }}>
         {/* Busca */}
-        <div style={{ position: 'relative', flex: 1 }}>
+        <div style={{ position: 'relative', flex: '1 1 200px', minWidth: '0' }}>
           <Search size={15} style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--texto-claro)', pointerEvents: 'none' }} />
           <input
             id="input-busca"
@@ -280,7 +280,7 @@ export default function ApoiadoresList() {
               value={filters.cidade}
               onChange={(e) => setFilters((p) => ({ ...p, cidade: e.target.value }))}
               className="form-input"
-              style={{ minHeight: '40px', height: '40px' }}
+              style={{ minHeight: '44px', width: '100%' }}
             />
           </div>
 
@@ -291,7 +291,7 @@ export default function ApoiadoresList() {
               value={filters.status}
               onChange={(e) => setFilters((p) => ({ ...p, status: e.target.value }))}
               className="form-input"
-              style={{ minHeight: '40px', height: '40px' }}
+              style={{ minHeight: '44px', width: '100%' }}
             >
               <option value="">Todos</option>
               <option value="ativo">Ativo</option>
@@ -307,7 +307,7 @@ export default function ApoiadoresList() {
               value={filters.origem}
               onChange={(e) => setFilters((p) => ({ ...p, origem: e.target.value }))}
               className="form-input"
-              style={{ minHeight: '40px', height: '40px' }}
+              style={{ minHeight: '44px', width: '100%' }}
             >
               <option value="">Todas as Origens</option>
               <option value="Site / Landing Page">Site / Landing Page</option>
@@ -316,11 +316,11 @@ export default function ApoiadoresList() {
             </select>
           </div>
 
-          <div className="flex gap-2 pt-2">
-            <button onClick={clearFilters} className="btn-secondary flex-1 text-xs" style={{ minHeight: '40px', height: '40px' }}>
+          <div className="flex flex-wrap gap-2 pt-2">
+            <button onClick={clearFilters} className="btn-secondary flex-1 text-xs" style={{ minHeight: '44px' }}>
               Limpar
             </button>
-            <button onClick={applyFilters} className="btn-primary flex-1 text-xs" style={{ minHeight: '40px', height: '40px' }}>
+            <button onClick={applyFilters} className="btn-primary flex-1 text-xs" style={{ minHeight: '44px' }}>
               Aplicar
             </button>
           </div>
@@ -335,7 +335,7 @@ export default function ApoiadoresList() {
         <button
           id="btn-novo-apoiador"
           onClick={() => navigate('/apoiadores/novo')}
-          style={S.btnNovo}
+          style={{ ...S.btnNovo, minHeight: '44px' }}
         >
           <UserPlus size={14} /> Novo apoiador
         </button>

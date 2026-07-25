@@ -104,7 +104,7 @@ function MultiplicadorCard({ m, canManage, onToggle, onEdit }) {
             onClick={() => onToggle(m.id, m.ativo)}
             style={{
               display: 'flex', alignItems: 'center', gap: '0.4rem',
-              fontSize: '0.78rem', fontWeight: 600, minHeight: '34px',
+              fontSize: '0.78rem', fontWeight: 600, minHeight: '44px',
               padding: '0.35rem 0.75rem', borderRadius: '8px', border: 'none',
               cursor: 'pointer', transition: 'all 0.2s',
               background: m.ativo ? 'rgba(220,38,38,0.06)' : 'rgba(5,150,105,0.08)',
@@ -121,7 +121,7 @@ function MultiplicadorCard({ m, canManage, onToggle, onEdit }) {
               fontSize: '0.78rem', fontWeight: 700, color: 'var(--primary)',
               background: 'rgba(0,84,166,0.06)', border: 'none',
               borderRadius: '8px', padding: '0.35rem 0.75rem',
-              minHeight: '34px', cursor: 'pointer', transition: 'background 0.2s',
+              minHeight: '44px', cursor: 'pointer', transition: 'background 0.2s',
             }}
           >
             Editar <ChevronRight size={13} />
@@ -218,7 +218,7 @@ export default function MultiplicadoresList({ title = 'Integrantes da Equipe' })
             <button
               id="btn-novo-multiplicador"
               onClick={() => navigate('/multiplicadores/novo')}
-              style={S.btnNovo}
+              style={{ ...S.btnNovo, minHeight: '44px' }}
             >
               <UserPlus size={15} /> Novo Integrante
             </button>
@@ -256,9 +256,9 @@ export default function MultiplicadoresList({ title = 'Integrantes da Equipe' })
       </div>
 
       {/* Barra de pesquisa e filtro */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%', marginTop: '0.25rem', marginBottom: '0.25rem' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.5rem', width: '100%', marginTop: '0.25rem', marginBottom: '0.25rem' }}>
         {/* Busca */}
-        <div style={{ position: 'relative', flex: 1 }}>
+        <div style={{ position: 'relative', flex: '1 1 200px', minWidth: '0' }}>
           <Search size={15} style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--texto-claro)', pointerEvents: 'none' }} />
           <input
             id="input-busca-equipe"
@@ -318,7 +318,7 @@ export default function MultiplicadoresList({ title = 'Integrantes da Equipe' })
               value={filters.municipio}
               onChange={(e) => setFilters((p) => ({ ...p, municipio: e.target.value }))}
               className="form-input"
-              style={{ minHeight: '40px', height: '40px', width: '100%', boxSizing: 'border-box', border: '1.5px solid var(--borda)', borderRadius: '8px', padding: '0.5rem 0.75rem', outline: 'none' }}
+              style={{ minHeight: '44px', width: '100%', boxSizing: 'border-box', border: '1.5px solid var(--borda)', borderRadius: '8px', padding: '0.5rem 0.75rem', outline: 'none' }}
             />
           </div>
 
@@ -329,7 +329,7 @@ export default function MultiplicadoresList({ title = 'Integrantes da Equipe' })
               value={filters.ativo}
               onChange={(e) => setFilters((p) => ({ ...p, ativo: e.target.value }))}
               className="form-input"
-              style={{ minHeight: '40px', height: '40px', width: '100%', boxSizing: 'border-box', border: '1.5px solid var(--borda)', borderRadius: '8px', padding: '0.5rem 0.75rem', outline: 'none', backgroundColor: '#fff' }}
+              style={{ minHeight: '44px', width: '100%', boxSizing: 'border-box', border: '1.5px solid var(--borda)', borderRadius: '8px', padding: '0.5rem 0.75rem', outline: 'none', backgroundColor: '#fff' }}
             >
               <option value="">Todos</option>
               <option value="ativo">Ativo</option>
@@ -337,7 +337,7 @@ export default function MultiplicadoresList({ title = 'Integrantes da Equipe' })
             </select>
           </div>
 
-          <div style={{ display: 'flex', gap: '0.5rem', paddingTop: '0.5rem' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', paddingTop: '0.5rem' }}>
             <button 
               onClick={clearFilters} 
               style={{ 
@@ -349,6 +349,7 @@ export default function MultiplicadoresList({ title = 'Integrantes da Equipe' })
                 color: 'var(--texto-medio)', 
                 fontWeight: 700, 
                 fontSize: '0.78rem', 
+                minHeight: '44px',
                 cursor: 'pointer' 
               }}
             >
@@ -365,6 +366,7 @@ export default function MultiplicadoresList({ title = 'Integrantes da Equipe' })
                 color: '#fff', 
                 fontWeight: 700, 
                 fontSize: '0.78rem', 
+                minHeight: '44px',
                 cursor: 'pointer' 
               }}
             >

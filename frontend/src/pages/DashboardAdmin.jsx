@@ -16,15 +16,16 @@ function KpiCard({ icon: Icon, label, value, subText, iconColor, iconBg }) {
     <div 
       className="card" 
       style={{ 
-        padding: '1.25rem', 
+        padding: 'clamp(1rem, 3vw, 1.25rem)', 
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'flex-start',
-        gap: '0.5rem',
+        gap: 'clamp(0.25rem, 1vw, 0.5rem)',
         borderRadius: '16px',
         border: '1.5px solid var(--borda)',
         backgroundColor: 'var(--bg-card)',
-        textAlign: 'left'
+        textAlign: 'left',
+        minWidth: 0
       }}
     >
       <div 
@@ -182,9 +183,9 @@ export default function DashboardAdmin() {
   return (
     <div className="flex flex-col gap-4 pb-4">
       {/* Linha de Boas-Vindas */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '0.5rem' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', textAlign: 'left' }}>
-          <h1 className="text-2xl font-black tracking-tight" style={{ color: 'var(--texto)', margin: 0 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'clamp(0.5rem, 2vw, 1rem)', marginBottom: '0.5rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', textAlign: 'left', minWidth: 0, flex: '1 1 min-content' }}>
+          <h1 className="font-black tracking-tight" style={{ color: 'var(--texto)', margin: 0, fontSize: 'clamp(1.1rem, 3vw, 1.5rem)' }}>
             {getGreeting()}, {user?.nome?.split(' ')[0] || 'Renê'}
           </h1>
           <p className="text-xs font-medium" style={{ color: 'var(--texto-medio)', margin: 0 }}>
@@ -193,7 +194,7 @@ export default function DashboardAdmin() {
         </div>
 
         {/* Botões no Cabeçalho */}
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           <button
             onClick={handleShareLink}
             style={{
@@ -204,6 +205,7 @@ export default function DashboardAdmin() {
               border: 'none',
               borderRadius: '20px',
               padding: '0.45rem 1rem',
+              minHeight: '44px',
               fontSize: '0.75rem',
               fontWeight: 700,
               color: '#059669',
@@ -228,6 +230,7 @@ export default function DashboardAdmin() {
               border: 'none',
               borderRadius: '20px',
               padding: '0.45rem 1rem',
+              minHeight: '44px',
               fontSize: '0.75rem',
               fontWeight: 700,
               color: 'var(--primary)',
@@ -253,7 +256,7 @@ export default function DashboardAdmin() {
       </div>
 
       {/* Grid de 4 Cards de KPIs */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: 'clamp(0.5rem, 2vw, 0.75rem)' }}>
         <KpiCard
           icon={Users}
           label="Total de apoiadores"
@@ -289,15 +292,16 @@ export default function DashboardAdmin() {
       </div>
 
       {/* Crescimento — últimos 7 dias */}
-      <div className="card" style={{ padding: '1.25rem', borderRadius: '16px', border: '1.5px solid var(--borda)', backgroundColor: 'var(--bg-card)' }}>
-        <h2 className="text-sm font-bold tracking-tight mb-4" style={{ color: 'var(--texto)', textAlign: 'left', margin: '0 0 1rem 0' }}>
+      <div className="card" style={{ padding: 'clamp(1rem, 3vw, 1.25rem)', borderRadius: '16px', border: '1.5px solid var(--borda)', backgroundColor: 'var(--bg-card)', minWidth: 0, overflowX: 'auto', width: '100%' }}>
+        <h2 className="font-bold tracking-tight mb-4" style={{ color: 'var(--texto)', textAlign: 'left', margin: '0 0 1rem 0', fontSize: 'clamp(1rem, 2.5vw, 1.1rem)' }}>
           Crescimento — últimos 7 dias
         </h2>
         {loading ? (
-          <div className="skeleton h-40 rounded-xl" style={{ height: '140px' }} />
+          <div className="skeleton h-40 rounded-xl" style={{ height: 'clamp(140px, 30vh, 200px)' }} />
         ) : (
-          <ResponsiveContainer width="100%" height={140}>
-            <BarChart data={serieCompleta} barCategoryGap="25%">
+          <div style={{ width: '100%', minWidth: 0, height: 'clamp(140px, 30vh, 200px)' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={serieCompleta} barCategoryGap="25%">
               <XAxis
                 dataKey="dia"
                 tick={{ fill: 'var(--texto-medio)', fontSize: 11, fontWeight: 600 }}
@@ -315,13 +319,14 @@ export default function DashboardAdmin() {
                 ))}
               </Bar>
             </BarChart>
-          </ResponsiveContainer>
+            </ResponsiveContainer>
+          </div>
         )}
       </div>
 
       {/* Apoiadores por cidade */}
-      <div className="card" style={{ padding: '1.25rem', borderRadius: '16px', border: '1.5px solid var(--borda)', backgroundColor: 'var(--bg-card)' }}>
-        <h2 className="text-sm font-bold tracking-tight mb-4" style={{ color: 'var(--texto)', textAlign: 'left', margin: '0 0 1.25rem 0' }}>
+      <div className="card" style={{ padding: 'clamp(1rem, 3vw, 1.25rem)', borderRadius: '16px', border: '1.5px solid var(--borda)', backgroundColor: 'var(--bg-card)', minWidth: 0, overflowX: 'auto', width: '100%' }}>
+        <h2 className="font-bold tracking-tight mb-4" style={{ color: 'var(--texto)', textAlign: 'left', margin: '0 0 1.25rem 0', fontSize: 'clamp(1rem, 2.5vw, 1.1rem)' }}>
           Apoiadores por cidade
         </h2>
         {loading ? (
@@ -362,8 +367,8 @@ export default function DashboardAdmin() {
       </div>
 
       {/* Últimos cadastros */}
-      <div className="card" style={{ padding: '1.25rem', borderRadius: '16px', border: '1.5px solid var(--borda)', backgroundColor: 'var(--bg-card)' }}>
-        <h2 className="text-sm font-bold tracking-tight mb-4" style={{ color: 'var(--texto)', textAlign: 'left', margin: '0 0 1.25rem 0' }}>
+      <div className="card" style={{ padding: 'clamp(1rem, 3vw, 1.25rem)', borderRadius: '16px', border: '1.5px solid var(--borda)', backgroundColor: 'var(--bg-card)', minWidth: 0, overflowX: 'auto', width: '100%' }}>
+        <h2 className="font-bold tracking-tight mb-4" style={{ color: 'var(--texto)', textAlign: 'left', margin: '0 0 1.25rem 0', fontSize: 'clamp(1rem, 2.5vw, 1.1rem)' }}>
           Últimos cadastros
         </h2>
         {loading ? (

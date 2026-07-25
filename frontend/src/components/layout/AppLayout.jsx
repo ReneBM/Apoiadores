@@ -318,6 +318,35 @@ export default function AppLayout() {
 
   return (
     <>
+      <style>{`
+        .app-layout-container {
+          display: flex;
+          min-width: 0;
+          overflow-x: hidden;
+        }
+        .app-main-wrapper {
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          min-width: 0;
+          overflow-x: hidden;
+        }
+        .app-main-content {
+          flex: 1;
+          min-width: 0;
+          padding: 1rem;
+          box-sizing: border-box;
+          overflow-x: hidden;
+        }
+        .app-sidebar-desktop {
+          flex-shrink: 0;
+        }
+        @media (min-width: 1024px) {
+          .app-main-content {
+            padding: 2rem 3rem;
+          }
+        }
+      `}</style>
       <div className="app-layout-container">
         
         {/* Sidebar Desktop */}

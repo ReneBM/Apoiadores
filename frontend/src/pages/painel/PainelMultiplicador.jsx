@@ -32,13 +32,13 @@ export default function PainelMultiplicador() {
   const userTier = user?.tipo || 'Apoiador';
 
   return (
-    <div className="flex flex-col gap-4 pb-4" style={{ padding: '0 0.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+    <div className="flex flex-col gap-4 pb-4" style={{ padding: '0 0.5rem', display: 'flex', flexDirection: 'column', gap: 'clamp(1rem, 3vw, 1.5rem)' }}>
       
       {/* Banner de Engajamento */}
       <div style={{
         background: 'linear-gradient(135deg, var(--primary-deeper) 0%, var(--primary-dark) 50%, var(--primary) 100%)',
         borderRadius: '16px',
-        padding: '1.25rem',
+        padding: 'clamp(1rem, 3vw, 1.5rem)',
         color: '#fff',
         display: 'flex',
         alignItems: 'center',
@@ -86,14 +86,14 @@ export default function PainelMultiplicador() {
       </div>
 
       {/* Link de Indicação Pessoal (WhatsApp / Copiar) */}
-      <div className="card" style={{ padding: '1.25rem', backgroundColor: '#fff', borderRadius: '12px', border: '1px solid var(--borda)' }}>
+      <div className="card" style={{ padding: 'clamp(1rem, 3vw, 1.5rem)', backgroundColor: '#fff', borderRadius: '12px', border: '1px solid var(--borda)' }}>
         <h3 style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--texto-medio)', margin: '0 0 0.75rem' }}>
           Indique simpatizantes
         </h3>
         <p style={{ fontSize: '0.8rem', color: 'var(--texto-claro)', margin: '0 0 1rem', lineHeight: '1.4' }}>
           Compartilhe seu link pessoal. Cada simpatizante cadastrado que for aprovado pela coordenação contará para subir seu nível!
         </p>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           <button
             onClick={handleCopyLink}
             style={{
@@ -111,6 +111,7 @@ export default function PainelMultiplicador() {
               fontWeight: 700,
               cursor: 'pointer',
               transition: 'all 0.2s',
+              minHeight: '44px'
             }}
           >
             {copied ? <Check size={16} color="#059669" /> : <Copy size={16} />}
@@ -137,6 +138,7 @@ export default function PainelMultiplicador() {
               cursor: 'pointer',
               transition: 'all 0.2s',
               boxShadow: '0 4px 10px rgba(37, 211, 102, 0.15)',
+              minHeight: '44px'
             }}
           >
             <Share2 size={16} />
@@ -147,7 +149,7 @@ export default function PainelMultiplicador() {
 
       {/* Benefícios Exclusivos (Disponível apenas para Líder de Base) */}
       {(userTier === 'Líder de Base' || userTier === 'Coordenador') && (
-        <div className="card" style={{ padding: '1.25rem', border: '1px solid rgba(0,84,166,0.15)', backgroundColor: 'rgba(0,84,166,0.02)', borderRadius: '12px' }}>
+        <div className="card" style={{ padding: 'clamp(1rem, 3vw, 1.5rem)', border: '1px solid rgba(0,84,166,0.15)', backgroundColor: 'rgba(0,84,166,0.02)', borderRadius: '12px' }}>
           <h3 style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', color: '#0054A6', margin: '0 0 0.75rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
             <Award size={16} />
             <span>Benefícios de {userTier}</span>
@@ -170,6 +172,9 @@ export default function PainelMultiplicador() {
                 textDecoration: 'none',
                 color: 'var(--texto)',
                 transition: 'all 0.2s',
+                minHeight: '44px',
+                width: '100%',
+                boxSizing: 'border-box'
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
@@ -198,6 +203,9 @@ export default function PainelMultiplicador() {
                 textDecoration: 'none',
                 color: 'var(--texto)',
                 transition: 'all 0.2s',
+                minHeight: '44px',
+                width: '100%',
+                boxSizing: 'border-box'
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
@@ -214,12 +222,12 @@ export default function PainelMultiplicador() {
       )}
 
       {/* Ações Rápidas (Permissões) */}
-      <div className="card" style={{ padding: '1.25rem', backgroundColor: '#fff', borderRadius: '12px', border: '1px solid var(--borda)' }}>
+      <div className="card" style={{ padding: 'clamp(1rem, 3vw, 1.5rem)', backgroundColor: '#fff', borderRadius: '12px', border: '1px solid var(--borda)' }}>
         <h3 style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--texto-medio)', margin: '0 0 0.75rem' }}>
           Minhas Ferramentas
         </h3>
         
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 150px), 1fr))', gap: 'clamp(0.75rem, 2vw, 1rem)' }}>
           {/* Cadastrar Apoiador */}
           <button
             onClick={() => navigate('/apoiadores/novo')}
@@ -235,7 +243,8 @@ export default function PainelMultiplicador() {
               backgroundColor: 'rgba(0, 84, 166, 0.03)',
               cursor: 'pointer',
               transition: 'all 0.2s',
-              color: 'var(--primary)'
+              color: 'var(--primary)',
+              minHeight: '44px'
             }}
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 84, 166, 0.08)'}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 84, 166, 0.03)'}
@@ -261,7 +270,8 @@ export default function PainelMultiplicador() {
               backgroundColor: 'rgba(5, 150, 105, 0.03)',
               cursor: 'pointer',
               transition: 'all 0.2s',
-              color: '#059669'
+              color: '#059669',
+              minHeight: '44px'
             }}
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(5, 150, 105, 0.08)'}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(5, 150, 105, 0.03)'}

@@ -152,7 +152,7 @@ export default function PainelControleAdmin() {
         </div>
 
         {/* Botões no Cabeçalho */}
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           <button
             onClick={handleShareLink}
             style={{
@@ -168,6 +168,7 @@ export default function PainelControleAdmin() {
               color: '#059669',
               cursor: 'pointer',
               transition: 'all 0.2s',
+              minHeight: '44px'
             }}
             onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(5, 150, 105, 0.12)'; }}
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(5, 150, 105, 0.08)'; }}
@@ -193,7 +194,8 @@ export default function PainelControleAdmin() {
                 color: 'var(--primary)',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
-                opacity: exporting ? 0.7 : 1
+                opacity: exporting ? 0.7 : 1,
+                minHeight: '44px'
               }}
               onMouseEnter={(e) => {
                 if (!exporting) e.currentTarget.style.backgroundColor = 'rgba(0, 84, 166, 0.12)';
@@ -214,7 +216,7 @@ export default function PainelControleAdmin() {
       </div>
 
       {/* Grid de Atalhos Rápidos para Gestão */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem', marginBottom: '0.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '0.75rem', marginBottom: '0.5rem' }}>
         
         {/* Fila de Aprovações */}
         {hasPermission('Apoiadores', 'visualizar') && (
@@ -467,7 +469,7 @@ export default function PainelControleAdmin() {
                   setShowAvisoModal(false);
                   setMsgForm({ titulo: '', conteudo: '', destinatarios: 'todos', imagem_url: '' });
                 }}
-                style={{ background: 'none', border: 'none', fontSize: '1.35rem', cursor: 'pointer', color: 'var(--texto-medio)', fontWeight: 'bold' }}
+                style={{ background: 'none', border: 'none', fontSize: '1.35rem', cursor: 'pointer', color: 'var(--texto-medio)', fontWeight: 'bold', minHeight: '44px', minWidth: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
                 ×
               </button>
@@ -479,7 +481,7 @@ export default function PainelControleAdmin() {
                 <select
                   value={msgForm.destinatarios}
                   onChange={(e) => setMsgForm(prev => ({ ...prev, destinatarios: e.target.value }))}
-                  style={{ width: '100%', padding: '0.65rem 0.85rem', border: '1.5px solid #e2e8f0', borderRadius: '10px', fontSize: '0.88rem', backgroundColor: '#fff', outline: 'none' }}
+                  style={{ width: '100%', padding: '0.65rem 0.85rem', border: '1.5px solid #e2e8f0', borderRadius: '10px', fontSize: '0.88rem', backgroundColor: '#fff', outline: 'none', minHeight: '44px' }}
                 >
                   <option value="todos">Todos os Multiplicadores</option>
                   <option value="mobilizadores">Apenas Mobilizadores (1 a 10 indicações)</option>
@@ -495,7 +497,7 @@ export default function PainelControleAdmin() {
                   value={msgForm.titulo}
                   onChange={(e) => setMsgForm(prev => ({ ...prev, titulo: e.target.value }))}
                   required
-                  style={{ width: '100%', padding: '0.65rem 0.85rem', border: '1.5px solid #e2e8f0', borderRadius: '10px', fontSize: '0.88rem', outline: 'none', boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '0.65rem 0.85rem', border: '1.5px solid #e2e8f0', borderRadius: '10px', fontSize: '0.88rem', outline: 'none', boxSizing: 'border-box', minHeight: '44px' }}
                 />
               </div>
 
@@ -527,7 +529,9 @@ export default function PainelControleAdmin() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        transition: 'all 0.2s'
+                        transition: 'all 0.2s',
+                        minHeight: '44px',
+                        minWidth: '44px'
                       }}
                       onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)'}
                       onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'}
@@ -561,7 +565,8 @@ export default function PainelControleAdmin() {
                         backgroundColor: '#f8fafc',
                         cursor: uploading ? 'not-allowed' : 'pointer',
                         textAlign: 'center',
-                        transition: 'all 0.2s'
+                        transition: 'all 0.2s',
+                        minHeight: '44px'
                       }}
                       onMouseEnter={(e) => {
                         if (!uploading) {
@@ -600,18 +605,18 @@ export default function PainelControleAdmin() {
                   value={msgForm.conteudo}
                   onChange={(e) => setMsgForm(prev => ({ ...prev, conteudo: e.target.value }))}
                   required
-                  style={{ width: '100%', padding: '0.65rem 0.85rem', border: '1.5px solid #e2e8f0', borderRadius: '10px', fontSize: '0.88rem', outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '0.65rem 0.85rem', border: '1.5px solid #e2e8f0', borderRadius: '10px', fontSize: '0.88rem', outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box', minHeight: '44px' }}
                 />
               </div>
 
-              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
                 <button
                   type="button"
                   onClick={() => {
                     setShowAvisoModal(false);
                     setMsgForm({ titulo: '', conteudo: '', destinatarios: 'todos', imagem_url: '' });
                   }}
-                  style={{ flex: 1, padding: '0.75rem', borderRadius: '10px', border: '1.5px solid #cbd5e1', backgroundColor: '#fff', color: '#475569', fontWeight: 700, fontSize: '0.88rem', cursor: 'pointer' }}
+                  style={{ flex: 1, padding: '0.75rem', borderRadius: '10px', border: '1.5px solid #cbd5e1', backgroundColor: '#fff', color: '#475569', fontWeight: 700, fontSize: '0.88rem', cursor: 'pointer', minHeight: '44px' }}
                 >
                   Cancelar
                 </button>
@@ -633,7 +638,8 @@ export default function PainelControleAdmin() {
                     justifyContent: 'center',
                     gap: '6px',
                     boxShadow: '0 4px 12px rgba(217, 119, 6, 0.2)',
-                    opacity: (msgLoading || uploading) ? 0.7 : 1
+                    opacity: (msgLoading || uploading) ? 0.7 : 1,
+                    minHeight: '44px'
                   }}
                 >
                   {msgLoading ? <Loader2 size={16} className="spin" /> : <Send size={16} />}

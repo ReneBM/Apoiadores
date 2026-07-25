@@ -12,14 +12,14 @@ function StatCard({ icon: Icon, label, value, sub, color = 'brand' }) {
   const currentColors = colors[color] || colors.brand;
 
   return (
-    <div className="kpi-card" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box', backgroundColor: '#fff', borderRadius: '12px', border: '1px solid var(--borda)' }}>
+    <div className="kpi-card" style={{ padding: 'clamp(1rem, 3vw, 1.25rem)', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box', backgroundColor: '#fff', borderRadius: '12px', border: '1px solid var(--borda)', minWidth: 0 }}>
       <div 
         className="w-10 h-10 rounded-xl flex items-center justify-center mb-2.5"
         style={{ backgroundColor: currentColors.bg, color: currentColors.text, width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       >
         <Icon size={20} />
       </div>
-      <p className="text-2xl font-extrabold leading-none" style={{ color: 'var(--texto)', margin: '0.2rem 0', fontSize: '1.5rem' }}>
+      <p className="font-extrabold leading-none" style={{ color: 'var(--texto)', margin: '0.2rem 0', fontSize: 'clamp(1.2rem, 4vw, 1.5rem)' }}>
         {value ?? '—'}
       </p>
       <p className="text-xs uppercase font-bold tracking-wider mt-1" style={{ color: 'var(--texto-medio)', fontSize: '0.75rem', margin: '0' }}>
@@ -69,9 +69,9 @@ export default function DashboardMultiplicador() {
     <div className="flex flex-col gap-4 pb-4" style={{ padding: '0 0.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
       
       {/* Saudação */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.5rem' }}>
-        <div>
-          <h2 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, color: 'var(--texto)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
+        <div style={{ minWidth: 0, flex: '1 1 min-content' }}>
+          <h2 style={{ fontSize: 'clamp(1.1rem, 3vw, 1.5rem)', fontWeight: 800, margin: 0, color: 'var(--texto)' }}>
             Visão Geral
           </h2>
           {stats?.municipio && (
@@ -84,7 +84,7 @@ export default function DashboardMultiplicador() {
       </div>
 
       {/* Estatísticas Rápidas */}
-      <div className="grid grid-cols-2 gap-3" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+      <div className="grid gap-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: 'clamp(0.5rem, 2vw, 0.75rem)' }}>
         <StatCard
           icon={Users}
           label="Apoiadores Ativos"
@@ -101,7 +101,7 @@ export default function DashboardMultiplicador() {
 
       {/* Meta */}
       {kpis?.meta > 0 && (
-        <div className="card" style={{ padding: '1.25rem', backgroundColor: '#fff', borderRadius: '12px', border: '1px solid var(--borda)' }}>
+        <div className="card" style={{ padding: 'clamp(1rem, 3vw, 1.25rem)', backgroundColor: '#fff', borderRadius: '12px', border: '1px solid var(--borda)', minWidth: 0, overflowX: 'auto', width: '100%' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Target size={16} color="var(--accent)" />

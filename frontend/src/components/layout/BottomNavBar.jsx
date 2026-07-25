@@ -36,7 +36,21 @@ export default function BottomNavBar() {
   links.push({ to: '/perfil', icon: Grid, label: 'Perfil' });
 
   return (
-    <nav className="bottom-nav">
+    <>
+      <style>{`
+        .bottom-nav {
+          padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        .nav-link {
+          min-height: 44px;
+        }
+        @media (min-width: 320px) and (max-width: 375px) {
+          .nav-link span {
+            font-size: 0.58rem !important;
+          }
+        }
+      `}</style>
+      <nav className="bottom-nav">
       <div className="bottom-nav-inner">
         {links.map(({ to, icon: Icon, label }) => (
           <NavLink
@@ -57,5 +71,6 @@ export default function BottomNavBar() {
         ))}
       </div>
     </nav>
+    </>
   );
 }
