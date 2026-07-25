@@ -272,8 +272,8 @@ export default function LandingPage() {
             src="/senador/styveson_v3_nobg.png"
             alt="Senador Styveson Valim"
             style={{
-              height: 'clamp(520px, 90vh, 840px)',
-              maxHeight: 'calc(100vh - 65px)',
+              height: 'clamp(540px, 94vh, 880px)',
+              maxHeight: 'calc(100vh - 35px)',
               maxWidth: '100%',
               width: 'auto',
               objectFit: 'contain',
