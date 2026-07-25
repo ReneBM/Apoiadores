@@ -250,13 +250,14 @@ export default function LandingPage() {
           ┌─── Card 1 ───┬──── Card 2 ────┬──── Card 3 ────┐  ← cintura
           └──────────────┴────────────────┴────────────────┘
       ════════════════════════════════════════════════════════════ */}
-      <div style={{
+      <div className="lp-desktop-stage" style={{
         position: 'relative',
         width: '100%',
         maxWidth: '1440px',
         margin: '0 auto',
         height: '100vh',
         minHeight: '700px',
+        maxHeight: '960px',
         display: 'grid',
         gridTemplateColumns: '42% 1fr',
       }}>
@@ -268,7 +269,7 @@ export default function LandingPage() {
           alignItems: 'flex-end',
           justifyContent: 'flex-start',
           paddingLeft: '0',
-          marginLeft: '-4rem',
+          marginLeft: '-3rem',
           overflow: 'visible',
           opacity: 0,
           animation: 'lpFadeInLeft 1.15s cubic-bezier(0.22,1,0.36,1) 0.15s forwards',
@@ -277,7 +278,8 @@ export default function LandingPage() {
             src="/senador/styveson_v3_nobg.png"
             alt="Senador Styveson Valim"
             style={{
-              height: '84vh',
+              height: 'min(84vh, 760px)',
+              maxHeight: '760px',
               width: 'auto',
               objectFit: 'contain',
               display: 'block',
@@ -317,7 +319,7 @@ export default function LandingPage() {
           {/* Headline principal */}
           <h1 style={{
             fontFamily: "'Gilroy', 'Oswald', 'Outfit', sans-serif",
-            fontSize: 'clamp(3.6rem, 6.2vw, 7rem)',
+            fontSize: 'clamp(3.8rem, 4.5vw, 5.5rem)',
             fontWeight: 900,
             fontStyle: 'normal',
             lineHeight: 0.9,
