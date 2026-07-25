@@ -134,13 +134,23 @@ export default function DashboardAdmin() {
   const topCidades = stats?.topCidades ?? [];
   const recentes = stats?.recentes ?? [];
 
+  // Normaliza a data para YYYY-MM-DD usando o fuso LOCAL.
+  // (toISOString usaria UTC e, à noite no Brasil, jogaria "hoje" para o dia seguinte.)
+  const chaveDia = (valor) => {
+    if (!valor) return '';
+    if (typeof valor === 'string') return valor.slice(0, 10); // 'YYYY-MM-DD' ou ISO completo
+    const d = valor instanceof Date ? valor : new Date(valor);
+    if (Number.isNaN(d.getTime())) return '';
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+
   // Preenche dias faltantes na série semanal
   const serieCompleta = (() => {
-    const map = Object.fromEntries(comicSemanal.map((d) => [d.dia, d.total]));
+    const map = Object.fromEntries(comicSemanal.map((d) => [chaveDia(d.dia), Number(d.total) || 0]));
     return Array.from({ length: 7 }, (_, i) => {
       const d = new Date();
       d.setDate(d.getDate() - (6 - i));
-      const key = d.toISOString().split('T')[0];
+      const key = chaveDia(d);
       const isToday = i === 6;
       
       let diaFormatado = d.toLocaleDateString('pt-BR', { weekday: 'short' });
@@ -149,7 +159,7 @@ export default function DashboardAdmin() {
       
       return {
         dia: isToday ? 'Hoje' : diaFormatado,
-        total: parseInt(map[key] ?? 0),
+        total: map[key] ?? 0,
       };
     });
   })();
@@ -310,7 +320,10 @@ export default function DashboardAdmin() {
               />
               <YAxis hide />
               <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0, 84, 166, 0.02)' }} />
-              <Bar dataKey="total" radius={[4, 4, 0, 0]}>
+              {/* isAnimationActive=false: a animação de entrada depende de
+                  requestAnimationFrame; se a aba estiver em segundo plano quando
+                  os dados chegam, as barras ficam travadas em altura 0. */}
+              <Bar dataKey="total" radius={[4, 4, 0, 0]} isAnimationActive={false}>
                 {serieCompleta.map((_, i) => (
                   <Cell
                     key={i}

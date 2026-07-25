@@ -25,14 +25,16 @@ const getAdminStats = async (_req, res, next) => {
       db.query(`SELECT COUNT(*) AS total FROM apoiadores WHERE created_at::date = CURRENT_DATE`),
 
       // 3. Novos nos últimos 7 dias (série para o gráfico)
+      // dia como texto YYYY-MM-DD: se devolvido como `date`, o driver converte
+      // para Date e o frontend não consegue casar a chave da série.
       db.query(`
         SELECT
-          created_at::date AS dia,
-          COUNT(*) AS total
+          TO_CHAR(created_at::date, 'YYYY-MM-DD') AS dia,
+          COUNT(*)::int AS total
         FROM apoiadores
         WHERE created_at >= CURRENT_DATE - INTERVAL '6 days'
-        GROUP BY dia
-        ORDER BY dia
+        GROUP BY created_at::date
+        ORDER BY created_at::date
       `),
 
       // 4. Top 5 cidades (mockup mostra 5 cidades)
@@ -154,10 +156,10 @@ const getMultiplicadorStats = async (req, res, next) => {
         [multiplicador.id]
       ),
       db.query(
-        `SELECT created_at::date AS dia, COUNT(*) AS total
+        `SELECT TO_CHAR(created_at::date, 'YYYY-MM-DD') AS dia, COUNT(*)::int AS total
          FROM apoiadores
          WHERE multiplicador_id = $1 AND created_at >= CURRENT_DATE - INTERVAL '6 days'
-         GROUP BY dia ORDER BY dia`,
+         GROUP BY created_at::date ORDER BY created_at::date`,
         [multiplicador.id]
       ),
     ]);

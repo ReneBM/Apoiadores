@@ -333,7 +333,10 @@ export default function AppLayout() {
         .app-layout-container {
           display: flex;
           min-width: 0;
-          overflow-x: hidden;
+          /* Sem overflow-x aqui: 'overflow-x: hidden' força 'overflow-y: auto'
+             pelo CSS, criando um scrollport que nunca rola e que anula o
+             position:sticky da sidebar no desktop. A rolagem horizontal já é
+             contida por html/body e por .app-main-wrapper/.app-main-content. */
         }
         .app-main-wrapper {
           display: flex;
