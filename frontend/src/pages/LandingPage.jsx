@@ -247,10 +247,10 @@ export default function LandingPage() {
         width: 'min(1440px, 96vw)',
         margin: '0 auto',
         height: '100vh',
-        minHeight: '620px',
-        maxHeight: '940px',
+        minHeight: '640px',
+        maxHeight: '960px',
         display: 'grid',
-        gridTemplateColumns: 'minmax(300px, 42%) 1fr',
+        gridTemplateColumns: 'minmax(320px, 46%) 1fr',
         boxSizing: 'border-box',
       }}>
 
@@ -261,7 +261,7 @@ export default function LandingPage() {
           alignItems: 'flex-end',
           justifyContent: 'flex-start',
           paddingLeft: '0',
-          marginLeft: '0',
+          marginLeft: '-1.5rem',
           height: '100%',
           overflow: 'visible',
           opacity: 0,
@@ -272,15 +272,15 @@ export default function LandingPage() {
             src="/senador/styveson_v3_nobg.png"
             alt="Senador Styveson Valim"
             style={{
-              height: 'clamp(460px, 76vh, 720px)',
-              maxHeight: 'calc(100vh - 110px)',
+              height: 'clamp(500px, 86vh, 800px)',
+              maxHeight: 'calc(100vh - 95px)',
               maxWidth: '100%',
               width: 'auto',
               objectFit: 'contain',
               display: 'block',
               flexShrink: 0,
-              WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 72%, transparent 98%)',
-              maskImage: 'linear-gradient(to bottom, black 0%, black 72%, transparent 98%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 75%, transparent 98%)',
+              maskImage: 'linear-gradient(to bottom, black 0%, black 75%, transparent 98%)',
             }}
           />
         </div>
@@ -292,9 +292,9 @@ export default function LandingPage() {
           justifyContent: 'center',
           alignItems: 'flex-end',
           textAlign: 'right',
-          paddingRight: 'clamp(1.5rem, 3.5vw, 4rem)',
-          paddingLeft: '1.5rem',
-          paddingBottom: 'clamp(3rem, 6vh, 4.8rem)',
+          paddingRight: 'clamp(1rem, 2.5vw, 3rem)',
+          paddingLeft: '1rem',
+          paddingBottom: 'clamp(2.5rem, 5vh, 4rem)',
           opacity: 0,
           animation: 'lpFadeInUp 0.9s ease-out 0.45s forwards',
         }}>
@@ -305,7 +305,7 @@ export default function LandingPage() {
             alt="Logo Time Styveson Valim"
             onError={e => { e.currentTarget.src = '/logo_sv_2025.png'; }}
             style={{
-              height: 'clamp(36px, 4vh, 48px)',
+              height: 'clamp(40px, 4.5vh, 52px)',
               width: 'auto',
               objectFit: 'contain',
               marginBottom: 'clamp(1rem, 2vh, 1.8rem)',
@@ -316,7 +316,7 @@ export default function LandingPage() {
           {/* Headline principal */}
           <h1 style={{
             fontFamily: "'Gilroy', 'Oswald', 'Outfit', sans-serif",
-            fontSize: 'clamp(3.2rem, 4.8vw, 5.5rem)',
+            fontSize: 'clamp(3.6rem, 5.8vw, 6.4rem)',
             fontWeight: 900,
             fontStyle: 'normal',
             lineHeight: 0.9,
@@ -364,9 +364,9 @@ export default function LandingPage() {
         {/* ── Cards — Flutuam na cintura do Senador ────────────── */}
         <div style={{
           position: 'absolute',
-          bottom: 'clamp(1.5rem, 3.5vh, 2.5rem)',
-          left: '0',
-          right: 'clamp(1.5rem, 3.5vw, 4rem)',
+          bottom: 'clamp(1.2rem, 3vh, 2.2rem)',
+          left: '0.5rem',
+          right: 'clamp(1rem, 2.5vw, 3rem)',
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
           gap: 'clamp(0.75rem, 1.2vw, 1.25rem)',
