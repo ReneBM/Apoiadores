@@ -488,9 +488,11 @@ export default function LandingPage() {
           alt="Logo Time SV"
           onError={(e) => { e.currentTarget.src = '/logo_sv_2025.png'; }}
           style={{
-            height: 'clamp(53px, 9vh, 76px)',
-            maxWidth: 'min(94vw, 360px)',
-            width: 'auto',
+            // Wordmark ~7,6:1 — dimensionar por largura evita que ocupe quase
+            // toda a tela e elimina o espaço vazio gerado pelo objectFit.
+            width: 'min(72vw, 300px)',
+            maxWidth: '100%',
+            height: 'auto',
             objectFit: 'contain',
             filter: 'drop-shadow(0 7px 20px rgba(0,0,0,0.46))',
             margin: '0 auto',
