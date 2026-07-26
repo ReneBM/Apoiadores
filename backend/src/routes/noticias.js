@@ -7,21 +7,28 @@ const { requirePermission } = require('../middleware/rbac');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const logger = require('../utils/logger');
 
-// Configuração do armazenamento de uploads (pasta uploads na raiz do backend)
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, '../../uploads');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, 'feed-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
+const { uploadArquivo, isConfigured: storageConfigurado } = require('../utils/storage');
+
+// O filesystem da Vercel é efêmero/somente-leitura: em produção o arquivo vai
+// para o Supabase Storage (memoryStorage). Sem Supabase configurado (dev local),
+// mantemos a gravação em disco para não quebrar o ambiente de desenvolvimento.
+const storage = storageConfigurado
+  ? multer.memoryStorage()
+  : multer.diskStorage({
+      destination: (req, file, cb) => {
+        const uploadDir = path.join(__dirname, '../../uploads');
+        if (!fs.existsSync(uploadDir)) {
+          fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
+      },
+      filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        cb(null, 'feed-' + uniqueSuffix + path.extname(file.originalname));
+      }
+    });
 
 // Filtro de tipos de arquivos (imagens e vídeos)
 const fileFilter = (req, file, cb) => {
@@ -36,10 +43,15 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
+// Funções serverless da Vercel aceitam ~4,5MB por requisição; acima disso a
+// plataforma corta antes de chegar aqui. Mantemos 4MB para falhar com uma
+// mensagem clara em vez de um erro genérico da infraestrutura.
+const LIMITE_UPLOAD_MB = 4;
+
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
-  limits: { fileSize: 50 * 1024 * 1024 } // Limite de 50MB
+  limits: { fileSize: LIMITE_UPLOAD_MB * 1024 * 1024 }
 });
 
 router.use(authenticate);
@@ -74,6 +86,11 @@ router.post(
 
     upload.single('file')(req, res, (err) => {
       if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return res.status(400).json({
+            error: `Arquivo muito grande. O limite é de ${LIMITE_UPLOAD_MB}MB — comprima a imagem ou envie o vídeo por link.`,
+          });
+        }
         return res.status(400).json({ error: `Erro no upload: ${err.message}` });
       } else if (err) {
         return res.status(400).json({ error: err.message });
@@ -81,12 +98,29 @@ router.post(
       next();
     });
   },
-  (req, res) => {
+  async (req, res, next) => {
     if (!req.file) {
       return res.status(400).json({ error: 'Nenhum arquivo enviado.' });
     }
-    const fileUrl = `/uploads/${req.file.filename}`;
-    res.json({ url: fileUrl });
+
+    // Dev local (sem Supabase): arquivo já foi gravado em disco pelo multer.
+    if (!storageConfigurado) {
+      return res.json({ url: `/uploads/${req.file.filename}` });
+    }
+
+    try {
+      const ext = path.extname(req.file.originalname).toLowerCase();
+      const nome = `feed-${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
+      const url = await uploadArquivo(req.file.buffer, nome, req.file.mimetype);
+      res.json({ url });
+    } catch (err) {
+      // Mensagem explícita: o erro genérico de 500 esconderia a causa real
+      // (bucket sem permissão, chave inválida etc.) em produção.
+      logger.error('Falha ao enviar mídia para o Supabase Storage', { message: err.message });
+      return res.status(502).json({
+        error: `Não foi possível salvar a mídia: ${err.message}`,
+      });
+    }
   }
 );
 

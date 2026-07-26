@@ -173,9 +173,9 @@ export default function FeedPerfil() {
   const handleFileUpload = async (file) => {
     if (!file) return;
 
-    const maxSize = 50 * 1024 * 1024;
+    const maxSize = 4 * 1024 * 1024;
     if (file.size > maxSize) {
-      toast.error('O arquivo é muito grande. O limite máximo é de 50MB.');
+      toast.error('O arquivo é muito grande. O limite máximo é de 4MB. Comprima a imagem ou envie o vídeo por link.');
       return;
     }
 
@@ -602,7 +602,7 @@ export default function FeedPerfil() {
                             Arraste uma mídia ou clique para selecionar
                           </span>
                           <span style={{ fontSize: '0.65rem', color: '#94a3b8' }}>
-                            Imagens ou vídeos de até 50MB
+                            Imagens ou vídeos de até 4MB
                           </span>
                         </>
                       )}
