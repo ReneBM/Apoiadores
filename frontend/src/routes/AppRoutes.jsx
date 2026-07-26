@@ -1,27 +1,37 @@
+import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { PrivateRoute } from './PrivateRoute';
 import AppLayout from '../components/layout/AppLayout';
 
-// Páginas
-import Login               from '../pages/Login';
-import PrimeiroAcesso      from '../pages/PrimeiroAcesso';
-import Dashboard           from '../pages/Dashboard';
-import ApoiadoresList      from '../pages/apoiadores/ApoiadoresList';
-import ApoiadoresForm      from '../pages/apoiadores/ApoiadoresForm';
-import ApoiadoresEdit      from '../pages/apoiadores/ApoiadoresEdit';
-import MultiplicadoresList from '../pages/multiplicadores/MultiplicadoresList';
-import MultiplicadoresForm from '../pages/multiplicadores/MultiplicadoresForm';
-import Painel from '../pages/painel/Painel';
-import CadastroApoiador from '../pages/CadastroApoiador';
-import PesquisaEngajamento from '../pages/PesquisaEngajamento';
-import AprovacoesPendentes  from '../pages/apoiadores/AprovacoesPendentes';
-import CentralCoordenador   from '../pages/painel/CentralCoordenador';
-import Feed          from '../pages/painel/Feed';
-import PerfilLider   from '../pages/perfil/PerfilLider';
-import PerfilAdmin   from '../pages/painel/PerfilAdmin';
-import PerfisAcesso from '../pages/admin/PerfisAcesso';
+// Páginas de entrada pública — carregadas junto com o app (são o primeiro contato)
 import LandingPage from '../pages/LandingPage';
+import Login from '../pages/Login';
+import CadastroApoiador from '../pages/CadastroApoiador';
+
+// Demais páginas sob demanda: evita baixar o app inteiro (gráficos, telas
+// administrativas) para quem só abriu a landing page.
+const PrimeiroAcesso      = lazy(() => import('../pages/PrimeiroAcesso'));
+const Dashboard           = lazy(() => import('../pages/Dashboard'));
+const ApoiadoresList      = lazy(() => import('../pages/apoiadores/ApoiadoresList'));
+const ApoiadoresForm      = lazy(() => import('../pages/apoiadores/ApoiadoresForm'));
+const ApoiadoresEdit      = lazy(() => import('../pages/apoiadores/ApoiadoresEdit'));
+const MultiplicadoresList = lazy(() => import('../pages/multiplicadores/MultiplicadoresList'));
+const MultiplicadoresForm = lazy(() => import('../pages/multiplicadores/MultiplicadoresForm'));
+const Painel              = lazy(() => import('../pages/painel/Painel'));
+const PesquisaEngajamento = lazy(() => import('../pages/PesquisaEngajamento'));
+const AprovacoesPendentes = lazy(() => import('../pages/apoiadores/AprovacoesPendentes'));
+const CentralCoordenador  = lazy(() => import('../pages/painel/CentralCoordenador'));
+const Feed                = lazy(() => import('../pages/painel/Feed'));
+const PerfilLider         = lazy(() => import('../pages/perfil/PerfilLider'));
+const PerfilAdmin         = lazy(() => import('../pages/painel/PerfilAdmin'));
+const PerfisAcesso        = lazy(() => import('../pages/admin/PerfisAcesso'));
+
+const CarregandoPagina = () => (
+  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', color: '#64748b', fontSize: '0.85rem' }}>
+    Carregando...
+  </div>
+);
 
 export default function AppRoutes() {
   const { isAuthenticated, user, primeiroAcesso, pesquisaConcluida } = useAuth();
@@ -33,6 +43,7 @@ export default function AppRoutes() {
   };
 
   return (
+    <Suspense fallback={<CarregandoPagina />}>
     <Routes>
       {/* Rotas públicas da Landing Page (Squeeze Page WhatsApp) */}
       <Route path="/lp" element={<LandingPage />} />
@@ -144,6 +155,7 @@ export default function AppRoutes() {
       {/* 404 */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </Suspense>
   );
 }
 
