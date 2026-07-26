@@ -22,19 +22,57 @@ if (process.env.ANTHROPIC_API_KEY) {
 
 const iaConfigurada = () => Boolean(client);
 
-// ── Filtro local de contingência ───────────────────────────────────────────
-// Apenas termos inequivocamente ofensivos; casos sutis ficam para a IA.
-// \b não funciona bem com acentos, então usamos limites manuais.
-const TERMOS_BLOQUEADOS = [
-  'vagabund[oa]', 'arrombad[oa]', 'desgraçad[oa]', 'filho da puta', 'fdp',
-  'vai se foder', 'vsf', 'foda-se', 'fod[ae]se', 'cuzão', 'babac[a]',
-  'imbecil', 'idiota', 'retardad[oa]', 'corno', 'puta que pariu',
-  'viad[oa]o?\\b', 'macac[oa]\\b', 'crioul[oa]',
+// ── Filtro local ───────────────────────────────────────────────────────────
+// Normaliza o texto antes de comparar: minúsculas, sem acentos, "leet"
+// convertido (s4fado → safado) e letras repetidas colapsadas (idiiota →
+// idiota). Compostos são casados também na versão sem espaços/pontuação,
+// pegando "filha da puta", "f d p", "vai-se-foder" etc.
+const normalizar = (texto) => String(texto)
+  .toLowerCase()
+  .normalize('NFD').replace(/[̀-ͯ]/g, '') // remove acentos
+  .replace(/[4@]/g, 'a').replace(/3/g, 'e').replace(/1/g, 'i')
+  .replace(/0/g, 'o').replace(/[5$]/g, 's').replace(/7/g, 't')
+  .replace(/(\p{L})\1+/gu, '$1'); // colapsa letras repetidas
+
+// Termos de UMA palavra (comparados palavra a palavra).
+// Escreva já na forma normalizada: sem acento e sem letras duplas.
+const PALAVRAS = [
+  'safado', 'safada', 'vagabundo', 'vagabunda', 'vagaba', 'arombado', 'arombada',
+  'desgracado', 'desgracada', 'babaca', 'imbecil', 'idiota', 'retardado', 'retardada',
+  'corno', 'chifrudo', 'cuzao', 'otario', 'otaria', 'canalha', 'pilantra',
+  'escroto', 'escrota', 'verme', 'piranha', 'vadia', 'biscate', 'rapariga',
+  'caralho', 'krl', 'pora', 'pqp', 'vtnc', 'vsf', 'fdp', 'merda', 'bosta',
+  'puta', 'cu', 'boiola', 'baitola', 'bicha', 'sapatao', 'traveco', 'viado',
+  'macaco', 'macaca', 'criolo', 'criola', 'mongoloide',
 ];
-const REGEX_LOCAL = new RegExp(`(^|[^\\p{L}])(${TERMOS_BLOQUEADOS.join('|')})($|[^\\p{L}])`, 'iu');
+const SET_PALAVRAS = new Set(PALAVRAS);
+
+// Termos COMPOSTOS (casados na versão compacta, sem espaços/pontuação).
+// Também já na forma normalizada.
+const COMPOSTOS = [
+  'filhodaputa', 'filhadaputa', 'fiodaputa', 'fiadaputa', 'filhaputa', 'filhoputa',
+  'vaisefoder', 'sefoder', 'fodase', 'vaitomarnocu', 'tomarnocu', 'toncu',
+  'putaquepariu', 'putaqueopariu', 'semvergonha', 'debilmental', 'lixohumano',
+  'vaiamerda', 'vaiprocaralho', 'seumerda', 'suamerda', 'seubosta', 'suabosta',
+];
+
+// Palavras longas também entram na busca compacta, pegando grafias
+// espaçadas ("i d i o t a") — só termos com 6+ letras, para evitar
+// falsos positivos entre palavras vizinhas. Siglas de baixo risco entram
+// também: nenhuma palavra do português contém essas sequências.
+const SIGLAS_COMPACTAS = ['fdp', 'vsf', 'pqp', 'vtnc', 'krl'];
+const COMPACTOS = [...COMPOSTOS, ...SIGLAS_COMPACTAS, ...PALAVRAS.filter((p) => p.length >= 6)];
 
 const analisarLocal = (texto) => {
-  if (REGEX_LOCAL.test(texto)) {
+  const norm = normalizar(texto);
+  const palavras = norm.split(/[^\p{L}]+/u).filter(Boolean);
+  const compacto = palavras.join('');
+
+  const bloqueou =
+    palavras.some((p) => SET_PALAVRAS.has(p)) ||
+    COMPACTOS.some((t) => compacto.includes(t));
+
+  if (bloqueou) {
     return {
       permitido: false,
       categoria: 'ofensa',
@@ -123,16 +161,20 @@ const analisarComIA = async (texto) => {
  * @returns {Promise<{permitido: boolean, categoria: string, motivo: string, fonte: string}>}
  */
 const analisarComentario = async (texto) => {
-  if (!iaConfigurada()) {
-    return analisarLocal(texto);
-  }
+  // O filtro local roda SEMPRE primeiro: bloqueio garantido dos termos
+  // conhecidos (independente da IA) e economia de chamadas de API.
+  const local = analisarLocal(texto);
+  if (!local.permitido) return local;
+
+  if (!iaConfigurada()) return local;
+
   try {
     const resultado = await analisarComIA(texto);
     if (resultado) return resultado;
   } catch (err) {
     logger.error('Moderação IA indisponível — usando filtro local.', { message: err.message });
   }
-  return analisarLocal(texto);
+  return local;
 };
 
 module.exports = { analisarComentario, iaConfigurada };
