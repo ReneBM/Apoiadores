@@ -18,18 +18,25 @@ const formatarCPF = (valor) => {
  * O apoiador informa o CPF; buscamos o nome e o identificador de indicação
  * para gerar o card com QR Code. Também permite copiar o link de cadastro.
  */
-export default function MonteSeuTimeModal({ open, onClose }) {
+export default function MonteSeuTimeModal({ open, onClose, onCadastrar }) {
   const [cpf, setCpf] = useState('');
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState('');
+  const [semCadastro, setSemCadastro] = useState(false); // CPF sem cadastro aprovado
   const [copiado, setCopiado] = useState(false);
   const [resultado, setResultado] = useState(null); // { nome, link }
 
   const linkGenerico = `${window.location.origin}/cadastro`;
 
   const fechar = () => {
-    setCpf(''); setErro(''); setResultado(null); setLoading(false);
+    setCpf(''); setErro(''); setSemCadastro(false); setResultado(null); setLoading(false);
     onClose();
+  };
+
+  const irParaCadastro = () => {
+    fechar();
+    if (onCadastrar) onCadastrar();
+    else window.location.href = '/cadastro';
   };
 
   const handleCopiarGenerico = async () => {
@@ -52,6 +59,7 @@ export default function MonteSeuTimeModal({ open, onClose }) {
     }
     setLoading(true);
     setErro('');
+    setSemCadastro(false);
     try {
       const res = await api.post('/apoiadores/meu-card', { cpf: limpo });
       const { nome, ref, atribuiIndicacao } = res.data;
@@ -62,6 +70,8 @@ export default function MonteSeuTimeModal({ open, onClose }) {
       });
     } catch (err) {
       setErro(err.response?.data?.error || 'Não foi possível consultar agora. Tente novamente em instantes.');
+      // 404 = CPF sem cadastro aprovado → oferece o cadastro na hora
+      setSemCadastro(err.response?.status === 404);
     } finally {
       setLoading(false);
     }
@@ -124,7 +134,7 @@ export default function MonteSeuTimeModal({ open, onClose }) {
               autoComplete="off"
               placeholder="000.000.000-00"
               value={cpf}
-              onChange={(e) => { setCpf(formatarCPF(e.target.value)); setErro(''); }}
+              onChange={(e) => { setCpf(formatarCPF(e.target.value)); setErro(''); setSemCadastro(false); }}
               disabled={loading}
               style={{
                 width: '100%', minHeight: '48px', padding: '0.72rem 1rem',
@@ -138,6 +148,24 @@ export default function MonteSeuTimeModal({ open, onClose }) {
               <div style={{ background: '#fee2e2', color: '#dc2626', padding: '0.6rem 0.8rem', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 600, marginTop: '0.7rem', border: '1px solid #fca5a5', textAlign: 'left' }}>
                 {erro}
               </div>
+            )}
+
+            {/* CPF sem cadastro: convida para se cadastrar na hora */}
+            {semCadastro && (
+              <button
+                type="button"
+                onClick={irParaCadastro}
+                style={{
+                  width: '100%', minHeight: '48px', marginTop: '0.7rem',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                  padding: '0.8rem', borderRadius: '10px', border: 'none',
+                  backgroundColor: '#059669', color: '#fff',
+                  fontSize: '0.9rem', fontWeight: 700, cursor: 'pointer',
+                  boxShadow: '0 6px 16px rgba(5,150,105,0.25)',
+                }}
+              >
+                Ainda não sou apoiador — quero me cadastrar
+              </button>
             )}
 
             <button

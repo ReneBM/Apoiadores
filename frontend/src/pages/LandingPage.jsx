@@ -679,7 +679,11 @@ export default function LandingPage() {
       </div>
 
       {/* ── Modal "Monte seu time" (card com QR pelo CPF) ── */}
-      <MonteSeuTimeModal open={showMonteTime} onClose={() => setShowMonteTime(false)} />
+      <MonteSeuTimeModal
+        open={showMonteTime}
+        onClose={() => setShowMonteTime(false)}
+        onCadastrar={() => setShowModal(true)}
+      />
 
       {/* ── Modal de Cadastro ── */}
       {showModal && (
