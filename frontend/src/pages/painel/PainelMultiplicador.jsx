@@ -95,7 +95,7 @@ export default function PainelMultiplicador() {
             Nossa Mobilização
           </span>
           <h3 style={{ fontSize: '0.95rem', fontWeight: 900, margin: '0 0 0.25rem 0', lineHeight: '1.2' }}>
-            TimeSV
+            Time SV
           </h3>
           <p style={{ fontSize: '0.72rem', opacity: 0.88, margin: 0, lineHeight: '1.3' }}>
             Multiplique o nosso trabalho nas redes e nas ruas de forma oficial e segura.
@@ -229,7 +229,7 @@ export default function PainelMultiplicador() {
           </button>
           <button
             onClick={() => handleShareWhatsApp(
-              'Olá! Convido você a fazer parte da nossa rede de apoiadores "TimeSV"! Cadastre-se através do meu link oficial:',
+              'Olá! Convido você a fazer parte da nossa rede de apoiadores "Time SV"! Cadastre-se através do meu link oficial:',
               referralLink
             )}
             style={{

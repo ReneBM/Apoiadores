@@ -1,6 +1,7 @@
 const router = require('express').Router();
+const rateLimit = require('express-rate-limit');
 const {
-  list, getById, create, update, remove, listCidades, createPublic, approve, alterarTipo, salvarPesquisaEngajamento,
+  list, getById, create, update, remove, listCidades, createPublic, approve, alterarTipo, salvarPesquisaEngajamento, meuCardPorCpf,
 } = require('../controllers/apoiadorController');
 const { authenticate } = require('../middleware/auth');
 const { requireRole, ownResourceOnly, requirePermission } = require('../middleware/rbac');
@@ -9,6 +10,18 @@ const db = require('../config/database');
 
 // Rota pública de cadastro de simpatizantes (indicação) — sem autenticação
 router.post('/publico', createPublic);
+
+// Consulta pública do próprio card de indicação pelo CPF ("Monte seu time").
+// Limite estreito por IP: a rota devolve o nome do apoiador, então precisa
+// resistir a tentativas em massa de descobrir cadastros.
+const cardLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutos
+  max: 8,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Muitas consultas seguidas. Aguarde alguns minutos e tente novamente.' },
+});
+router.post('/meu-card', cardLimiter, meuCardPorCpf);
 
 // Middleware to allow viewing supporters to users who have permission to manage supporters OR approvals
 const canViewApoiadoresList = async (req, res, next) => {

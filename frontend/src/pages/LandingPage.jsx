@@ -7,6 +7,7 @@ import {
   ArrowRight, X, UserCheck, UserPlus, Smartphone, Users
 } from 'lucide-react';
 import CadastroApoiador from './CadastroApoiador';
+import MonteSeuTimeModal from '../components/MonteSeuTimeModal';
 
 const formatPhone = (value) => {
   if (!value) return '';
@@ -24,6 +25,7 @@ export default function LandingPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [registeredData, setRegisteredData] = useState(null);
+  const [showMonteTime, setShowMonteTime] = useState(false);
   const [hoverPrimary, setHoverPrimary] = useState(false);
   const [hoverSecondary, setHoverSecondary] = useState(false);
 
@@ -76,7 +78,7 @@ export default function LandingPage() {
         senha: data.senha || null,
         consentimento_lgpd: true,
         como_se_considera: 'Apoiador',
-        observacoes: 'Cadastrado via Landing Page WhatsApp (TimeSV)'
+        observacoes: 'Cadastrado via Landing Page WhatsApp (Time SV)'
       };
       const res = await api.post('/apoiadores/publico', payload);
       setRegisteredData({
@@ -447,8 +449,15 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Card 3 — Monte seu Time */}
-          <div className="lp-card">
+          {/* Card 3 — Monte seu Time (abre o gerador de card com QR) */}
+          <div
+            className="lp-card"
+            role="button"
+            tabIndex={0}
+            onClick={() => setShowMonteTime(true)}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setShowMonteTime(true); } }}
+            style={{ cursor: 'pointer' }}
+          >
             <div style={{
               width: '48px', height: '48px', borderRadius: '14px',
               backgroundColor: '#0348d4', flexShrink: 0,
@@ -462,7 +471,7 @@ export default function LandingPage() {
                 Monte seu time
               </h3>
               <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.74rem', color: '#475569', margin: 0, lineHeight: 1.5, fontWeight: 500 }}>
-                Convide amigos, monte seu time e ajude o nosso RN.
+                Gere seu card com QR Code e convide amigos.
               </p>
             </div>
           </div>
@@ -639,8 +648,15 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Card 3 — Monte seu Time */}
-          <div className="lp-card" style={{ padding: '1rem 1.15rem' }}>
+          {/* Card 3 — Monte seu Time (abre o gerador de card com QR) */}
+          <div
+            className="lp-card"
+            role="button"
+            tabIndex={0}
+            onClick={() => setShowMonteTime(true)}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setShowMonteTime(true); } }}
+            style={{ padding: '1rem 1.15rem', cursor: 'pointer' }}
+          >
             <div style={{
               width: '44px', height: '44px', borderRadius: '12px',
               backgroundColor: '#0348d4', flexShrink: 0,
@@ -654,13 +670,16 @@ export default function LandingPage() {
                 Monte seu time
               </h3>
               <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.74rem', color: '#475569', margin: 0, lineHeight: 1.4, fontWeight: 500 }}>
-                Convide amigos, monte seu time e ajude o nosso RN.
+                Gere seu card com QR Code e convide amigos.
               </p>
             </div>
           </div>
         </div>
 
       </div>
+
+      {/* ── Modal "Monte seu time" (card com QR pelo CPF) ── */}
+      <MonteSeuTimeModal open={showMonteTime} onClose={() => setShowMonteTime(false)} />
 
       {/* ── Modal de Cadastro ── */}
       {showModal && (

@@ -200,7 +200,7 @@ export default function Header({ title }) {
         }
       `}</style>
       <header className="app-header" style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 100 }}>
-        {/* Logo TimeSV no Topo do App */}
+        {/* Logo Time SV no Topo do App */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
           <img 
             className="header-app-logo"

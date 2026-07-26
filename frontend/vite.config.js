@@ -9,8 +9,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'TimeSV',
-        short_name: 'TimeSV',
+        name: 'Time SV',
+        short_name: 'Time SV',
         description: 'Sistema de gestão de apoiadores políticos',
         theme_color: '#1e3a5f',
         background_color: '#0f172a',

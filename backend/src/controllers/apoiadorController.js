@@ -472,6 +472,67 @@ const createPublic = async (req, res, next) => {
   }
 };
 
+// ── Buscar o próprio card de indicação pelo CPF (público) ──────────────────
+// Usado no "Monte seu time" da landing page: o apoiador informa o CPF e
+// recebe o nome + o identificador de indicação para montar o card com QR.
+// A rota tem limite de tentativas por IP (ver routes/apoiadores.js) e toda
+// consulta fica registrada no audit_log para rastreabilidade (LGPD).
+const meuCardPorCpf = async (req, res, next) => {
+  try {
+    const { cpf } = req.body || {};
+
+    if (!validarCPF(cpf)) {
+      return res.status(400).json({ error: 'CPF inválido. Confira os números digitados.' });
+    }
+
+    const cpfLimpo = String(cpf).replace(/\D/g, '');
+
+    const { rows } = await db.query(
+      `SELECT a.id, a.nome, a.status, a.email
+       FROM apoiadores a
+       WHERE REPLACE(REPLACE(REPLACE(a.cpf, '.', ''), '-', ''), ' ', '') = $1
+       LIMIT 1`,
+      [cpfLimpo]
+    );
+
+    const apoiador = rows[0];
+
+    // Resposta genérica: não diferencia "não encontrado" de "não aprovado",
+    // para não confirmar a existência de um cadastro específico.
+    if (!apoiador || apoiador.status !== 'ativo') {
+      await audit(null, 'CONSULTA_CARD_CPF_SEM_RESULTADO', 'apoiadores', null, {}, req.ip);
+      return res.status(404).json({
+        error: 'Não encontramos um cadastro aprovado com esse CPF. Se você acabou de se cadastrar, aguarde a aprovação da coordenação.',
+      });
+    }
+
+    // Descobre o identificador de indicação: a conta do apoiador (se existir)
+    // precisa ter perfil de multiplicador para que a indicação seja atribuída.
+    let ref = null;
+    if (apoiador.email) {
+      const { rows: uRows } = await db.query(
+        `SELECT u.id
+         FROM users u
+         JOIN multiplicadores m ON m.user_id = u.id
+         WHERE LOWER(u.email) = LOWER($1) AND u.ativo = true
+         LIMIT 1`,
+        [apoiador.email]
+      );
+      ref = uRows[0]?.id || null;
+    }
+
+    await audit(null, 'CONSULTA_CARD_CPF', 'apoiadores', apoiador.id, { ref: !!ref }, req.ip);
+
+    res.json({
+      nome: apoiador.nome,
+      ref,                      // null => link genérico (sem atribuição de indicação)
+      atribuiIndicacao: !!ref,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 // ── Aprovar cadastro pendente ──────────────────────────────────────────────
 const approve = async (req, res, next) => {
   try {
@@ -731,4 +792,4 @@ const salvarPesquisaEngajamento = async (req, res, next) => {
   }
 };
 
-module.exports = { list, getById, create, update, remove, listCidades, createPublic, approve, alterarTipo, salvarPesquisaEngajamento };
+module.exports = { list, getById, create, update, remove, listCidades, createPublic, approve, alterarTipo, salvarPesquisaEngajamento, meuCardPorCpf };
