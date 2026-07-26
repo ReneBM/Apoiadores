@@ -1,4 +1,7 @@
 const db = require('../config/database');
+const { v4: uuidv4 } = require('uuid');
+const logger = require('../utils/logger');
+const { analisarComentario } = require('../utils/moderacao');
 
 const list = async (req, res, next) => {
   try {
@@ -125,6 +128,28 @@ const createComentario = async (req, res, next) => {
     }
     if (texto.length > 500) {
       return res.status(400).json({ error: 'O comentário deve ter no máximo 500 caracteres.' });
+    }
+
+    // Moderação (IA com contingência local): bloqueia ofensas, xingamentos,
+    // discurso de ódio, ameaças, assédio, conteúdo sexual e spam.
+    const moderacao = await analisarComentario(texto);
+    if (!moderacao.permitido) {
+      // Trilha de moderação no audit_log (LGPD / transparência)
+      db.query(
+        `INSERT INTO audit_log (id, user_id, acao, entidade, entidade_id, detalhes, ip)
+         VALUES ($1, $2, 'COMENTARIO_BLOQUEADO_MODERACAO', 'noticia_comentarios', $3, $4, $5)`,
+        [uuidv4(), req.user.id, id, JSON.stringify({
+          categoria: moderacao.categoria,
+          motivo: moderacao.motivo,
+          fonte: moderacao.fonte,
+          texto: texto.slice(0, 200),
+        }), req.ip]
+      ).catch((err) => logger.error('Falha ao auditar comentário bloqueado', { message: err.message }));
+
+      return res.status(422).json({
+        error: 'Seu comentário não foi publicado porque contém linguagem que viola as diretrizes da comunidade. Reescreva com respeito — críticas e opiniões são bem-vindas.',
+        categoria: moderacao.categoria,
+      });
     }
 
     const { rows } = await db.query(
