@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 const db = require('../config/database');
 const logger = require('../utils/logger');
 const { sendTempPasswordEmail } = require('../utils/mailer');
+const { enviarPrimeiroAcesso } = require('../utils/whatsapp');
 const { gerarSenhaTemporaria } = require('../utils/password');
 
 const BCRYPT_ROUNDS = 12;
@@ -156,9 +157,9 @@ const create = async (req, res, next) => {
     const userId      = uuidv4();
 
     await client.query(
-      `INSERT INTO users (id, nome, email, senha_hash, role, primeiro_acesso, tipo, perfil_id)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-      [userId, nome, emailNorm, senhaHash, finalRole, isMultiplicador, finalTipo, finalPerfilId]
+      `INSERT INTO users (id, nome, email, senha_hash, role, primeiro_acesso, tipo, perfil_id, telefone)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      [userId, nome, emailNorm, senhaHash, finalRole, isMultiplicador, finalTipo, finalPerfilId, telefone || null]
     );
 
     // Sincroniza o tipo na tabela apoiadores se existir
@@ -182,9 +183,13 @@ const create = async (req, res, next) => {
 
     logger.info(`Usuário criado: ${emailNorm} [${finalRole}] por ${req.user.id}`);
 
-    // Envia e-mail com senha temporária (assíncrono, sem bloquear a resposta)
+    // Envia a senha temporária por e-mail e WhatsApp (assíncrono, sem bloquear
+    // a resposta — o envio nunca cancela a criação do usuário)
     if (isMultiplicador) {
       sendTempPasswordEmail(emailNorm, nome, senhaFinal);
+      if (telefone) {
+        enviarPrimeiroAcesso(telefone, nome, emailNorm, senhaFinal).catch(() => {});
+      }
     }
 
     res.status(201).json({

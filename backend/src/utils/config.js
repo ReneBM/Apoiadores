@@ -51,6 +51,18 @@ const DEFINICOES = {
     sensivel: false,
     padrao: 'Esta é uma senha temporária. No primeiro acesso, você será obrigado a criar uma senha definitiva. Não compartilhe esta senha com ninguém.',
   },
+
+  // ── WhatsApp (Cloud API oficial da Meta) ────────────────────────────────
+  // O texto das mensagens NÃO fica aqui: a Meta exige que cada modelo seja
+  // cadastrado e aprovado no painel dela. Aqui guardamos só o acesso e o
+  // nome de cada modelo aprovado.
+  WHATSAPP_ATIVO:      { sensivel: false, env: 'WHATSAPP_ATIVO', padrao: 'nao' },
+  WHATSAPP_TOKEN:      { sensivel: true,  env: 'WHATSAPP_TOKEN' },
+  WHATSAPP_PHONE_ID:   { sensivel: false, env: 'WHATSAPP_PHONE_ID' },
+  WHATSAPP_IDIOMA:     { sensivel: false, env: 'WHATSAPP_IDIOMA', padrao: 'pt_BR' },
+  WHATSAPP_TPL_RESET:  { sensivel: false, padrao: 'codigo_recuperacao' },
+  WHATSAPP_TPL_ACESSO: { sensivel: false, padrao: 'acesso_criado' },
+  WHATSAPP_TPL_AVISO:  { sensivel: false, padrao: 'aviso_campanha' },
 };
 
 /** Variáveis aceitas em cada texto (usadas na tela de Configurações). */

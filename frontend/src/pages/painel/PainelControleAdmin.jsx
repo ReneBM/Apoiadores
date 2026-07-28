@@ -19,7 +19,7 @@ export default function PainelControleAdmin() {
   const [pendingCount, setPendingCount] = useState(0);
   const [exporting, setExporting] = useState(false);
   const [showAvisoModal, setShowAvisoModal] = useState(false);
-  const [msgForm, setMsgForm] = useState({ titulo: '', conteudo: '', destinatarios: 'todos', imagem_url: '' });
+  const [msgForm, setMsgForm] = useState({ titulo: '', conteudo: '', destinatarios: 'todos', imagem_url: '', enviar_whatsapp: false });
   const [msgLoading, setMsgLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
 
@@ -50,7 +50,7 @@ export default function PainelControleAdmin() {
     try {
       const res = await api.post('/mensagens', msgForm);
       toast.success(res.data.message || 'Aviso cadastrado e disparado!');
-      setMsgForm({ titulo: '', conteudo: '', destinatarios: 'todos', imagem_url: '' });
+      setMsgForm({ titulo: '', conteudo: '', destinatarios: 'todos', imagem_url: '', enviar_whatsapp: false });
       setShowAvisoModal(false);
     } catch (err) {
       console.error(err);
@@ -467,7 +467,7 @@ export default function PainelControleAdmin() {
               <button 
                 onClick={() => {
                   setShowAvisoModal(false);
-                  setMsgForm({ titulo: '', conteudo: '', destinatarios: 'todos', imagem_url: '' });
+                  setMsgForm({ titulo: '', conteudo: '', destinatarios: 'todos', imagem_url: '', enviar_whatsapp: false });
                 }}
                 style={{ background: 'none', border: 'none', fontSize: '1.35rem', cursor: 'pointer', color: 'var(--texto-medio)', fontWeight: 'bold', minHeight: '44px', minWidth: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
@@ -609,12 +609,29 @@ export default function PainelControleAdmin() {
                 />
               </div>
 
+              <label style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem', cursor: 'pointer', padding: '0.75rem', borderRadius: '10px', backgroundColor: '#f8fafc', border: '1.5px solid #e2e8f0' }}>
+                <input
+                  type="checkbox"
+                  checked={msgForm.enviar_whatsapp}
+                  onChange={(e) => setMsgForm(prev => ({ ...prev, enviar_whatsapp: e.target.checked }))}
+                  style={{ width: '18px', height: '18px', marginTop: '1px', flexShrink: 0, accentColor: '#25D366' }}
+                />
+                <span>
+                  <strong style={{ fontSize: '0.85rem', color: '#1e293b' }}>Enviar também por WhatsApp</strong>
+                  <small style={{ display: 'block', color: '#64748b', fontSize: '0.72rem', lineHeight: 1.5 }}>
+                    Além do pop-up no app, a mensagem vai para o WhatsApp de quem tem
+                    telefone cadastrado e não pediu descadastro. Exige o WhatsApp
+                    configurado em Configurações.
+                  </small>
+                </span>
+              </label>
+
               <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
                 <button
                   type="button"
                   onClick={() => {
                     setShowAvisoModal(false);
-                    setMsgForm({ titulo: '', conteudo: '', destinatarios: 'todos', imagem_url: '' });
+                    setMsgForm({ titulo: '', conteudo: '', destinatarios: 'todos', imagem_url: '', enviar_whatsapp: false });
                   }}
                   style={{ flex: 1, padding: '0.75rem', borderRadius: '10px', border: '1.5px solid #cbd5e1', backgroundColor: '#fff', color: '#475569', fontWeight: 700, fontSize: '0.88rem', cursor: 'pointer', minHeight: '44px' }}
                 >

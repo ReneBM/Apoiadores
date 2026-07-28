@@ -5,6 +5,7 @@ const logger = require('../utils/logger');
 const { validarCPF } = require('../utils/cpf');
 const { gerarSenhaTemporaria } = require('../utils/password');
 const { sendTempPasswordEmail } = require('../utils/mailer');
+const { enviarPrimeiroAcesso } = require('../utils/whatsapp');
 
 // ── Helper: registra no audit_log ─────────────────────────────────────────
 const audit = async (userId, acao, entidade, entidadeId, detalhes, ip) => {
@@ -617,9 +618,9 @@ const approve = async (req, res, next) => {
         const PERFIL_OPERADOR_ID = 'c3c3c3c3-c3c3-c3c3-c3c3-c3c3c3c3c3c3';
 
         await db.query(
-          `INSERT INTO users (id, nome, email, senha_hash, role, ativo, primeiro_acesso, perfil_id)
-           VALUES ($1, $2, $3, $4, 'multiplicador', true, $5, $6)`,
-          [userId, apoiador.nome, apoiador.email, senhaHash, !hasOwnPassword, PERFIL_OPERADOR_ID]
+          `INSERT INTO users (id, nome, email, senha_hash, role, ativo, primeiro_acesso, perfil_id, telefone)
+           VALUES ($1, $2, $3, $4, 'multiplicador', true, $5, $6, $7)`,
+          [userId, apoiador.nome, apoiador.email, senhaHash, !hasOwnPassword, PERFIL_OPERADOR_ID, apoiador.telefone]
         );
 
         // Cria o perfil correspondente em multiplicadores
@@ -637,10 +638,14 @@ const approve = async (req, res, next) => {
     await audit(req.user.id, 'APPROVE_APOIADOR', 'apoiadores', id,
       { nome: apoiador.nome, email: apoiador.email, userCreated, hasOwnPassword }, req.ip);
 
-    // Envia a senha temporária por e-mail (fire-and-forget; falha no e-mail não
-    // cancela a aprovação). Só quando geramos uma senha temporária.
+    // Envia a senha temporária por e-mail e WhatsApp (fire-and-forget; falha
+    // no envio não cancela a aprovação). Só quando geramos uma senha temporária.
     if (senhaTemp && apoiador.email) {
       sendTempPasswordEmail(apoiador.email, apoiador.nome, senhaTemp);
+      if (apoiador.telefone) {
+        enviarPrimeiroAcesso(apoiador.telefone, apoiador.nome, apoiador.email, senhaTemp)
+          .catch(() => {});
+      }
     }
 
     res.json({
@@ -730,9 +735,9 @@ const alterarTipo = async (req, res, next) => {
         const senhaHash = await bcrypt.hash(senhaTempGerada, 12);
 
         await client.query(
-          `INSERT INTO users (id, nome, email, senha_hash, role, tipo, primeiro_acesso, ativo)
-           VALUES ($1, $2, $3, $4, $5, $6, true, true)`,
-          [userId, apoiador.nome, emailNorm, senhaHash, targetRole, tipo]
+          `INSERT INTO users (id, nome, email, senha_hash, role, tipo, primeiro_acesso, ativo, telefone)
+           VALUES ($1, $2, $3, $4, $5, $6, true, true, $7)`,
+          [userId, apoiador.nome, emailNorm, senhaHash, targetRole, tipo, apoiador.telefone]
         );
 
         if (targetRole === 'multiplicador') {
@@ -751,10 +756,14 @@ const alterarTipo = async (req, res, next) => {
     // Registrar ação no log de auditoria
     await audit(req.user.id, 'PROMOTE_APOIADOR', 'apoiadores', id, { tipo, email: emailNorm }, req.ip);
 
-    // Se criamos um novo usuário, envia a senha temporária por e-mail
-    // (fire-and-forget; após o COMMIT para não segurar a transação).
+    // Se criamos um novo usuário, envia a senha temporária por e-mail e
+    // WhatsApp (fire-and-forget; após o COMMIT para não segurar a transação).
     if (senhaTempGerada && emailNorm) {
       sendTempPasswordEmail(emailNorm, apoiador.nome, senhaTempGerada);
+      if (apoiador.telefone) {
+        enviarPrimeiroAcesso(apoiador.telefone, apoiador.nome, emailNorm, senhaTempGerada)
+          .catch(() => {});
+      }
     }
 
     res.json({

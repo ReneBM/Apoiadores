@@ -4,6 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 const db = require('../config/database');
 const FUNCIONALIDADES = require('../config/funcionalidades');
 const { sendPasswordResetCodeEmail } = require('../utils/mailer');
+const { enviarCodigoRecuperacao, whatsappConfigurado } = require('../utils/whatsapp');
 const {
   generateAccessToken,
   generateRefreshToken,
@@ -257,14 +258,20 @@ const forgotPassword = async (req, res, next) => {
     }
 
     const { rows } = await db.query(
-      'SELECT id, nome, email, ativo FROM users WHERE email = $1',
+      'SELECT id, nome, email, telefone, ativo FROM users WHERE email = $1',
       [email]
     );
 
+    // Mensagem única para todos os casos: não revela quais e-mails existem.
+    // Cita o WhatsApp quando ele está ligado no sistema — isso é constante
+    // para todo mundo, então não vaza nada sobre a conta consultada.
+    const respostaGenerica = (await whatsappConfigurado())
+      ? 'Se o e-mail estiver cadastrado, um código foi enviado. Confira o e-mail e o WhatsApp.'
+      : 'Se o e-mail estiver cadastrado, um código foi enviado.';
+
     const user = rows[0];
     if (!user || !user.ativo) {
-      // Resposta genérica: não revela quais e-mails existem no sistema
-      return res.json({ message: 'Se o e-mail estiver cadastrado, um código foi enviado.' });
+      return res.json({ message: respostaGenerica });
     }
 
     // Gera PIN numérico de 6 dígitos (CSPRNG)
@@ -276,22 +283,40 @@ const forgotPassword = async (req, res, next) => {
       [pin, expiresAt.toISOString(), user.id]
     );
 
-    try {
-      await sendPasswordResetCodeEmail(user.email, user.nome, pin);
-    } catch (mailErr) {
-      // O e-mail É a entrega deste fluxo: se não saiu, o usuário precisa saber
-      // em vez de esperar por um código que nunca chega. Limpa o PIN órfão.
+    // Dois canais em paralelo: basta um chegar. Quem trocou de e-mail ainda
+    // recebe pelo WhatsApp, e vice-versa.
+    const [porEmail, porWhatsapp] = await Promise.all([
+      sendPasswordResetCodeEmail(user.email, user.nome, pin)
+        .then(() => ({ ok: true }))
+        .catch((err) => ({ ok: false, erro: err.message })),
+      user.telefone
+        ? enviarCodigoRecuperacao(user.telefone, pin)
+        : Promise.resolve({ ok: false, erro: 'Usuário sem telefone cadastrado.' }),
+    ]);
+
+    if (!porEmail.ok && !porWhatsapp.ok) {
+      // Nenhum canal entregou: o usuário precisa saber, em vez de esperar por
+      // um código que nunca chega. Limpa o PIN órfão.
       await db.query(
         'UPDATE users SET reset_password_code = NULL, reset_password_expires = NULL WHERE id = $1',
         [user.id]
       ).catch(() => {});
-      logger.error('Falha ao enviar código de redefinição', { message: mailErr.message });
+      logger.error('Falha ao enviar código de redefinição', {
+        email: porEmail.erro, whatsapp: porWhatsapp.erro,
+      });
       return res.status(502).json({
         error: 'Não foi possível enviar o código no momento. Tente novamente em alguns minutos ou fale com a coordenação.',
       });
     }
 
-    res.json({ message: 'Se o e-mail estiver cadastrado, um código foi enviado.' });
+    if (!porEmail.ok || !porWhatsapp.ok) {
+      logger.warn('Código de redefinição entregue por apenas um canal', {
+        email: porEmail.ok ? 'ok' : porEmail.erro,
+        whatsapp: porWhatsapp.ok ? 'ok' : porWhatsapp.erro,
+      });
+    }
+
+    res.json({ message: respostaGenerica });
   } catch (err) {
     next(err);
   }

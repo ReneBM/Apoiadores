@@ -4,6 +4,13 @@ const logger = require('../utils/logger');
 const { DEFINICOES, CHAVES, VARIAVEIS, obterConfig, salvarConfig, definidaNoBanco } = require('../utils/config');
 const { mascarar } = require('../utils/cripto');
 const { testarConexao, enviarEmail } = require('../utils/mailer');
+const {
+  whatsappConfigurado,
+  testarConexao: testarConexaoWhatsapp,
+  enviarTemplate,
+  formatarTelefone,
+  normalizarTelefone,
+} = require('../utils/whatsapp');
 
 const audit = async (userId, acao, detalhes, ip) => {
   try {
@@ -43,8 +50,9 @@ const getConfiguracoes = async (req, res, next) => {
     }
 
     const emailPronto = Boolean(await obterConfig('MAIL_USER')) && Boolean(await obterConfig('MAIL_PASS'));
+    const whatsappPronto = await whatsappConfigurado();
 
-    res.json({ itens, emailPronto });
+    res.json({ itens, emailPronto, whatsappPronto });
   } catch (err) {
     next(err);
   }
@@ -140,4 +148,48 @@ const testarEmail = async (req, res, next) => {
   }
 };
 
-module.exports = { getConfiguracoes, updateConfiguracoes, testarEmail };
+/**
+ * Testa o WhatsApp: confere token + número e, se um destino for informado,
+ * envia uma mensagem real usando o modelo de aviso já aprovado.
+ */
+const testarWhatsapp = async (req, res, next) => {
+  try {
+    const destino = (req.body?.destinatario || '').trim();
+    const conta = await testarConexaoWhatsapp();
+
+    if (!destino) {
+      return res.json({
+        message: `Conexão OK. Número conectado: ${conta.numero} (${conta.nome}). Qualidade: ${conta.qualidade || 'sem histórico'}.`,
+      });
+    }
+
+    const telefone = normalizarTelefone(destino);
+    if (!telefone) {
+      return res.status(400).json({ error: 'Informe um celular válido com DDD. Ex.: (84) 99999-8888' });
+    }
+
+    const modelo = (await obterConfig('WHATSAPP_TPL_AVISO')) || 'aviso_campanha';
+    const envio = await enviarTemplate({
+      para: telefone,
+      template: modelo,
+      parametros: ['Teste', 'Esta é uma mensagem de teste do aplicativo Time SV. Se você recebeu, o envio por WhatsApp está funcionando.'],
+      tipo: 'teste',
+    });
+
+    if (!envio.ok) {
+      return res.status(400).json({
+        error: `Conexão OK, mas o envio falhou: ${envio.erro}`,
+      });
+    }
+
+    await audit(req.user.id, 'TESTAR_WHATSAPP', { destinatario: telefone }, req.ip);
+    res.json({
+      message: `Mensagem de teste enviada para ${formatarTelefone(telefone)} pelo número ${conta.numero}. Confira o WhatsApp.`,
+    });
+  } catch (err) {
+    logger.error('Teste de WhatsApp falhou', { message: err.message });
+    res.status(400).json({ error: `Não foi possível conectar: ${err.message}` });
+  }
+};
+
+module.exports = { getConfiguracoes, updateConfiguracoes, testarEmail, testarWhatsapp };
