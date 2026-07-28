@@ -19,11 +19,11 @@ export default function RecuperarSenha() {
   
   const [showPass, setShowPass] = useState(false);
 
-  // Passo 1: Enviar email ou telefone para receber o PIN
+  // Passo 1: Enviar o e-mail cadastrado para receber o PIN
   const handleRequestPin = async (e) => {
     e.preventDefault();
     if (!identificador) {
-      setError('Informe seu e-mail ou telefone cadastrado.');
+      setError('Informe o e-mail cadastrado na sua conta.');
       return;
     }
     
@@ -306,7 +306,7 @@ export default function RecuperarSenha() {
             {step === 1 && (
               <>
                 <h1>Esqueceu a senha?</h1>
-                <p>Insira seu e-mail ou telefone para receber<br/>um código de recuperação.</p>
+                <p>Insira o e-mail da sua conta para receber<br/>um código de recuperação.</p>
               </>
             )}
             {step === 2 && (
@@ -338,7 +338,7 @@ export default function RecuperarSenha() {
           {step === 1 && (
             <form onSubmit={handleRequestPin} noValidate>
               <div className="login-form-group">
-                <label htmlFor="identificador" className="login-label">E-mail ou Telefone</label>
+                <label htmlFor="identificador" className="login-label">E-mail cadastrado</label>
                 <input
                   id="identificador"
                   type="text"

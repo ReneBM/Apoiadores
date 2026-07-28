@@ -1,7 +1,9 @@
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 const db = require('../config/database');
 const FUNCIONALIDADES = require('../config/funcionalidades');
+const { sendPasswordResetCodeEmail } = require('../utils/mailer');
 const {
   generateAccessToken,
   generateRefreshToken,
@@ -246,24 +248,27 @@ const forgotPassword = async (req, res, next) => {
   try {
     const { identificador } = req.body;
     if (!identificador) {
-      return res.status(400).json({ error: 'Informe seu e-mail ou telefone.' });
+      return res.status(400).json({ error: 'Informe o e-mail cadastrado na sua conta.' });
     }
 
-    // Busca o usuário pelo email (já que o login primário é por e-mail)
-    // No futuro, se houver busca por telefone na tabela users, pode adaptar aqui.
+    const email = String(identificador).toLowerCase().trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ error: 'Informe um e-mail válido.' });
+    }
+
     const { rows } = await db.query(
       'SELECT id, nome, email, ativo FROM users WHERE email = $1',
-      [identificador.toLowerCase().trim()]
+      [email]
     );
 
     const user = rows[0];
     if (!user || !user.ativo) {
-      // Retorna sucesso genérico para não expor quais emails existem
+      // Resposta genérica: não revela quais e-mails existem no sistema
       return res.json({ message: 'Se o e-mail estiver cadastrado, um código foi enviado.' });
     }
 
-    // Gera PIN numérico de 6 dígitos
-    const pin = Math.floor(100000 + Math.random() * 900000).toString();
+    // Gera PIN numérico de 6 dígitos (CSPRNG)
+    const pin = String(crypto.randomInt(100000, 1000000));
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutos
 
     await db.query(
@@ -271,13 +276,45 @@ const forgotPassword = async (req, res, next) => {
       [pin, expiresAt.toISOString(), user.id]
     );
 
-    const { sendPasswordResetCodeEmail } = require('../utils/mailer');
-    await sendPasswordResetCodeEmail(user.email, user.nome, pin);
+    try {
+      await sendPasswordResetCodeEmail(user.email, user.nome, pin);
+    } catch (mailErr) {
+      // O e-mail É a entrega deste fluxo: se não saiu, o usuário precisa saber
+      // em vez de esperar por um código que nunca chega. Limpa o PIN órfão.
+      await db.query(
+        'UPDATE users SET reset_password_code = NULL, reset_password_expires = NULL WHERE id = $1',
+        [user.id]
+      ).catch(() => {});
+      logger.error('Falha ao enviar código de redefinição', { message: mailErr.message });
+      return res.status(502).json({
+        error: 'Não foi possível enviar o código no momento. Tente novamente em alguns minutos ou fale com a coordenação.',
+      });
+    }
 
     res.json({ message: 'Se o e-mail estiver cadastrado, um código foi enviado.' });
   } catch (err) {
     next(err);
   }
+};
+
+/**
+ * Confere o PIN de redefinição.
+ * Exige código armazenado não-nulo e payload com 6 dígitos: evita que uma
+ * comparação entre nulos (conta sem código + `codigo: null`) passe adiante.
+ * @returns {null|{status:number, error:string}} erro, ou null se válido
+ */
+const conferirCodigo = (user, codigo) => {
+  const informado = String(codigo ?? '').trim();
+  if (!user || !user.reset_password_code || !/^\d{6}$/.test(informado)) {
+    return { status: 400, error: 'Código inválido.' };
+  }
+  if (String(user.reset_password_code) !== informado) {
+    return { status: 400, error: 'Código inválido.' };
+  }
+  if (!user.reset_password_expires || new Date() > new Date(user.reset_password_expires)) {
+    return { status: 400, error: 'Código expirado. Solicite novamente.' };
+  }
+  return null;
 };
 
 const verifyResetCode = async (req, res, next) => {
@@ -289,17 +326,11 @@ const verifyResetCode = async (req, res, next) => {
 
     const { rows } = await db.query(
       'SELECT id, reset_password_code, reset_password_expires FROM users WHERE email = $1',
-      [email.toLowerCase().trim()]
+      [String(email).toLowerCase().trim()]
     );
 
-    const user = rows[0];
-    if (!user || user.reset_password_code !== codigo) {
-      return res.status(400).json({ error: 'Código inválido.' });
-    }
-
-    if (new Date() > new Date(user.reset_password_expires)) {
-      return res.status(400).json({ error: 'Código expirado. Solicite novamente.' });
-    }
+    const falha = conferirCodigo(rows[0], codigo);
+    if (falha) return res.status(falha.status).json({ error: falha.error });
 
     res.json({ success: true, message: 'Código válido.' });
   } catch (err) {
@@ -313,20 +344,18 @@ const resetPassword = async (req, res, next) => {
     if (!email || !codigo || !novaSenha) {
       return res.status(400).json({ error: 'Dados incompletos.' });
     }
+    if (String(novaSenha).length < 6) {
+      return res.status(400).json({ error: 'A nova senha deve ter pelo menos 6 caracteres.' });
+    }
 
     const { rows } = await db.query(
       'SELECT id, reset_password_code, reset_password_expires FROM users WHERE email = $1',
-      [email.toLowerCase().trim()]
+      [String(email).toLowerCase().trim()]
     );
 
     const user = rows[0];
-    if (!user || user.reset_password_code !== codigo) {
-      return res.status(400).json({ error: 'Código inválido.' });
-    }
-
-    if (new Date() > new Date(user.reset_password_expires)) {
-      return res.status(400).json({ error: 'Código expirado. Solicite novamente.' });
-    }
+    const falha = conferirCodigo(user, codigo);
+    if (falha) return res.status(falha.status).json({ error: falha.error });
 
     const novoHash = await bcrypt.hash(novaSenha, BCRYPT_ROUNDS);
     

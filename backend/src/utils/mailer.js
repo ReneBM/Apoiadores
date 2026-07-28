@@ -11,6 +11,13 @@ const transporter = nodemailer.createTransport({
 });
 
 /**
+ * Indica se o envio de e-mail está configurado neste ambiente.
+ * Sem MAIL_USER/MAIL_PASS o nodemailer falha na autenticação — quem depende
+ * do e-mail (ex.: código de redefinição) precisa saber disso de antemão.
+ */
+const mailerConfigurado = () => Boolean(process.env.MAIL_USER && process.env.MAIL_PASS);
+
+/**
  * Envia e-mail de primeiro acesso com a senha temporária para o multiplicador.
  * @param {string} destinatario - E-mail do multiplicador
  * @param {string} nome         - Nome do multiplicador
@@ -252,6 +259,13 @@ const sendPasswordResetCodeEmail = async (destinatario, nome, codigo) => {
     </html>
   `;
 
+  // Diferente do e-mail de primeiro acesso (fire-and-forget), aqui o e-mail
+  // É a entrega: se falhar, quem chamou precisa saber para avisar o usuário
+  // em vez de deixá-lo esperando um código que nunca chega.
+  if (!mailerConfigurado()) {
+    throw new Error('Envio de e-mail não configurado (MAIL_USER/MAIL_PASS ausentes).');
+  }
+
   try {
     await transporter.sendMail({
       from: `"Sistema Senador Valentim" <${process.env.MAIL_USER}>`,
@@ -262,7 +276,8 @@ const sendPasswordResetCodeEmail = async (destinatario, nome, codigo) => {
     logger.info(`E-mail de redefinição enviado para: ${destinatario}`);
   } catch (err) {
     logger.error(`Falha ao enviar e-mail de redefinição para ${destinatario}: ${err.message}`);
+    throw err;
   }
 };
 
-module.exports = { sendTempPasswordEmail, sendPasswordResetCodeEmail };
+module.exports = { sendTempPasswordEmail, sendPasswordResetCodeEmail, mailerConfigurado };
