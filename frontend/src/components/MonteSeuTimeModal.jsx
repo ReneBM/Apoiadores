@@ -5,21 +5,15 @@ import api from '../api/axios';
 import { copyToClipboard } from '../utils/clipboard';
 import ReferralCardModal from './ReferralCardModal';
 
-const formatarCPF = (valor) => {
-  const d = String(valor).replace(/\D/g, '').slice(0, 11);
-  return d
-    .replace(/(\d{3})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-};
-
 /**
  * Modal do card "Monte seu time" na landing page.
- * O apoiador informa o CPF; buscamos o nome e o identificador de indicação
- * para gerar o card com QR Code. Também permite copiar o link de cadastro.
+ * O apoiador informa o e-mail do cadastro (aceita também o CPF, para quem se
+ * cadastrou antes do formulário ser simplificado); buscamos o nome e o
+ * identificador de indicação para gerar o card com QR Code.
+ * Também permite copiar o link de cadastro.
  */
 export default function MonteSeuTimeModal({ open, onClose, onCadastrar }) {
-  const [cpf, setCpf] = useState('');
+  const [identificador, setIdentificador] = useState('');
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState('');
   const [semCadastro, setSemCadastro] = useState(false); // CPF sem cadastro aprovado
@@ -29,7 +23,7 @@ export default function MonteSeuTimeModal({ open, onClose, onCadastrar }) {
   const linkGenerico = `${window.location.origin}/cadastro`;
 
   const fechar = () => {
-    setCpf(''); setErro(''); setSemCadastro(false); setResultado(null); setLoading(false);
+    setIdentificador(''); setErro(''); setSemCadastro(false); setResultado(null); setLoading(false);
     onClose();
   };
 
@@ -52,16 +46,24 @@ export default function MonteSeuTimeModal({ open, onClose, onCadastrar }) {
 
   const handleGerar = async (e) => {
     e.preventDefault();
-    const limpo = cpf.replace(/\D/g, '');
-    if (limpo.length !== 11) {
-      setErro('Digite os 11 números do seu CPF.');
+    const valor = identificador.trim();
+    const digitos = valor.replace(/\D/g, '');
+    const pareceCpf = !valor.includes('@') && digitos.length === 11;
+
+    if (!valor) {
+      setErro('Informe o e-mail que você usou no cadastro.');
       return;
     }
+    if (!pareceCpf && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor)) {
+      setErro('Informe um e-mail válido (ou o CPF, se você se cadastrou antes).');
+      return;
+    }
+
     setLoading(true);
     setErro('');
     setSemCadastro(false);
     try {
-      const res = await api.post('/apoiadores/meu-card', { cpf: limpo });
+      const res = await api.post('/apoiadores/meu-card', { identificador: pareceCpf ? digitos : valor });
       const { nome, ref, atribuiIndicacao } = res.data;
       setResultado({
         nome,
@@ -121,20 +123,20 @@ export default function MonteSeuTimeModal({ open, onClose, onCadastrar }) {
 
         <div style={{ padding: '1.1rem' }}>
           <p style={{ fontSize: '0.85rem', color: '#475569', margin: '0 0 1rem', lineHeight: 1.5, textAlign: 'left' }}>
-            Já é apoiador? Informe seu CPF para gerar o <strong>seu card com QR Code</strong> e convidar amigos — cada cadastro pelo seu card conta para você.
+            Já é apoiador? Informe o e-mail do seu cadastro para gerar o <strong>seu card com QR Code</strong> e convidar amigos — cada cadastro pelo seu card conta para você.
           </p>
 
           <form onSubmit={handleGerar}>
             <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: '#1e293b', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.6px', textAlign: 'left' }}>
-              Seu CPF
+              Seu e-mail
             </label>
             <input
               type="text"
-              inputMode="numeric"
-              autoComplete="off"
-              placeholder="000.000.000-00"
-              value={cpf}
-              onChange={(e) => { setCpf(formatarCPF(e.target.value)); setErro(''); setSemCadastro(false); }}
+              inputMode="email"
+              autoComplete="email"
+              placeholder="seu@email.com"
+              value={identificador}
+              onChange={(e) => { setIdentificador(e.target.value); setErro(''); setSemCadastro(false); }}
               disabled={loading}
               style={{
                 width: '100%', minHeight: '48px', padding: '0.72rem 1rem',
@@ -206,7 +208,7 @@ export default function MonteSeuTimeModal({ open, onClose, onCadastrar }) {
 
           <p style={{ fontSize: '0.7rem', color: '#94a3b8', margin: '0.9rem 0 0', lineHeight: 1.5, display: 'flex', gap: '6px', alignItems: 'flex-start', textAlign: 'left' }}>
             <Shield size={14} style={{ flexShrink: 0, marginTop: '1px' }} />
-            <span>Seu CPF é usado apenas para localizar seu cadastro e não fica salvo neste navegador.</span>
+            <span>Seu e-mail é usado apenas para localizar seu cadastro e não fica salvo neste navegador. Cadastrou-se antes com CPF? Ele também funciona aqui.</span>
           </p>
         </div>
       </div>

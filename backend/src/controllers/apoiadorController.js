@@ -161,18 +161,19 @@ const getById = async (req, res, next) => {
 const create = async (req, res, next) => {
   try {
     const {
-      nome, email, telefone, cidade, bairro, interesse,
+      nome, email, telefone, cidade, uf, bairro, interesse,
       observacoes, consentimento_lgpd, multiplicador_id, status, senha,
-      cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais
+      sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais
     } = req.body;
 
-    if (cpf) {
-      if (!validarCPF(cpf)) {
-        return res.status(400).json({ error: 'CPF inválido.' });
-      }
-      const cpfCheck = await db.query('SELECT id FROM apoiadores WHERE cpf = $1', [cpf]);
-      if (cpfCheck.rows.length > 0) {
-        return res.status(400).json({ error: 'Já existe um cadastro com este CPF.' });
+    // E-mail é a única chave de unicidade do sistema
+    if (email) {
+      const emailCheck = await db.query(
+        'SELECT 1 FROM apoiadores WHERE LOWER(email) = LOWER($1) LIMIT 1',
+        [email]
+      );
+      if (emailCheck.rows.length > 0) {
+        return res.status(400).json({ error: 'Já existe um cadastro com este e-mail.' });
       }
     }
 
@@ -192,17 +193,17 @@ const create = async (req, res, next) => {
     const id = uuidv4();
     const { rows } = await db.query(
       `INSERT INTO apoiadores
-         (id, nome, email, telefone, cidade, bairro, interesse, observacoes,
+         (id, nome, email, telefone, cidade, uf, bairro, interesse, observacoes,
           consentimento_lgpd, data_consentimento, status, multiplicador_id, cadastrado_por,
-          cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais, senha_inicial, origem)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,now(),$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,'Painel Administrativo')
+          sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais, senha_inicial, origem)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,now(),$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,'Painel Administrativo')
        RETURNING id`,
       [
-        id, nome, email || null, telefone || null, cidade, bairro || null,
+        id, nome, email || null, telefone || null, cidade, uf || null, bairro || null,
         interesse || null, observacoes || null,
         consentimento_lgpd, status || 'ativo',
         multiplicadorId, req.user.id,
-        cpf || null, sexo || null, acao_impacto || null, como_se_considera || null,
+        sexo || null, acao_impacto || null, como_se_considera || null,
         como_ajudar ? JSON.stringify(como_ajudar) : null,
         pessoas_mobilizar || null,
         grupo_organizacao ? JSON.stringify(grupo_organizacao) : null,
@@ -225,9 +226,9 @@ const create = async (req, res, next) => {
 const update = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { 
-      nome, email, telefone, cidade, bairro, interesse, observacoes, status, multiplicador_id,
-      cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais
+    const {
+      nome, email, telefone, cidade, uf, bairro, interesse, observacoes, status, multiplicador_id,
+      sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais
     } = req.body;
 
     const { rows } = await db.query('SELECT * FROM apoiadores WHERE id = $1', [id]);
@@ -238,13 +239,14 @@ const update = async (req, res, next) => {
       return res.status(400).json({ error: 'O E-mail é obrigatório.' });
     }
 
-    if (cpf && cpf !== existing.cpf) {
-      if (!validarCPF(cpf)) {
-        return res.status(400).json({ error: 'CPF inválido.' });
-      }
-      const cpfCheck = await db.query('SELECT id FROM apoiadores WHERE cpf = $1', [cpf]);
-      if (cpfCheck.rows.length > 0) {
-        return res.status(400).json({ error: 'Já existe um cadastro com este CPF.' });
+    // E-mail é a única chave de unicidade: não pode colidir com outro cadastro
+    if (email && email.toLowerCase() !== String(existing.email || '').toLowerCase()) {
+      const emailCheck = await db.query(
+        'SELECT 1 FROM apoiadores WHERE LOWER(email) = LOWER($1) AND id <> $2 LIMIT 1',
+        [email, id]
+      );
+      if (emailCheck.rows.length > 0) {
+        return res.status(400).json({ error: 'Já existe um cadastro com este e-mail.' });
       }
     }
 
@@ -265,7 +267,7 @@ const update = async (req, res, next) => {
     const interesseVal = interesse !== undefined ? interesse : existing.interesse;
     const observacoesVal = observacoes !== undefined ? observacoes : existing.observacoes;
     const statusVal = status !== undefined ? status : existing.status;
-    const cpfVal = cpf !== undefined ? cpf : existing.cpf;
+    const ufVal = uf !== undefined ? uf : existing.uf;
     const sexoVal = sexo !== undefined ? sexo : existing.sexo;
     const acaoImpactoVal = acao_impacto !== undefined ? acao_impacto : existing.acao_impacto;
     const comoSeConsideraVal = como_se_considera !== undefined ? como_se_considera : existing.como_se_considera;
@@ -288,7 +290,7 @@ const update = async (req, res, next) => {
          observacoes = $7,
          status = $8,
          multiplicador_id = $9,
-         cpf = $10,
+         uf = $10,
          sexo = $11,
          acao_impacto = $12,
          como_se_considera = $13,
@@ -301,7 +303,7 @@ const update = async (req, res, next) => {
        WHERE id = $19`,
       [
         nomeVal, emailVal, telefoneVal, cidadeVal, bairroVal, interesseVal, observacoesVal, statusVal, multiplicadorVal,
-        cpfVal, sexoVal, acaoImpactoVal, comoSeConsideraVal, comoAjudarVal, pessoasMobilizarVal, grupoOrganizacaoVal, temasInteresseVal, redesSociaisVal,
+        ufVal, sexoVal, acaoImpactoVal, comoSeConsideraVal, comoAjudarVal, pessoasMobilizarVal, grupoOrganizacaoVal, temasInteresseVal, redesSociaisVal,
         id
       ]
     );
@@ -486,37 +488,59 @@ const createPublic = async (req, res, next) => {
   }
 };
 
-// ── Buscar o próprio card de indicação pelo CPF (público) ──────────────────
-// Usado no "Monte seu time" da landing page: o apoiador informa o CPF e
+// ── Buscar o próprio card de indicação (público) ───────────────────────────
+// Usado no "Monte seu time" da landing page: o apoiador informa o e-mail
+// (ou o CPF, para quem se cadastrou antes do formulário ser simplificado) e
 // recebe o nome + o identificador de indicação para montar o card com QR.
 // A rota tem limite de tentativas por IP (ver routes/apoiadores.js) e toda
 // consulta fica registrada no audit_log para rastreabilidade (LGPD).
-const meuCardPorCpf = async (req, res, next) => {
+const meuCard = async (req, res, next) => {
   try {
-    const { cpf } = req.body || {};
+    const body = req.body || {};
+    const bruto = String(body.identificador ?? body.email ?? body.cpf ?? '').trim();
 
-    if (!validarCPF(cpf)) {
-      return res.status(400).json({ error: 'CPF inválido. Confira os números digitados.' });
+    if (!bruto) {
+      return res.status(400).json({ error: 'Informe seu e-mail para localizar seu cadastro.' });
     }
 
-    const cpfLimpo = String(cpf).replace(/\D/g, '');
+    const somenteDigitos = bruto.replace(/\D/g, '');
+    const pareceCpf = !bruto.includes('@') && somenteDigitos.length === 11;
 
-    const { rows } = await db.query(
-      `SELECT a.id, a.nome, a.status, a.email
-       FROM apoiadores a
-       WHERE REPLACE(REPLACE(REPLACE(a.cpf, '.', ''), '-', ''), ' ', '') = $1
-       LIMIT 1`,
-      [cpfLimpo]
-    );
+    let rows;
+    if (pareceCpf) {
+      // Cadastros antigos: CPF ainda existe no banco, mas não é mais coletado
+      if (!validarCPF(bruto)) {
+        return res.status(400).json({ error: 'CPF inválido. Confira os números digitados.' });
+      }
+      ({ rows } = await db.query(
+        `SELECT a.id, a.nome, a.status, a.email
+         FROM apoiadores a
+         WHERE REPLACE(REPLACE(REPLACE(a.cpf, '.', ''), '-', ''), ' ', '') = $1
+         LIMIT 1`,
+        [somenteDigitos]
+      ));
+    } else {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(bruto)) {
+        return res.status(400).json({ error: 'Informe um e-mail válido (ou o CPF usado no cadastro).' });
+      }
+      ({ rows } = await db.query(
+        `SELECT a.id, a.nome, a.status, a.email
+         FROM apoiadores a
+         WHERE LOWER(a.email) = LOWER($1)
+         ORDER BY a.created_at DESC
+         LIMIT 1`,
+        [bruto]
+      ));
+    }
 
     const apoiador = rows[0];
 
     // Resposta genérica: não diferencia "não encontrado" de "não aprovado",
     // para não confirmar a existência de um cadastro específico.
     if (!apoiador || apoiador.status !== 'ativo') {
-      await audit(null, 'CONSULTA_CARD_CPF_SEM_RESULTADO', 'apoiadores', null, {}, req.ip);
+      await audit(null, 'CONSULTA_CARD_SEM_RESULTADO', 'apoiadores', null, {}, req.ip);
       return res.status(404).json({
-        error: 'Não encontramos um cadastro aprovado com esse CPF. Se você acabou de se cadastrar, aguarde a aprovação da coordenação.',
+        error: 'Não encontramos um cadastro aprovado com esses dados. Se você acabou de se cadastrar, aguarde a aprovação da coordenação.',
       });
     }
 
@@ -535,7 +559,7 @@ const meuCardPorCpf = async (req, res, next) => {
       ref = uRows[0]?.id || null;
     }
 
-    await audit(null, 'CONSULTA_CARD_CPF', 'apoiadores', apoiador.id, { ref: !!ref }, req.ip);
+    await audit(null, 'CONSULTA_CARD', 'apoiadores', apoiador.id, { ref: !!ref }, req.ip);
 
     res.json({
       nome: apoiador.nome,
@@ -806,4 +830,4 @@ const salvarPesquisaEngajamento = async (req, res, next) => {
   }
 };
 
-module.exports = { list, getById, create, update, remove, listCidades, createPublic, approve, alterarTipo, salvarPesquisaEngajamento, meuCardPorCpf };
+module.exports = { list, getById, create, update, remove, listCidades, createPublic, approve, alterarTipo, salvarPesquisaEngajamento, meuCard };

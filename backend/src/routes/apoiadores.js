@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const rateLimit = require('express-rate-limit');
 const {
-  list, getById, create, update, remove, listCidades, createPublic, approve, alterarTipo, salvarPesquisaEngajamento, meuCardPorCpf,
+  list, getById, create, update, remove, listCidades, createPublic, approve, alterarTipo, salvarPesquisaEngajamento, meuCard,
 } = require('../controllers/apoiadorController');
 const { authenticate } = require('../middleware/auth');
 const { requireRole, ownResourceOnly, requirePermission } = require('../middleware/rbac');
@@ -21,7 +21,7 @@ const cardLimiter = rateLimit({
   legacyHeaders: false,
   message: { error: 'Muitas consultas seguidas. Aguarde alguns minutos e tente novamente.' },
 });
-router.post('/meu-card', cardLimiter, meuCardPorCpf);
+router.post('/meu-card', cardLimiter, meuCard);
 
 // Middleware to allow viewing supporters to users who have permission to manage supporters OR approvals
 const canViewApoiadoresList = async (req, res, next) => {

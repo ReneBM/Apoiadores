@@ -1,21 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import api from '../../api/axios';
 import { useAuth } from '../../contexts/AuthContext';
 import toast from 'react-hot-toast';
 import { Loader2, ChevronLeft, Trash2 } from 'lucide-react';
-import { validarCPF } from '../../utils/cpf';
 
-const formatCPF = (value) => {
-  if (!value) return '';
-  return value
-    .replace(/\D/g, '')
-    .replace(/(\d{3})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d{1,2})/, '$1-$2')
-    .replace(/(-\d{2})\d+?$/, '$1');
-};
+const UFS = [
+  'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS',
+  'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC',
+  'SP', 'SE', 'TO',
+];
 
 const formatPhone = (value) => {
   if (!value) return '';
@@ -40,18 +35,9 @@ export default function ApoiadoresEdit() {
   const [selectedTipo, setSelectedTipo] = useState('Apoiador');
   const [cidades, setCidades] = useState([]);
   const [multiplicadores, setMultiplicadores] = useState([]);
-
-  useEffect(() => {
-    fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados/RN/municipios')
-      .then(res => res.json())
-      .then(data => {
-        setCidades(data.map(c => c.nome).sort((a, b) => a.localeCompare(b)));
-      })
-      .catch(err => {
-        console.error('Erro ao buscar cidades', err);
-        setCidades(['Natal', 'Mossoró', 'Parnamirim', 'São Gonçalo do Amarante', 'Macaíba']);
-      });
-  }, []);
+  // Cidade salva no cadastro: o <select> só consegue exibi-la depois que a
+  // lista do IBGE chega, então reaplicamos o valor quando a lista carrega.
+  const cidadeSalva = useRef(null);
 
   useEffect(() => {
     if (canManageAll) {
@@ -62,37 +48,43 @@ export default function ApoiadoresEdit() {
   }, [canManageAll]);
 
   const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm();
-  
-  const cepValue = watch('cep');
 
+  const ufValue = watch('uf');
+
+  // Carrega as cidades do IBGE conforme a UF selecionada
   useEffect(() => {
-    if (cepValue) {
-      let val = cepValue.replace(/\D/g, '');
-      if (val.length === 8) {
-        fetch(`https://viacep.com.br/ws/${val}/json/`)
-          .then(res => res.json())
-          .then(data => {
-            if (!data.erro) {
-              if (data.localidade) setValue('cidade', data.localidade);
-              if (data.bairro) setValue('bairro', data.bairro);
-              toast.success('Endereço preenchido pelo CEP!');
-            }
-          })
-          .catch(err => console.error('Erro ao buscar CEP', err));
-      }
+    fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${ufValue || 'RN'}/municipios`)
+      .then(res => res.json())
+      .then(data => {
+        setCidades(data.map(c => c.nome).sort((a, b) => a.localeCompare(b)));
+      })
+      .catch(err => {
+        console.error('Erro ao buscar cidades', err);
+        setCidades((ufValue || 'RN') === 'RN'
+          ? ['Natal', 'Mossoró', 'Parnamirim', 'São Gonçalo do Amarante', 'Macaíba']
+          : []);
+      });
+  }, [ufValue]);
+
+  // Reaplica a cidade do cadastro assim que a lista de cidades existir
+  useEffect(() => {
+    if (cidadeSalva.current && cidades.includes(cidadeSalva.current)) {
+      setValue('cidade', cidadeSalva.current);
+      cidadeSalva.current = null;
     }
-  }, [cepValue, setValue]);
+  }, [cidades, setValue]);
 
   useEffect(() => {
     api.get(`/apoiadores/${id}`)
       .then(({ data }) => {
+        cidadeSalva.current = data.cidade ?? null;
         reset({
           nome: data.nome ?? '',
           email: data.email ?? '',
           telefone: data.telefone ?? '',
-          cpf: data.cpf ?? '',
           sexo: data.sexo ?? '',
           cidade: data.cidade ?? '',
+          uf: data.uf ?? 'RN',
           bairro: data.bairro ?? '',
           acao_impacto: data.acao_impacto ?? '',
           como_se_considera: data.como_se_considera ?? '',
@@ -117,7 +109,6 @@ export default function ApoiadoresEdit() {
       .finally(() => setLoading(false));
   }, [id, navigate, reset]);
 
-  const cpfValue = watch('cpf');
   const telefoneValue = watch('telefone');
 
   const formComoAjudar = watch('como_ajudar', []);
@@ -140,11 +131,6 @@ export default function ApoiadoresEdit() {
   };
 
   const onSubmit = async (data) => {
-    if (data.cpf && (data.cpf.length !== 14 || !validarCPF(data.cpf))) {
-      toast.error('O CPF informado é inválido. Verifique os números.');
-      return;
-    }
-    
     setSubmitting(true);
     try {
       if (selectedTipo !== 'Apoiador' && !data.email) {
@@ -253,61 +239,29 @@ export default function ApoiadoresEdit() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label htmlFor="cpf" className="form-label">CPF</label>
-              <input
-                id="cpf" type="text" placeholder="000.000.000-00" maxLength={14}
-                className="form-input"
-                value={cpfValue || ''}
-                onChange={(e) => setValue('cpf', formatCPF(e.target.value), { shouldDirty: true })}
-              />
-            </div>
-            <div>
-              <label htmlFor="sexo" className="form-label">Sexo</label>
-              <select id="sexo" className="form-input" {...register('sexo')}>
-                <option value="">Não informado</option>
-                <option value="Masculino">Masculino</option>
-                <option value="Feminino">Feminino</option>
-                <option value="Outro">Outro</option>
-                <option value="Prefiro não informar">Prefiro não informar</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label htmlFor="telefone" className="form-label">Celular / WhatsApp *</label>
-              <input 
-                id="telefone" type="tel" placeholder="(84) 9 9999-9999" maxLength={15}
-                className="form-input" 
-                value={telefoneValue || ''}
-                onChange={(e) => setValue('telefone', formatPhone(e.target.value), { shouldDirty: true })} 
-              />
-            </div>
-            <div>
-              <label htmlFor="email" className="form-label">E-mail</label>
+              <label htmlFor="email" className="form-label">E-mail *</label>
               <input
                 id="email" type="email" placeholder="nome@email.com"
+                className={`form-input ${errors.email ? 'border-red-500' : ''}`}
+                {...register('email', {
+                  required: 'E-mail é obrigatório.',
+                  pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'E-mail inválido.' }
+                })}
+              />
+              {errors.email && <p className="form-error">{errors.email.message}</p>}
+            </div>
+            <div>
+              <label htmlFor="telefone" className="form-label">Celular / WhatsApp *</label>
+              <input
+                id="telefone" type="tel" placeholder="(84) 9 9999-9999" maxLength={15}
                 className="form-input"
-                {...register('email')}
+                value={telefoneValue || ''}
+                onChange={(e) => setValue('telefone', formatPhone(e.target.value), { shouldDirty: true })}
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="col-span-2">
-              <label htmlFor="cep" className="form-label">CEP</label>
-              <input
-                id="cep" type="text" placeholder="00000-000" maxLength={9}
-                className="form-input"
-                {...register('cep')}
-                onChange={(e) => {
-                  let val = e.target.value.replace(/\D/g, '');
-                  if (val.length > 5) val = val.replace(/^(\d{5})(\d)/, '$1-$2');
-                  e.target.value = val;
-                  setValue('cep', val);
-                }}
-              />
-            </div>
             <div>
               <label htmlFor="cidade" className="form-label">Cidade *</label>
               <select
@@ -323,8 +277,16 @@ export default function ApoiadoresEdit() {
               {errors.cidade && <p className="form-error">{errors.cidade.message}</p>}
             </div>
             <div>
-              <label htmlFor="bairro" className="form-label">Bairro</label>
-              <input id="bairro" type="text" autoCapitalize="words" className="form-input" {...register('bairro')} />
+              <label htmlFor="uf" className="form-label">Estado (UF) *</label>
+              <select
+                id="uf" className="form-input"
+                {...register('uf', { required: true })}
+                onChange={(e) => { setValue('uf', e.target.value, { shouldDirty: true }); setValue('cidade', ''); }}
+              >
+                {UFS.map(u => (
+                  <option key={u} value={u}>{u}</option>
+                ))}
+              </select>
             </div>
           </div>
         </div>

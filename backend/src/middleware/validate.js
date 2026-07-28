@@ -39,9 +39,9 @@ const apoiadorSchema = z.object({
     z.string().email('E-mail inválido.').optional().nullable()
   ),
   telefone: z.string().max(20).optional().nullable(),
-  cpf: z.string().max(14).optional().nullable(),
   sexo: z.string().max(20).optional().nullable(),
   cidade: z.string().min(2, 'Cidade obrigatória.').max(100),
+  uf: z.string().length(2, 'UF deve ter 2 letras.').optional().nullable(),
   bairro: z.string().max(100).optional().nullable(),
   interesse: z.string().max(500).optional().nullable(),
   observacoes: z.string().max(1000).optional().nullable(),
@@ -90,7 +90,6 @@ const userSchema = z.object({
   _demote: z.boolean().optional(),
   municipio: z.string().max(100).optional().nullable(),
   telefone: z.string().max(20).optional().nullable(),
-  cep: z.string().max(9).optional().nullable(),
   bairro: z.string().max(100).optional().nullable(),
   coordenador_id: z.preprocess((val) => (val === '' ? null : val), z.string().uuid().optional().nullable()),
   meta_apoiadores: z.preprocess(

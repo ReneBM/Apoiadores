@@ -5,17 +5,12 @@ import api from '../../api/axios';
 import { useAuth } from '../../contexts/AuthContext';
 import toast from 'react-hot-toast';
 import { Loader2, ChevronLeft, ShieldCheck, Key } from 'lucide-react';
-import { validarCPF } from '../../utils/cpf';
 
-const formatCPF = (value) => {
-  if (!value) return '';
-  return value
-    .replace(/\D/g, '')
-    .replace(/(\d{3})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d{1,2})/, '$1-$2')
-    .replace(/(-\d{2})\d+?$/, '$1');
-};
+const UFS = [
+  'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS',
+  'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC',
+  'SP', 'SE', 'TO',
+];
 
 const formatPhone = (value) => {
   if (!value) return '';
@@ -36,8 +31,8 @@ export default function ApoiadoresForm() {
 
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     defaultValues: {
-      nome: '', email: '', telefone: '', cpf: '', sexo: '',
-      cep: '', cidade: '', bairro: '', acao_impacto: '', como_se_considera: '',
+      nome: '', email: '', telefone: '', sexo: '',
+      cidade: '', uf: 'RN', bairro: '', acao_impacto: '', como_se_considera: '',
       como_ajudar: [], pessoas_mobilizar: '', grupo_organizacao: [],
       temas_interesse: [],
       redes_sociais: { instagram: '', facebook: '', tiktok: '', youtube: '' },
@@ -49,45 +44,27 @@ export default function ApoiadoresForm() {
   });
 
   const consentimento = watch('consentimento_lgpd');
-  const cpfValue = watch('cpf');
   const telefoneValue = watch('telefone');
-  const cepValue = watch('cep');
+  const ufValue = watch('uf');
 
   const formComoAjudar = watch('como_ajudar');
   const formGrupo = watch('grupo_organizacao');
   const formTemas = watch('temas_interesse');
   const formRedes = watch('redes_sociais');
 
-  // Carrega cidades do RN do IBGE
+  // Carrega as cidades do IBGE conforme a UF selecionada
   useEffect(() => {
-    fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados/RN/municipios')
+    fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${ufValue || 'RN'}/municipios`)
       .then(res => res.json())
       .then(data => {
         setCidades(data.map(c => c.nome).sort((a, b) => a.localeCompare(b)));
       })
       .catch(() => {
-        setCidades(['Natal', 'Mossoró', 'Parnamirim', 'São Gonçalo do Amarante', 'Macaíba', 'Caicó', 'Açu']);
+        setCidades((ufValue || 'RN') === 'RN'
+          ? ['Natal', 'Mossoró', 'Parnamirim', 'São Gonçalo do Amarante', 'Macaíba', 'Caicó', 'Açu']
+          : []);
       });
-  }, []);
-
-  // Busca endereço por CEP (ViaCEP)
-  useEffect(() => {
-    if (cepValue) {
-      const val = cepValue.replace(/\D/g, '');
-      if (val.length === 8) {
-        fetch(`https://viacep.com.br/ws/${val}/json/`)
-          .then(res => res.json())
-          .then(data => {
-            if (!data.erro) {
-              if (data.localidade) setValue('cidade', data.localidade);
-              if (data.bairro) setValue('bairro', data.bairro);
-              toast.success('Endereço preenchido pelo CEP!');
-            }
-          })
-          .catch(() => {});
-      }
-    }
-  }, [cepValue, setValue]);
+  }, [ufValue]);
 
   useEffect(() => {
     if (isAdmin || isCoordenador) {
@@ -113,11 +90,6 @@ export default function ApoiadoresForm() {
 
   const onSubmit = async (data) => {
     if (!data.consentimento_lgpd) return;
-    
-    if (data.cpf && (data.cpf.length !== 14 || !validarCPF(data.cpf))) {
-      toast.error('O CPF informado é inválido. Verifique os números.');
-      return;
-    }
 
     if (data.senha && data.senha.length < 6) {
       toast.error('A senha de acesso deve ter pelo menos 6 caracteres.');
@@ -177,65 +149,29 @@ export default function ApoiadoresForm() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label htmlFor="cpf" className="form-label">CPF</label>
-              <input
-                id="cpf" type="text" placeholder="000.000.000-00" maxLength={14}
-                className="form-input"
-                value={cpfValue || ''}
-                onChange={(e) => setValue('cpf', formatCPF(e.target.value), { shouldDirty: true })}
-              />
-            </div>
-            <div>
-              <label htmlFor="sexo" className="form-label">Sexo</label>
-              <select id="sexo" className="form-input" {...register('sexo')}>
-                <option value="">Não informado</option>
-                <option value="Masculino">Masculino</option>
-                <option value="Feminino">Feminino</option>
-                <option value="Outro">Outro</option>
-                <option value="Prefiro não informar">Prefiro não informar</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label htmlFor="telefone" className="form-label">Celular / WhatsApp</label>
-              <input 
-                id="telefone" type="tel" placeholder="(84) 9 9999-9999" maxLength={15}
-                className="form-input" 
-                value={telefoneValue || ''}
-                onChange={(e) => setValue('telefone', formatPhone(e.target.value), { shouldDirty: true })} 
-              />
-            </div>
-            <div>
-              <label htmlFor="email" className="form-label">E-mail (opcional)</label>
+              <label htmlFor="email" className="form-label">E-mail *</label>
               <input
                 id="email" type="email" placeholder="nome@email.com"
                 className={`form-input ${errors.email ? 'border-red-500' : ''}`}
-                {...register('email', { 
-                  pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'E-mail inválido.' } 
+                {...register('email', {
+                  required: 'E-mail é obrigatório.',
+                  pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'E-mail inválido.' }
                 })}
               />
               {errors.email && <p className="form-error">{errors.email.message}</p>}
             </div>
-          </div>
-
-          {/* Endereço / CEP / Cidade */}
-          <div className="grid grid-cols-3 gap-3">
             <div>
-              <label htmlFor="cep" className="form-label">CEP</label>
+              <label htmlFor="telefone" className="form-label">Celular / WhatsApp</label>
               <input
-                id="cep" type="text" placeholder="00000-000" maxLength={9}
+                id="telefone" type="tel" placeholder="(84) 9 9999-9999" maxLength={15}
                 className="form-input"
-                {...register('cep')}
-                onChange={(e) => {
-                  let val = e.target.value.replace(/\D/g, '');
-                  if (val.length > 5) val = val.replace(/^(\d{5})(\d)/, '$1-$2');
-                  e.target.value = val;
-                  setValue('cep', val);
-                }}
+                value={telefoneValue || ''}
+                onChange={(e) => setValue('telefone', formatPhone(e.target.value), { shouldDirty: true })}
               />
             </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <label htmlFor="cidade" className="form-label">Cidade *</label>
               <select
@@ -252,8 +188,16 @@ export default function ApoiadoresForm() {
               {errors.cidade && <p className="form-error">{errors.cidade.message}</p>}
             </div>
             <div>
-              <label htmlFor="bairro" className="form-label">Bairro</label>
-              <input id="bairro" type="text" autoCapitalize="words" placeholder="Bairro" className="form-input" {...register('bairro')} />
+              <label htmlFor="uf" className="form-label">Estado (UF) *</label>
+              <select
+                id="uf" className="form-input" style={{ backgroundColor: '#fff' }}
+                {...register('uf', { required: true })}
+                onChange={(e) => { setValue('uf', e.target.value, { shouldDirty: true }); setValue('cidade', ''); }}
+              >
+                {UFS.map((u) => (
+                  <option key={u} value={u}>{u}</option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
