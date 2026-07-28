@@ -3,17 +3,12 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import api, { getMediaUrl } from '../api/axios';
 import { Loader2, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { validarCPF } from '../utils/cpf';
 
-// --- Formatter helper ---
-const formatCPF = (value) => {
-  return value
-    .replace(/\D/g, '')
-    .replace(/(\d{3})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d{1,2})/, '$1-$2')
-    .replace(/(-\d{2})\d+?$/, '$1');
-};
+const UFS = [
+  'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS',
+  'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC',
+  'SP', 'SE', 'TO',
+];
 
 const formatPhone = (value) => {
   return value
@@ -32,11 +27,8 @@ export default function CadastroApoiador({ isModal = false, onClose }) {
     nome: '',
     email: '',
     telefone: '',
-    cpf: '',
-    cep: '',
-    sexo: '',
     cidade: '',
-    bairro: '',
+    uf: 'RN',
     acao_impacto: '',
     como_se_considera: '',
     como_ajudar: [],
@@ -60,39 +52,31 @@ export default function CadastroApoiador({ isModal = false, onClose }) {
   const [success, setSuccess] = useState(false);
   const [cidades, setCidades] = useState([]);
 
+  // Cidades do IBGE conforme a UF selecionada (padrão: RN)
   useEffect(() => {
-    fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados/RN/municipios')
+    fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${form.uf}/municipios`)
       .then(res => res.json())
       .then(data => {
         setCidades(data.map(c => c.nome).sort((a, b) => a.localeCompare(b)));
       })
       .catch(err => {
         console.error('Erro ao buscar cidades', err);
-        setCidades(['Natal', 'Mossoró', 'Parnamirim', 'São Gonçalo do Amarante', 'Macaíba']);
+        setCidades(form.uf === 'RN'
+          ? ['Natal', 'Mossoró', 'Parnamirim', 'São Gonçalo do Amarante', 'Macaíba']
+          : []);
       });
-  }, []);
+  }, [form.uf]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    
-    if (name === 'cpf') {
-      setForm(prev => ({ ...prev, cpf: formatCPF(value) }));
-      return;
-    }
+
     if (name === 'telefone') {
       setForm(prev => ({ ...prev, telefone: formatPhone(value) }));
       return;
     }
-    if (name === 'cep') {
-      let val = value.replace(/\D/g, '');
-      if (val.length > 5) val = val.replace(/^(\d{5})(\d)/, '$1-$2');
-      if (val.length > 9) val = val.slice(0, 9);
-      setForm(prev => ({ ...prev, cep: val }));
-      
-      // Auto-busca do CEP se completo (8 digitos numéricos)
-      if (val.replace(/\D/g, '').length === 8) {
-        buscarCep(val.replace(/\D/g, ''));
-      }
+    if (name === 'uf') {
+      // Trocou o estado: limpa a cidade (a lista será recarregada)
+      setForm(prev => ({ ...prev, uf: value, cidade: '' }));
       return;
     }
 
@@ -111,25 +95,6 @@ export default function CadastroApoiador({ isModal = false, onClose }) {
     }));
   };
 
-  const buscarCep = async (cepNumerico) => {
-    try {
-      const res = await fetch(`https://viacep.com.br/ws/${cepNumerico}/json/`);
-      const data = await res.json();
-      if (!data.erro) {
-        setForm(prev => ({
-          ...prev,
-          cidade: data.localidade || prev.cidade,
-          bairro: data.bairro || prev.bairro
-        }));
-        if (data.localidade) {
-          toast.success('Endereço preenchido pelo CEP!');
-        }
-      }
-    } catch (err) {
-      console.error('Erro ao buscar CEP', err);
-    }
-  };
-
   const handleArrayChange = (field, value, checked) => {
     setForm(prev => {
       const array = [...prev[field]];
@@ -146,20 +111,15 @@ export default function CadastroApoiador({ isModal = false, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.nome || !form.cpf || !form.cidade || !form.telefone || !form.email) {
-      toast.error('Por favor, preencha os campos obrigatórios (Nome, CPF, Celular, Cidade e E-mail).');
+    if (!form.nome || !form.email || !form.telefone || !form.cidade || !form.uf) {
+      toast.error('Por favor, preencha os campos obrigatórios (Nome, E-mail, Celular, Cidade e Estado).');
       return;
     }
 
-    // Valida formato do e-mail
+    // Valida formato do e-mail (a unicidade é conferida pelo servidor)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(form.email)) {
       toast.error('Por favor, informe um e-mail válido.');
-      return;
-    }
-
-    if (form.cpf.length !== 14 || !validarCPF(form.cpf)) {
-      toast.error('O CPF informado é inválido. Verifique os números.');
       return;
     }
 
@@ -517,58 +477,27 @@ export default function CadastroApoiador({ isModal = false, onClose }) {
               />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <div className="form-group">
-                <label className="form-label">CPF *</label>
-                <input
-                  type="text" name="cpf" placeholder="000.000.000-00"
-                  value={form.cpf} onChange={handleChange} disabled={loading}
-                  className="form-input" required maxLength={14}
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Sexo</label>
-                <select name="sexo" value={form.sexo} onChange={handleChange} disabled={loading} className="form-input">
-                  <option value="">Selecione</option>
-                  <option value="Masculino">Masculino</option>
-                  <option value="Feminino">Feminino</option>
-                  <option value="Outro">Outro</option>
-                  <option value="Prefiro não informar">Prefiro não informar</option>
-                </select>
-              </div>
+            <div className="form-group">
+              <label className="form-label">E-mail *</label>
+              <input
+                type="email" name="email" placeholder="seu@email.com"
+                value={form.email} onChange={handleChange} disabled={loading}
+                className="form-input" required
+                inputMode="email"
+                autoComplete="email"
+              />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <div className="form-group">
-                <label className="form-label">Celular / WhatsApp *</label>
-                <input
-                  type="tel" name="telefone" placeholder="(84) 99999-9999"
-                  value={form.telefone} onChange={handleChange} disabled={loading}
-                  className="form-input" required maxLength={15}
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">E-mail *</label>
-                <input
-                  type="email" name="email" placeholder="seu@email.com"
-                  value={form.email} onChange={handleChange} disabled={loading}
-                  className="form-input"
-                  inputMode="email"
-                  autoComplete="email"
-                />
-              </div>
+            <div className="form-group">
+              <label className="form-label">Celular / WhatsApp *</label>
+              <input
+                type="tel" name="telefone" placeholder="(84) 99999-9999"
+                value={form.telefone} onChange={handleChange} disabled={loading}
+                className="form-input" required maxLength={15}
+              />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                <label className="form-label">CEP</label>
-                <input
-                  type="text" name="cep" placeholder="00000-000"
-                  value={form.cep} onChange={handleChange} disabled={loading}
-                  className="form-input" maxLength={9}
-                />
-                <small style={{ color: '#64748b', marginTop: '0.2rem', display: 'block' }}>Digite o CEP para preencher cidade e bairro automaticamente</small>
-              </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1rem' }}>
               <div className="form-group">
                 <label className="form-label">Cidade *</label>
                 <select
@@ -583,28 +512,16 @@ export default function CadastroApoiador({ isModal = false, onClose }) {
                 </select>
               </div>
               <div className="form-group">
-                <label className="form-label">Bairro</label>
-                <input
-                  type="text" name="bairro" placeholder="Ex: Tirol"
-                  value={form.bairro} onChange={handleChange} disabled={loading}
-                  className="form-input"
-                />
+                <label className="form-label">Estado (UF) *</label>
+                <select
+                  name="uf" value={form.uf} onChange={handleChange} disabled={loading}
+                  className="form-input" required
+                >
+                  {UFS.map(u => (
+                    <option key={u} value={u}>{u}</option>
+                  ))}
+                </select>
               </div>
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '1.5rem', textAlign: 'left', background: '#f8fafc', padding: '1rem', borderRadius: '10px', border: '1.5px solid #e2e8f0' }}>
-              <input
-                type="checkbox"
-                id="consentimento_lgpd"
-                name="consentimento_lgpd"
-                checked={form.consentimento_lgpd}
-                onChange={handleChange}
-                disabled={loading}
-                style={{ marginTop: '0.25rem', accentColor: '#0054A6', width: '18px', height: '18px', cursor: 'pointer' }}
-              />
-              <label htmlFor="consentimento_lgpd" style={{ color: '#334155', fontSize: '0.85rem', lineHeight: '1.4', cursor: 'pointer', fontWeight: 500 }}>
-                Autorizo o tratamento dos meus dados pessoais fornecidos acima para fins de comunicação, campanhas de mobilização e informativos do aplicativo Apoiadores, conforme a Lei Geral de Proteção de Dados (LGPD).
-              </label>
             </div>
 
             {/* Campos de Senha */}
@@ -637,10 +554,26 @@ export default function CadastroApoiador({ isModal = false, onClose }) {
                 />
               </div>
             </div>
-            <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '8px', padding: '0.75rem 1rem', marginBottom: '0.5rem' }}>
+            <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '8px', padding: '0.75rem 1rem', marginBottom: '1rem' }}>
               <p style={{ margin: 0, color: '#1e40af', fontSize: '0.82rem', fontWeight: 500 }}>
                 Esta senha será usada para você acessar o aplicativo após seu cadastro ser aprovado. Guarde-a em um lugar seguro!
               </p>
+            </div>
+
+            {/* Termo de consentimento LGPD — último item, antes do botão */}
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '1.25rem', textAlign: 'left', background: '#f8fafc', padding: '1rem', borderRadius: '10px', border: '1.5px solid #e2e8f0' }}>
+              <input
+                type="checkbox"
+                id="consentimento_lgpd"
+                name="consentimento_lgpd"
+                checked={form.consentimento_lgpd}
+                onChange={handleChange}
+                disabled={loading}
+                style={{ marginTop: '0.25rem', accentColor: '#0054A6', width: '18px', height: '18px', cursor: 'pointer' }}
+              />
+              <label htmlFor="consentimento_lgpd" style={{ color: '#334155', fontSize: '0.85rem', lineHeight: '1.4', cursor: 'pointer', fontWeight: 500 }}>
+                Autorizo o tratamento dos meus dados pessoais fornecidos acima para fins de comunicação, campanhas de mobilização e informativos do aplicativo Apoiadores, conforme a Lei Geral de Proteção de Dados (LGPD).
+              </label>
             </div>
 
             <button type="submit" disabled={loading} className="submit-btn">

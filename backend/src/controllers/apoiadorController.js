@@ -384,24 +384,37 @@ const listCidades = async (_req, res, next) => {
 const createPublic = async (req, res, next) => {
   try {
     const {
-      nome, email, telefone, cidade, bairro, interesse,
+      nome, email, telefone, cidade, uf, bairro, interesse,
       consentimento_lgpd, ref, senha,
-      cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais
+      sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais
     } = req.body;
 
+    // Campos essenciais do cadastro público
+    if (!nome || !email || !telefone || !cidade) {
+      return res.status(400).json({ error: 'Preencha os campos obrigatórios: nome, e-mail, celular e cidade.' });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ error: 'Informe um e-mail válido.' });
+    }
+    if (!senha || senha.length < 6) {
+      return res.status(400).json({ error: 'Crie uma senha com no mínimo 6 caracteres.' });
+    }
     if (!consentimento_lgpd) {
       return res.status(400).json({ error: 'O consentimento LGPD é obrigatório.' });
     }
 
-    if (cpf) {
-      const cleanCpf = cpf.replace(/\D/g, '');
-      const cpfCheck = await db.query(
-        'SELECT id FROM apoiadores WHERE cpf = $1 OR REPLACE(REPLACE(REPLACE(cpf, \'.\', \'\'), \'-\', \'\'), \' \', \'\') = $2',
-        [cpf, cleanCpf]
-      );
-      if (cpfCheck.rows.length > 0) {
-        return res.status(400).json({ error: 'Já existe um cadastro com este CPF.' });
-      }
+    // E-mail é a única chave de unicidade do cadastro: confere em apoiadores
+    // e em users (a aprovação cria a conta com este mesmo e-mail).
+    const emailNorm = email.toLowerCase().trim();
+    const emailCheck = await db.query(
+      `SELECT 1 FROM apoiadores WHERE LOWER(email) = $1
+       UNION ALL
+       SELECT 1 FROM users WHERE LOWER(email) = $1
+       LIMIT 1`,
+      [emailNorm]
+    );
+    if (emailCheck.rows.length > 0) {
+      return res.status(400).json({ error: 'Já existe um cadastro com este e-mail. Se for você, aguarde a aprovação ou faça login.' });
     }
 
     let multiplicadorId = null;
@@ -439,14 +452,14 @@ const createPublic = async (req, res, next) => {
     try {
       await db.query(
         `INSERT INTO apoiadores
-           (id, nome, email, telefone, cidade, bairro, interesse,
+           (id, nome, email, telefone, cidade, uf, bairro, interesse,
             consentimento_lgpd, data_consentimento, status, multiplicador_id, cadastrado_por,
-            cpf, sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais, senha_inicial, origem)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, now(), 'pendente', $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)`,
+            sexo, acao_impacto, como_se_considera, como_ajudar, pessoas_mobilizar, grupo_organizacao, temas_interesse, redes_sociais, senha_inicial, origem)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, now(), 'pendente', $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)`,
         [
-          id, nome, email || null, telefone || null, cidade, bairro || null,
+          id, nome, emailNorm, telefone, cidade, uf || null, bairro || null,
           interesse || null, consentimento_lgpd, multiplicadorId, cadastradoPor,
-          cpf || null, sexo || null, acao_impacto || null, como_se_considera || null,
+          sexo || null, acao_impacto || null, como_se_considera || null,
           como_ajudar ? JSON.stringify(como_ajudar) : null,
           pessoas_mobilizar || null,
           grupo_organizacao ? JSON.stringify(grupo_organizacao) : null,
@@ -457,8 +470,9 @@ const createPublic = async (req, res, next) => {
         ]
       );
     } catch (insertErr) {
-      if (insertErr.message && (insertErr.message.includes('UNIQUE') || insertErr.message.includes('unique') || insertErr.code === '23505')) {
-        return res.status(400).json({ error: 'Já existe um cadastro com este CPF ou E-mail.' });
+      // Corrida entre a checagem e o INSERT: o índice único de e-mail garante
+      if (insertErr.code === '23505') {
+        return res.status(400).json({ error: 'Já existe um cadastro com este e-mail. Se for você, aguarde a aprovação ou faça login.' });
       }
       throw insertErr;
     }
