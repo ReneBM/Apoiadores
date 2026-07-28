@@ -1,21 +1,42 @@
 const nodemailer = require('nodemailer');
 const logger = require('./logger');
-
-// ── Transporter Gmail ─────────────────────────────────────────────────────
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
-  },
-});
+const { obterConfigs } = require('./config');
 
 /**
- * Indica se o envio de e-mail está configurado neste ambiente.
- * Sem MAIL_USER/MAIL_PASS o nodemailer falha na autenticação — quem depende
- * do e-mail (ex.: código de redefinição) precisa saber disso de antemão.
+ * O transporter é criado a cada envio a partir da configuração vigente
+ * (tela de Configurações → banco, com as variáveis de ambiente como reserva).
+ * Assim, alterar as credenciais no painel passa a valer sem novo deploy.
  */
-const mailerConfigurado = () => Boolean(process.env.MAIL_USER && process.env.MAIL_PASS);
+const criarTransporter = async () => {
+  const { MAIL_USER, MAIL_PASS, MAIL_FROM_NAME } = await obterConfigs();
+  if (!MAIL_USER || !MAIL_PASS) {
+    throw new Error('Envio de e-mail não configurado. Preencha o e-mail e a senha de app em Configurações.');
+  }
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: { user: MAIL_USER, pass: MAIL_PASS },
+  });
+  return { transporter, remetente: `"${MAIL_FROM_NAME || 'Time SV'}" <${MAIL_USER}>` };
+};
+
+/** Indica se o envio de e-mail está configurado (banco ou ambiente). */
+const mailerConfigurado = async () => {
+  const { MAIL_USER, MAIL_PASS } = await obterConfigs();
+  return Boolean(MAIL_USER && MAIL_PASS);
+};
+
+/** Testa as credenciais atuais sem enviar mensagem (SMTP verify). */
+const testarConexao = async () => {
+  const { transporter } = await criarTransporter();
+  await transporter.verify();
+  return true;
+};
+
+/** Envia um e-mail simples usando a configuração vigente. */
+const enviarEmail = async ({ to, subject, html }) => {
+  const { transporter, remetente } = await criarTransporter();
+  await transporter.sendMail({ from: remetente, to, subject, html });
+};
 
 /**
  * Envia e-mail de primeiro acesso com a senha temporária para o multiplicador.
@@ -149,8 +170,7 @@ const sendTempPasswordEmail = async (destinatario, nome, senhaTemp) => {
   `;
 
   try {
-    await transporter.sendMail({
-      from: `"Sistema Senador Valentim" <${process.env.MAIL_USER}>`,
+    await enviarEmail({
       to: destinatario,
       subject: '🔐 Seu acesso ao sistema foi criado',
       html,
@@ -261,14 +281,10 @@ const sendPasswordResetCodeEmail = async (destinatario, nome, codigo) => {
 
   // Diferente do e-mail de primeiro acesso (fire-and-forget), aqui o e-mail
   // É a entrega: se falhar, quem chamou precisa saber para avisar o usuário
-  // em vez de deixá-lo esperando um código que nunca chega.
-  if (!mailerConfigurado()) {
-    throw new Error('Envio de e-mail não configurado (MAIL_USER/MAIL_PASS ausentes).');
-  }
-
+  // em vez de deixá-lo esperando um código que nunca chega. (criarTransporter
+  // já lança quando as credenciais não estão configuradas.)
   try {
-    await transporter.sendMail({
-      from: `"Sistema Senador Valentim" <${process.env.MAIL_USER}>`,
+    await enviarEmail({
       to: destinatario,
       subject: '🔐 Código para Redefinição de Senha',
       html,
@@ -280,4 +296,4 @@ const sendPasswordResetCodeEmail = async (destinatario, nome, codigo) => {
   }
 };
 
-module.exports = { sendTempPasswordEmail, sendPasswordResetCodeEmail, mailerConfigurado };
+module.exports = { sendTempPasswordEmail, sendPasswordResetCodeEmail, mailerConfigurado, testarConexao, enviarEmail };

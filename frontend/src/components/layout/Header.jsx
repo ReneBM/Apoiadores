@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import api from '../../api/axios';
-import { Bell, Mail, Send, Check, Loader2, MessageCircle, X, ChevronRight, Menu, LogOut, UserPlus, CheckSquare, Megaphone, Shield } from 'lucide-react';
+import { Bell, Mail, Send, Check, Loader2, MessageCircle, X, ChevronRight, Menu, LogOut, UserPlus, CheckSquare, Megaphone, Shield, Settings } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function Header({ title }) {
@@ -758,6 +758,35 @@ export default function Header({ title }) {
                 >
                   <Shield size={18} color="#7c3aed" />
                   <span>Perfis de Acesso</span>
+                </button>
+              )}
+
+              {user?.role === 'admin' && (
+                <button
+                  onClick={() => {
+                    setMenuOpen(false);
+                    navigate('/configuracoes');
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem',
+                    padding: '1.1rem 1.5rem',
+                    border: 'none',
+                    background: 'none',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    fontSize: '0.9rem',
+                    fontWeight: 600,
+                    color: '#262626',
+                    borderBottom: '1px solid #f1f5f9',
+                    transition: 'background-color 0.15s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8fafc'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                >
+                  <Settings size={18} color="#0f766e" />
+                  <span>Configurações</span>
                 </button>
               )}
 

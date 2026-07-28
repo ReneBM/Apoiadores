@@ -27,6 +27,7 @@ const Feed                = lazy(() => import('../pages/painel/Feed'));
 const PerfilLider         = lazy(() => import('../pages/perfil/PerfilLider'));
 const PerfilAdmin         = lazy(() => import('../pages/painel/PerfilAdmin'));
 const PerfisAcesso        = lazy(() => import('../pages/admin/PerfisAcesso'));
+const Configuracoes       = lazy(() => import('../pages/admin/Configuracoes'));
 
 const CarregandoPagina = () => (
   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', color: '#64748b', fontSize: '0.85rem' }}>
@@ -129,6 +130,11 @@ export default function AppRoutes() {
           {/* Perfis de Acesso (Apenas Staff) */}
           <Route element={<PrivateRoute roles={['admin', 'coordenador']} permission={{ func: 'Perfis de Acesso', action: 'visualizar' }} />}>
             <Route path="/perfis"                  element={<PerfisAcesso />} />
+          </Route>
+
+          {/* Configurações do sistema — guardam credenciais: só administrador */}
+          <Route element={<PrivateRoute roles={['admin']} />}>
+            <Route path="/configuracoes"           element={<Configuracoes />} />
           </Route>
 
           <Route element={<PrivateRoute roles={['admin', 'coordenador']} permission={{ func: 'Equipe', action: 'criar' }} />}>

@@ -15,6 +15,7 @@ const materiaisRoutes = require('./src/routes/materiais');
 const mensagensRoutes = require('./src/routes/mensagens');
 const chatRoutes = require('./src/routes/chat');
 const perfisRoutes = require('./src/routes/perfis');
+const configRoutes = require('./src/routes/config');
 const cmsRoutes = require('./src/routes/cms');
 const logger = require('./src/utils/logger');
 
@@ -133,6 +134,7 @@ app.use('/api/materiais', materiaisRoutes);
 app.use('/api/mensagens', mensagensRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/perfis', perfisRoutes);
+app.use('/api/config', configRoutes);
 
 
 const fs = require('fs');
