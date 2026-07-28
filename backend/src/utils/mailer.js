@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 const logger = require('./logger');
-const { obterConfigs } = require('./config');
+const { obterConfigs, obterConfig, renderizarTexto } = require('./config');
 
 /**
  * O transporter é criado a cada envio a partir da configuração vigente
@@ -47,6 +47,13 @@ const enviarEmail = async ({ to, subject, html }) => {
 const sendTempPasswordEmail = async (destinatario, nome, senhaTemp) => {
   const primeiroNome = nome.split(' ')[0];
 
+  // Textos editáveis em Configurações → Mensagens
+  const vars = { nome: primeiroNome, email: destinatario };
+  const assuntoCfg = await obterConfig('EMAIL_ACESSO_ASSUNTO');
+  const tituloCfg  = renderizarTexto(await obterConfig('EMAIL_ACESSO_TITULO'), vars);
+  const textoCfg   = renderizarTexto(await obterConfig('EMAIL_ACESSO_TEXTO'), vars);
+  const avisoCfg   = renderizarTexto(await obterConfig('EMAIL_ACESSO_AVISO'), vars);
+
   const html = `
     <!DOCTYPE html>
     <html lang="pt-BR">
@@ -87,12 +94,10 @@ const sendTempPasswordEmail = async (destinatario, nome, senhaTemp) => {
                     Olá, ${primeiroNome} 👋
                   </p>
                   <h2 style="margin:0 0 20px;color:#f1f5f9;font-size:18px;font-weight:700;">
-                    Seu acesso foi criado!
+                    ${tituloCfg}
                   </h2>
                   <p style="margin:0 0 24px;color:#94a3b8;font-size:14px;line-height:1.6;">
-                    Você foi cadastrado como <strong style="color:#60a5fa;">Multiplicador</strong>
-                    no sistema de gestão de apoiadores do Senador Styvenson Valentim.
-                    Use os dados abaixo para fazer seu primeiro acesso.
+                    ${textoCfg}
                   </p>
 
                   <!-- Credenciais -->
@@ -125,9 +130,7 @@ const sendTempPasswordEmail = async (destinatario, nome, senhaTemp) => {
                   <div style="background:#1c1917;border:1px solid #fbbf24;border-radius:10px;
                                padding:14px 16px;margin-bottom:24px;">
                     <p style="margin:0;color:#fbbf24;font-size:13px;line-height:1.6;">
-                      ⚠️ <strong>Importante:</strong> Esta é uma senha temporária.
-                      No primeiro acesso, você será obrigado a criar uma senha definitiva.
-                      Não compartilhe esta senha com ninguém.
+                      ⚠️ <strong>Importante:</strong> ${avisoCfg}
                     </p>
                   </div>
 
@@ -172,7 +175,7 @@ const sendTempPasswordEmail = async (destinatario, nome, senhaTemp) => {
   try {
     await enviarEmail({
       to: destinatario,
-      subject: '🔐 Seu acesso ao sistema foi criado',
+      subject: assuntoCfg,
       html,
     });
     logger.info(`E-mail de primeiro acesso enviado para: ${destinatario}`);
@@ -190,6 +193,13 @@ const sendTempPasswordEmail = async (destinatario, nome, senhaTemp) => {
  */
 const sendPasswordResetCodeEmail = async (destinatario, nome, codigo) => {
   const primeiroNome = nome.split(' ')[0];
+
+  // Textos editáveis em Configurações → Mensagens
+  const varsReset = { nome: primeiroNome, email: destinatario };
+  const assuntoReset = await obterConfig('EMAIL_RESET_ASSUNTO');
+  const tituloReset  = renderizarTexto(await obterConfig('EMAIL_RESET_TITULO'), varsReset);
+  const textoReset   = renderizarTexto(await obterConfig('EMAIL_RESET_TEXTO'), varsReset);
+  const avisoReset   = renderizarTexto(await obterConfig('EMAIL_RESET_AVISO'), varsReset);
 
   const html = `
     <!DOCTYPE html>
@@ -231,11 +241,10 @@ const sendPasswordResetCodeEmail = async (destinatario, nome, codigo) => {
                     Olá, ${primeiroNome} 👋
                   </p>
                   <h2 style="margin:0 0 20px;color:#f1f5f9;font-size:18px;font-weight:700;">
-                    Código de Recuperação de Senha
+                    ${tituloReset}
                   </h2>
                   <p style="margin:0 0 24px;color:#94a3b8;font-size:14px;line-height:1.6;">
-                    Recebemos uma solicitação para redefinir a senha da sua conta.
-                    Se foi você, utilize o código de 6 dígitos abaixo para continuar o processo.
+                    ${textoReset}
                   </p>
 
                   <!-- Credenciais -->
@@ -253,8 +262,7 @@ const sendPasswordResetCodeEmail = async (destinatario, nome, codigo) => {
                   <div style="background:#1c1917;border:1px solid #fbbf24;border-radius:10px;
                                padding:14px 16px;margin-bottom:24px;">
                     <p style="margin:0;color:#fbbf24;font-size:13px;line-height:1.6;">
-                      ⚠️ <strong>Atenção:</strong> Este código expira em 15 minutos.
-                      Se você não solicitou a redefinição, apenas ignore este e-mail.
+                      ⚠️ <strong>Atenção:</strong> ${avisoReset}
                     </p>
                   </div>
                 </td>
@@ -286,7 +294,7 @@ const sendPasswordResetCodeEmail = async (destinatario, nome, codigo) => {
   try {
     await enviarEmail({
       to: destinatario,
-      subject: '🔐 Código para Redefinição de Senha',
+      subject: assuntoReset,
       html,
     });
     logger.info(`E-mail de redefinição enviado para: ${destinatario}`);

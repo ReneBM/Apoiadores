@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 const db = require('../config/database');
 const logger = require('../utils/logger');
-const { DEFINICOES, CHAVES, obterConfig, salvarConfig, definidaNoBanco } = require('../utils/config');
+const { DEFINICOES, CHAVES, VARIAVEIS, obterConfig, salvarConfig, definidaNoBanco } = require('../utils/config');
 const { mascarar } = require('../utils/cripto');
 const { testarConexao, enviarEmail } = require('../utils/mailer');
 
@@ -37,6 +37,8 @@ const getConfiguracoes = async (req, res, next) => {
         // visual para o admin reconhecer o que está salvo.
         valor: def.sensivel ? '' : (valor || ''),
         dica: def.sensivel && valor ? mascarar(valor) : '',
+        padrao: def.padrao || '',
+        variaveis: VARIAVEIS[chave] || [],
       };
     }
 

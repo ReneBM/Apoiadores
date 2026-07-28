@@ -2,7 +2,35 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
 import toast from 'react-hot-toast';
-import { Loader2, ChevronLeft, Mail, Save, Send, CheckCircle2, AlertTriangle, Eye, EyeOff, ShieldCheck } from 'lucide-react';
+import { Loader2, ChevronLeft, Mail, Save, Send, CheckCircle2, AlertTriangle, Eye, EyeOff, ShieldCheck, MessageSquare, RotateCcw } from 'lucide-react';
+
+// Textos dos e-mails, agrupados por mensagem
+const MENSAGENS = [
+  {
+    id: 'reset',
+    titulo: 'Recuperação de senha',
+    descricao: 'Enviado quando alguém usa o "Esqueceu a senha?" e recebe o código de 6 dígitos.',
+    campos: [
+      { chave: 'EMAIL_RESET_ASSUNTO', rotulo: 'Assunto', tipo: 'texto' },
+      { chave: 'EMAIL_RESET_TITULO', rotulo: 'Título dentro do e-mail', tipo: 'texto' },
+      { chave: 'EMAIL_RESET_TEXTO', rotulo: 'Mensagem', tipo: 'area' },
+      { chave: 'EMAIL_RESET_AVISO', rotulo: 'Aviso destacado (caixa amarela)', tipo: 'area' },
+    ],
+  },
+  {
+    id: 'acesso',
+    titulo: 'Primeiro acesso',
+    descricao: 'Enviado quando um cadastro é aprovado e a pessoa recebe a senha temporária.',
+    campos: [
+      { chave: 'EMAIL_ACESSO_ASSUNTO', rotulo: 'Assunto', tipo: 'texto' },
+      { chave: 'EMAIL_ACESSO_TITULO', rotulo: 'Título dentro do e-mail', tipo: 'texto' },
+      { chave: 'EMAIL_ACESSO_TEXTO', rotulo: 'Mensagem', tipo: 'area' },
+      { chave: 'EMAIL_ACESSO_AVISO', rotulo: 'Aviso destacado (caixa amarela)', tipo: 'area' },
+    ],
+  },
+];
+
+const CHAVES_EMAIL = MENSAGENS.flatMap((m) => m.campos.map((c) => c.chave));
 
 export default function Configuracoes() {
   const navigate = useNavigate();
@@ -11,6 +39,7 @@ export default function Configuracoes() {
   const [salvando, setSalvando] = useState(false);
   const [testando, setTestando] = useState(false);
   const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [aba, setAba] = useState('email'); // 'email' | 'mensagens'
 
   const [estado, setEstado] = useState(null); // resposta do GET
   const [form, setForm] = useState({ MAIL_USER: '', MAIL_PASS: '', MAIL_FROM_NAME: '' });
@@ -20,10 +49,13 @@ export default function Configuracoes() {
     try {
       const { data } = await api.get('/config');
       setEstado(data);
+      const textos = {};
+      CHAVES_EMAIL.forEach((k) => { textos[k] = data.itens[k]?.valor || ''; });
       setForm({
         MAIL_USER: data.itens.MAIL_USER?.valor || '',
         MAIL_PASS: '', // sensível: sempre começa vazio (vazio = não alterar)
         MAIL_FROM_NAME: data.itens.MAIL_FROM_NAME?.valor || '',
+        ...textos,
       });
     } catch {
       toast.error('Não foi possível carregar as configurações.');
@@ -75,6 +107,20 @@ export default function Configuracoes() {
   const dicaSenha = estado?.itens?.MAIL_PASS?.dica;
   const origem = estado?.itens?.MAIL_PASS?.origem;
 
+  const restaurarPadrao = (chave) => {
+    const padrao = estado?.itens?.[chave]?.padrao || '';
+    setForm((f) => ({ ...f, [chave]: padrao }));
+    toast.success('Texto padrão restaurado. Salve para aplicar.');
+  };
+
+  const estiloAba = (ativa) => ({
+    flex: 1, padding: '0.7rem 0.5rem', border: 'none', cursor: 'pointer',
+    background: 'none', fontSize: '0.85rem', fontWeight: 700, minHeight: '44px',
+    color: ativa ? 'var(--primary)' : 'var(--texto-claro)',
+    borderBottom: `2.5px solid ${ativa ? 'var(--primary)' : 'transparent'}`,
+    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+  });
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', paddingBottom: '2rem' }}>
 
@@ -95,6 +141,90 @@ export default function Configuracoes() {
         </div>
       </div>
 
+      {/* Abas */}
+      <div style={{ display: 'flex', borderBottom: '1.5px solid var(--borda)', backgroundColor: '#fff', borderRadius: '12px 12px 0 0' }}>
+        <button type="button" onClick={() => setAba('email')} style={estiloAba(aba === 'email')}>
+          <Mail size={15} /> Envio de e-mail
+        </button>
+        <button type="button" onClick={() => setAba('mensagens')} style={estiloAba(aba === 'mensagens')}>
+          <MessageSquare size={15} /> Mensagens
+        </button>
+      </div>
+
+      {aba === 'mensagens' ? (
+        <>
+          <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--texto-medio)', lineHeight: 1.5, textAlign: 'left', padding: '0 0.25rem' }}>
+            Personalize o que os usuários leem nos e-mails automáticos. O visual e a
+            identidade do e-mail continuam os mesmos — aqui você ajusta só os textos.
+          </p>
+
+          {MENSAGENS.map((msg) => (
+            <form key={msg.id} onSubmit={handleSalvar} className="card" style={{ padding: 'clamp(1rem, 3vw, 1.5rem)', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div style={{ textAlign: 'left' }}>
+                <h2 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--primary)', margin: 0 }}>{msg.titulo}</h2>
+                <p style={{ margin: '0.25rem 0 0', fontSize: '0.76rem', color: 'var(--texto-claro)', lineHeight: 1.45 }}>{msg.descricao}</p>
+              </div>
+
+              {msg.campos.map((campo) => {
+                const info = estado?.itens?.[campo.chave];
+                const variaveis = info?.variaveis || [];
+                const alterado = (form[campo.chave] || '') !== (info?.padrao || '');
+                return (
+                  <div className="form-group" key={campo.chave}>
+                    <label htmlFor={campo.chave} className="form-label" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+                      <span>{campo.rotulo}</span>
+                      {alterado && (
+                        <button
+                          type="button"
+                          onClick={() => restaurarPadrao(campo.chave)}
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--texto-claro)', fontSize: '0.68rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px', textTransform: 'none', letterSpacing: 0, padding: '2px 4px' }}
+                          title="Voltar ao texto padrão"
+                        >
+                          <RotateCcw size={12} /> restaurar padrão
+                        </button>
+                      )}
+                    </label>
+                    {campo.tipo === 'area' ? (
+                      <textarea
+                        id={campo.chave} className="form-input" rows={3}
+                        style={{ resize: 'vertical', fontFamily: 'inherit', lineHeight: 1.5 }}
+                        value={form[campo.chave] || ''}
+                        onChange={(e) => setForm({ ...form, [campo.chave]: e.target.value })}
+                        disabled={salvando}
+                      />
+                    ) : (
+                      <input
+                        id={campo.chave} type="text" className="form-input"
+                        value={form[campo.chave] || ''}
+                        onChange={(e) => setForm({ ...form, [campo.chave]: e.target.value })}
+                        disabled={salvando}
+                      />
+                    )}
+                    {variaveis.length > 0 && (
+                      <small style={{ color: 'var(--texto-claro)', fontSize: '0.7rem' }}>
+                        Você pode usar: {variaveis.map((v) => <code key={v} style={{ marginRight: '6px' }}>{v}</code>)}
+                      </small>
+                    )}
+                  </div>
+                );
+              })}
+
+              <button type="submit" disabled={salvando} className="submit-btn" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', minHeight: '48px' }}>
+                {salvando ? <><Loader2 size={16} className="spin" /> Salvando...</> : <><Save size={16} /> Salvar mensagens</>}
+              </button>
+            </form>
+          ))}
+
+          <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-start', padding: '0 0.25rem', color: 'var(--texto-claro)', fontSize: '0.75rem', lineHeight: 1.5, textAlign: 'left' }}>
+            <MessageSquare size={15} style={{ flexShrink: 0, marginTop: '2px' }} />
+            <span>
+              O código de 6 dígitos, a senha temporária e o botão de acesso são inseridos
+              automaticamente pelo sistema — não é preciso escrevê-los no texto.
+            </span>
+          </div>
+        </>
+      ) : (
+      <>
       {/* Situação do envio de e-mail */}
       <div className="card" style={{
         padding: '0.9rem 1rem', borderRadius: '12px',
@@ -232,6 +362,8 @@ export default function Configuracoes() {
           registrada na auditoria.
         </span>
       </div>
+      </>
+      )}
     </div>
   );
 }
