@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ============================================================
+       SEO BÁSICO
+       ============================================================ -->
+  <title>TIME SV — Senador Styvenson Valentim | A política tem jeito</title>
+  <meta name="description" content="Entre no TIME SV. Acompanhe o trabalho do Senador Styvenson Valentim pelo Rio Grande do Norte: recursos destinados, projetos de lei e fiscalização de verdade. A política tem jeito.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://timesv.com.br/"><!-- SUBSTITUIR: URL final de publicação -->
+
+  <!-- Open Graph (preview no WhatsApp/Facebook) -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="TIME SV — Senador Styvenson Valentim">
+  <meta property="og:description" content="A política tem jeito. Entre no TIME SV e acompanhe o trabalho pelo Rio Grande do Norte.">
+  <meta property="og:url" content="https://timesv.com.br/"><!-- SUBSTITUIR: URL final -->
+  <meta property="og:image" content="https://timesv.com.br/assets/og-time-sv-1200x630.jpg"><!-- PRODUZIR: imagem 1200x630 -->
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="TIME SV — Senador Styvenson Valentim">
+  <meta name="twitter:description" content="A política tem jeito. Entre no TIME SV.">
+  <meta name="twitter:image" content="https://timesv.com.br/assets/og-time-sv-1200x630.jpg"><!-- PRODUZIR -->
+
+  <!-- JSON-LD: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Styvenson Valentim",
+    "alternateName": "SV",
+    "jobTitle": "Senador da República pelo Rio Grande do Norte",
+    "worksFor": { "@type": "Organization", "name": "Senado Federal" },
+    "url": "https://timesv.com.br/",
+    "image": "https://timesv.com.br/assets/foto-sv-hero.png",
+    "sameAs": [
+      "https://www.instagram.com/USUARIO_INSTAGRAM/",
+      "https://www.facebook.com/USUARIO_FACEBOOK/",
+      "https://www.youtube.com/@CANAL_YOUTUBE",
+      "https://x.com/USUARIO_X"
+    ]
+  }
+  </script>
+  <!-- SUBSTITUIR acima: URLs reais das redes sociais -->
+
+  <!-- ============================================================
+       PERFORMANCE — fontes com preconnect e display=swap
+       ============================================================ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Ícones Lucide (único CDN de script permitido) -->
+  <script defer src="https://unpkg.com/lucide@0.454.0/dist/umd/lucide.min.js"></script>
+
+  <!-- Favicon + preload da foto do hero (LCP) -->
+  <link rel="icon" type="image/png" href="assets/logo-time-sv.png">
+  <link rel="preload" as="image" href="assets/foto-sv-hero.png">
+
+  <!-- CMS: aplica o conteúdo publicado no painel administrativo (/campanha/admin).
+       Sem API disponível, o site usa o conteúdo padrão deste HTML. -->
+  <script defer src="cms-runtime.js"></script>
+
+  <!-- ============================================================
+       ANALYTICS — descomentar e preencher antes de publicar
+       ============================================================
+  <!- - Meta Pixel - ->
+  <script>
+    !function(f,b,e,v,n,t,s){...}  // Colar snippet oficial do Meta Pixel aqui
+    fbq('init', 'SEU_PIXEL_ID');
+    fbq('track', 'PageView');
+  </script>
+
+  <!- - Google Analytics 4 - ->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXX');
+  </script>
+  ============================================================ -->
+
+  <style>
+    /* ============================================================
+       0. VARIÁVEIS E RESET
+       ============================================================ */
+    :root {
+      --azul-claro:    #7CB9F7;
+      --azul-royal:    #2B5BD7;
+      --azul-profundo: #1A3E9E;
+      --azul-noite:    #12275C;   /* derivado, p/ fundos bem escuros */
+      --ambar:         #FFC55A;
+      --laranja:       #F5A623;   /* SOMENTE botões e destaques de ação */
+      --laranja-texto: #D98B0F;   /* laranja acessível p/ TEXTO sobre branco (AA) */
+      --branco:        #FFFFFF;
+      --cinza-fundo:   #F4F6FA;
+      --texto:         #26314F;
+      --texto-suave:   #5A6785;
+
+      --grad-azul: linear-gradient(100deg, var(--azul-claro), var(--azul-royal));
+      --grad-cta:  linear-gradient(100deg, var(--ambar), var(--laranja));
+
+      --fonte-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+      --fonte-corpo:   "Inter", system-ui, sans-serif;
+
+      --raio: 14px;
+      --sombra: 0 8px 28px rgba(26, 62, 158, .12);
+      --largura-max: 1160px;
+      --altura-header: 72px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-padding-top: calc(var(--altura-header) + 12px); }
+    @media (prefers-reduced-motion: no-preference) {
+      html { scroll-behavior: smooth; }
+    }
+
+    body {
+      font-family: var(--fonte-corpo);
+      color: var(--texto);
+      background: var(--branco);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img, svg, video { max-width: 100%; height: auto; display: block; }
+
+    a { color: var(--azul-royal); }
+
+    /* Foco visível para navegação por teclado */
+    :focus-visible {
+      outline: 3px solid var(--laranja);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    /* Link "pular para o conteúdo" (acessibilidade) */
+    .pular-conteudo {
+      position: absolute; left: -9999px; top: 0;
+      background: var(--azul-profundo); color: #fff;
+      padding: 12px 20px; z-index: 200; font-weight: 600;
+    }
+    .pular-conteudo:focus { left: 12px; top: 12px; }
+
+    /* ============================================================
+       1. UTILITÁRIOS
+       ============================================================ */
+    .container {
+      width: min(var(--largura-max), 100% - 40px);
+      margin-inline: auto;
+    }
+
+    .secao { padding: 72px 0; }
+    @media (min-width: 768px) { .secao { padding: 96px 0; } }
+
+    /* Título de seção com gradiente azul (tratamento da logo) */
+    .titulo-secao {
+      font-family: var(--fonte-display);
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: clamp(2rem, 5.5vw, 3.1rem);
+      line-height: 1.05;
+      letter-spacing: .01em;
+      background: var(--grad-azul);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 12px;
+    }
+    .subtitulo-secao {
+      color: var(--texto-suave);
+      max-width: 640px;
+      margin-bottom: 40px;
+      font-size: 1.05rem;
+    }
+    .centro { text-align: center; }
+    .centro .subtitulo-secao { margin-inline: auto; }
+
+    /* Botões — laranja é escasso: só CTA */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      font-family: var(--fonte-display);
+      font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+      font-size: 1.12rem;
+      padding: 14px 30px; border-radius: 999px;
+      text-decoration: none; border: 0; cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-cta {
+      background: var(--grad-cta);
+      color: var(--azul-noite);            /* texto escuro sobre laranja = contraste AA */
+      box-shadow: 0 6px 20px rgba(245, 166, 35, .45);
+    }
+    .btn-cta:hover { box-shadow: 0 10px 26px rgba(245, 166, 35, .55); }
+
+    .btn-outline-branco {
+      background: transparent; color: #fff;
+      border: 2px solid rgba(255,255,255,.85);
+    }
+    .btn-outline-branco:hover { background: rgba(255,255,255,.12); }
+
+    .btn-outline-azul {
+      background: transparent; color: var(--azul-royal);
+      border: 2px solid var(--azul-royal);
+    }
+    .btn-outline-azul:hover { background: rgba(43,91,215,.08); }
+
+    /* Animação de entrada ao scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.visivel { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* Silhueta do mapa do RN como marca d'água */
+    .marca-rn {
+      position: absolute; pointer-events: none;
+      color: currentColor;
+    }
+
+    /* ============================================================
+       2. HEADER FIXO
+       ============================================================ */
+    .header {
+      position: fixed; inset: 0 0 auto 0; z-index: 100;
+      height: var(--altura-header);
+      background: rgba(255,255,255,.94);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(43,91,215,.10);
+      transition: box-shadow .25s ease;
+    }
+    .header.rolado { box-shadow: 0 4px 18px rgba(26,62,158,.10); }
+
+    .header-inner {
+      height: 100%;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+
+    .logo-link { display: inline-flex; align-items: center; min-width: 0; }
+    .logo-link img { height: 44px; width: auto; }
+    /* Logo horizontal larga: reduz no mobile p/ caber ao lado do hambúrguer */
+    @media (max-width: 480px) { .logo-link img { height: 34px; } }
+
+    .nav-desktop { display: none; }
+    .nav-desktop ul { display: flex; gap: 28px; list-style: none; }
+    .nav-desktop a {
+      font-weight: 600; font-size: .95rem; text-decoration: none;
+      color: var(--texto);
+      padding: 6px 2px;
+      border-bottom: 2px solid transparent;
+      transition: color .15s ease, border-color .15s ease;
+    }
+    .nav-desktop a:hover { color: var(--azul-royal); border-color: var(--azul-royal); }
+
+    .header .btn-cta { padding: 11px 22px; font-size: 1rem; display: none; }
+
+    /* Hambúrguer */
+    .btn-menu {
+      display: inline-flex; flex-direction: column; gap: 5px;
+      background: none; border: 0; cursor: pointer; padding: 10px;
+    }
+    .btn-menu span {
+      width: 26px; height: 3px; border-radius: 3px;
+      background: var(--azul-profundo);
+      transition: transform .25s ease, opacity .25s ease;
+    }
+    .btn-menu[aria-expanded="true"] span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .btn-menu[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+    .btn-menu[aria-expanded="true"] span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    @media (min-width: 992px) {
+      .nav-desktop { display: block; }
+      .header .btn-cta { display: inline-flex; }
+      .btn-menu { display: none; }
+    }
+
+    /* Menu mobile full-screen */
+    .menu-mobile {
+      position: fixed; inset: 0; z-index: 99;
+      background: linear-gradient(160deg, var(--azul-profundo), var(--azul-noite));
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 100px 28px 40px;
+      transform: translateX(100%);
+      transition: transform .3s ease;
+      overflow-y: auto;
+    }
+    .menu-mobile.aberto { transform: none; }
+    @media (prefers-reduced-motion: reduce) { .menu-mobile { transition: none; } }
+
+    .menu-mobile ul { list-style: none; display: grid; gap: 8px; }
+    .menu-mobile a:not(.btn) {
+      font-family: var(--fonte-display);
+      font-size: 2rem; font-weight: 700; text-transform: uppercase;
+      color: #fff; text-decoration: none;
+      display: block; padding: 10px 4px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+    .menu-mobile a:not(.btn):hover { color: var(--ambar); }
+    .menu-mobile .menu-ctas { margin-top: 32px; display: grid; gap: 14px; }
+
+    /* ============================================================
+       3. HERO
+       ============================================================ */
+    .hero {
+      position: relative;
+      background: linear-gradient(135deg, var(--azul-royal) 0%, var(--azul-profundo) 62%, var(--azul-noite) 100%);
+      color: #fff;
+      padding-top: calc(var(--altura-header) + 48px);
+      overflow: hidden;
+    }
+    .hero .marca-rn {
+      color: #fff; opacity: .06;
+      width: min(760px, 90vw);
+      right: -12%; top: 4%;
+    }
+    /* Sem padding inferior: o recorte da foto assenta direto na faixa de números */
+    .hero-grid {
+      position: relative;
+      display: grid; gap: 32px;
+    }
+    @media (min-width: 900px) {
+      .hero-grid { grid-template-columns: 1.15fr .85fr; align-items: end; }
+    }
+
+    .hero-chamada { padding-bottom: 46px; }
+    .hero-etiqueta {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.25);
+      padding: 7px 16px; border-radius: 999px;
+      font-weight: 600; font-size: .85rem; letter-spacing: .06em; text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+    .hero h1 {
+      font-family: var(--fonte-display);
+      font-weight: 800; text-transform: uppercase;
+      font-size: clamp(2.7rem, 8.5vw, 4.9rem);
+      line-height: .98; letter-spacing: .005em;
+      margin-bottom: 18px;
+    }
+    /* SLOGAN — trecho em âmbar p/ ritmo visual (âmbar sobre azul-profundo passa AA) */
+    .hero h1 .destaque { color: var(--ambar); }
+    .hero-sub {
+      font-size: clamp(1.02rem, 2.4vw, 1.2rem);
+      color: #E4EDFC;
+      max-width: 520px;
+      margin-bottom: 30px;
+    }
+    .hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; }
+
+    .hero-foto {
+      position: relative;
+      display: flex; justify-content: center; align-items: flex-end;
+      min-height: 300px;
+    }
+    .hero-foto img {
+      width: min(400px, 82vw);
+      filter: drop-shadow(0 18px 40px rgba(0,0,0,.35));
+    }
+
+    /* Faixa de números-âncora do hero */
+    .hero-faixa {
+      position: relative;
+      background: rgba(255,255,255,.08);
+      border-top: 1px solid rgba(255,255,255,.15);
+      backdrop-filter: blur(4px);
+    }
+    .hero-faixa-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      padding: 22px 0;
+    }
+    .hero-numero { display: flex; align-items: center; gap: 14px; }
+    .hero-numero .num {
+      font-family: var(--fonte-display);
+      font-weight: 800; font-size: clamp(1.7rem, 5vw, 2.5rem);
+      color: var(--ambar); line-height: 1;
+    }
+    .hero-numero .rotulo { font-size: .82rem; color: #D8E4F9; line-height: 1.35; max-width: 190px; }
+
+    /* ============================================================
+       4. FAIXA DE NÚMEROS (contadores)
+       ============================================================ */
+    .numeros-grid {
+      display: grid; gap: 18px;
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media (min-width: 900px) { .numeros-grid { grid-template-columns: repeat(4, 1fr); } }
+
+    .card-numero {
+      background: #fff;
+      border: 2px solid rgba(43,91,215,.18);
+      border-radius: var(--raio);
+      padding: 26px 20px;
+      text-align: center;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    .card-numero:hover { border-color: var(--azul-royal); box-shadow: var(--sombra); }
+    .card-numero .icone {
+      display: inline-grid; place-items: center;
+      width: 52px; height: 52px; border-radius: 14px;
+      background: var(--grad-azul); color: #fff;
+      margin-bottom: 14px;
+    }
+    .card-numero .valor {
+      font-family: var(--fonte-display);
+      font-weight: 800; font-size: clamp(2rem, 5vw, 2.7rem);
+      line-height: 1;
+      background: var(--grad-azul);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .card-numero .rotulo { font-weight: 600; margin-top: 8px; }
+    .card-numero .micro { font-size: .82rem; color: var(--texto-suave); margin-top: 4px; }
+
+    /* ============================================================
+       5. QUEM É O SV
+       ============================================================ */
+    .quem-grid { display: grid; gap: 40px; align-items: center; }
+    @media (min-width: 900px) { .quem-grid { grid-template-columns: .9fr 1.1fr; } }
+
+    .quem-foto {
+      position: relative; border-radius: var(--raio); overflow: hidden;
+      background: linear-gradient(160deg, var(--azul-claro), var(--azul-royal));
+      min-height: 380px;
+      display: flex; align-items: flex-end; justify-content: center;
+      box-shadow: var(--sombra);
+    }
+    .quem-foto .marca-rn { color: #fff; opacity: .14; width: 85%; top: 12%; left: 8%; }
+    /* Recorte sem fundo assenta na base do card */
+    .quem-foto img { position: relative; width: 88%; filter: drop-shadow(0 10px 24px rgba(0,0,0,.28)); }
+
+    .quem-texto h2 { text-align: left; }
+    .quem-texto p { margin-bottom: 16px; }
+    .quem-texto .link-mais {
+      font-weight: 700; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .quem-texto .link-mais:hover { text-decoration: underline; }
+
+    /* ============================================================
+       6. O QUE JÁ FIZEMOS (grid com filtro)
+       ============================================================ */
+    .filtros {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      margin-bottom: 36px;
+    }
+    .filtro-btn {
+      font-family: var(--fonte-corpo); font-weight: 600; font-size: .9rem;
+      padding: 9px 20px; border-radius: 999px; cursor: pointer;
+      background: #fff; color: var(--azul-royal);
+      border: 2px solid rgba(43,91,215,.35);
+      transition: background .15s ease, color .15s ease, border-color .15s ease;
+    }
+    .filtro-btn:hover { border-color: var(--azul-royal); }
+    .filtro-btn[aria-pressed="true"] {
+      background: var(--azul-royal); color: #fff; border-color: var(--azul-royal);
+    }
+
+    .entregas-grid {
+      display: grid; gap: 22px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 640px)  { .entregas-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 992px)  { .entregas-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .card-entrega {
+      background: #fff; border-radius: var(--raio); overflow: hidden;
+      box-shadow: var(--sombra);
+      display: flex; flex-direction: column;
+      transition: transform .2s ease;
+    }
+    .card-entrega:hover { transform: translateY(-4px); }
+    .card-entrega[hidden] { display: none; }
+
+    /* Capa do card — imagem editável pelo CMS (padrão: gradiente azul) */
+    .card-entrega .card-img {
+      width: 100%; height: 150px; object-fit: cover; display: block;
+      background: linear-gradient(135deg, var(--azul-claro), var(--azul-royal));
+    }
+    .card-entrega .card-corpo { padding: 20px 22px 24px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .card-entrega .eixo {
+      font-size: .74rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--azul-royal);
+    }
+    .card-entrega h3 { font-family: var(--fonte-display); font-size: 1.35rem; font-weight: 700; text-transform: uppercase; line-height: 1.1; }
+    .card-entrega .municipio {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: .84rem; font-weight: 600; color: var(--texto-suave);
+    }
+    .card-entrega p { font-size: .92rem; color: var(--texto-suave); }
+
+    .entregas-cta { margin-top: 44px; text-align: center; }
+
+    /* ============================================================
+       7. PROJETOS DE LEI
+       ============================================================ */
+    .secao-projetos { background: var(--cinza-fundo); position: relative; overflow: hidden; }
+    .secao-projetos .marca-rn { color: var(--azul-royal); opacity: .05; width: 560px; left: -10%; bottom: -12%; }
+
+    .projetos-grid {
+      position: relative;
+      display: grid; gap: 22px; grid-template-columns: 1fr;
+    }
+    @media (min-width: 640px) { .projetos-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 992px) { .projetos-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .card-pl {
+      background: #fff; border-radius: var(--raio); padding: 24px;
+      border-top: 5px solid var(--azul-royal);
+      box-shadow: var(--sombra);
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .card-pl .tema {
+      font-size: .74rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--azul-royal);
+    }
+    .card-pl h3 { font-family: var(--fonte-display); font-size: 1.4rem; font-weight: 700; text-transform: uppercase; line-height: 1.12; }
+    .card-pl .numero-pl {
+      font-weight: 700; font-size: .95rem; color: var(--azul-profundo);
+      background: rgba(43,91,215,.08); border-radius: 8px;
+      padding: 4px 10px; align-self: flex-start;
+    }
+    .card-pl p { font-size: .92rem; color: var(--texto-suave); flex: 1; }
+
+    .status {
+      align-self: flex-start;
+      font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+      padding: 5px 12px; border-radius: 999px;
+    }
+    .status-aprovado   { background: #E3F4E8; color: #17693A; }
+    .status-tramitando { background: #FFF3DC; color: #8A5B00; }
+
+    .projetos-rodape {
+      position: relative;
+      margin-top: 40px;
+      display: grid; gap: 22px;
+    }
+    @media (min-width: 900px) { .projetos-rodape { grid-template-columns: 1fr auto; align-items: center; } }
+
+    /* Bloco de participação: Sugira um PL */
+    .bloco-sugira {
+      background: linear-gradient(120deg, var(--azul-royal), var(--azul-profundo));
+      color: #fff; border-radius: var(--raio);
+      padding: 30px 28px;
+      display: grid; gap: 16px;
+    }
+    @media (min-width: 720px) { .bloco-sugira { grid-template-columns: 1fr auto; align-items: center; } }
+    .bloco-sugira h3 { font-family: var(--fonte-display); font-size: 1.7rem; font-weight: 700; text-transform: uppercase; line-height: 1.1; }
+    .bloco-sugira p { color: #DCE7FB; font-size: .95rem; }
+
+    /* ============================================================
+       8. VITRINE DE LANDING PAGES
+       ============================================================ */
+    .vitrine-grid { display: grid; gap: 20px; grid-template-columns: 1fr; }
+    @media (min-width: 720px) { .vitrine-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1080px) { .vitrine-grid { grid-template-columns: repeat(4, 1fr); } }
+
+    .card-lp {
+      position: relative; border-radius: var(--raio); overflow: hidden;
+      min-height: 300px;
+      display: flex; align-items: flex-end;
+      text-decoration: none;
+      /* SUBSTITUIR: aplicar background-image real por card (inline style) */
+      background: linear-gradient(160deg, var(--azul-claro) 0%, var(--azul-royal) 55%, var(--azul-profundo) 100%);
+      transition: transform .2s ease;
+    }
+    .card-lp:hover { transform: translateY(-5px); }
+    /* Foto de fundo do card de causa — editável pelo CMS; o overlay azul fica por cima */
+    .card-lp .lp-fundo {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    }
+    .card-lp::after { /* overlay gradiente azul sobre a foto */
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(18,39,92,.92) 12%, rgba(26,62,158,.45) 55%, rgba(26,62,158,.10) 100%);
+    }
+    .card-lp .conteudo { position: relative; z-index: 1; padding: 24px; color: #fff; }
+    .card-lp .icone-lp {
+      display: inline-grid; place-items: center;
+      width: 46px; height: 46px; border-radius: 12px;
+      background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.3);
+      margin-bottom: 12px;
+    }
+    .card-lp h3 { font-family: var(--fonte-display); font-size: 1.65rem; font-weight: 800; text-transform: uppercase; line-height: 1.05; margin-bottom: 10px; }
+    .card-lp .cta-lp {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-weight: 700; font-size: .9rem; color: var(--ambar);
+      text-transform: uppercase; letter-spacing: .04em;
+    }
+
+    /* ============================================================
+       9. NOTÍCIAS E VÍDEOS
+       ============================================================ */
+    .secao-noticias { background: var(--cinza-fundo); }
+    .noticias-grid { display: grid; gap: 22px; grid-template-columns: 1fr; }
+    @media (min-width: 720px) { .noticias-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .card-noticia {
+      background: #fff; border-radius: var(--raio); overflow: hidden;
+      box-shadow: var(--sombra); display: flex; flex-direction: column;
+    }
+    .card-noticia .card-img {
+      width: 100%; height: 170px; object-fit: cover; display: block;
+      background: linear-gradient(135deg, var(--azul-claro), var(--azul-profundo));
+    }
+    .card-noticia .corpo { padding: 20px 22px 24px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .card-noticia time { font-size: .8rem; font-weight: 600; color: var(--texto-suave); text-transform: uppercase; letter-spacing: .05em; }
+    .card-noticia h3 { font-family: var(--fonte-display); font-size: 1.35rem; font-weight: 700; line-height: 1.15; text-transform: uppercase; }
+    .card-noticia p { font-size: .92rem; color: var(--texto-suave); flex: 1; }
+    .card-noticia .leia-mais { font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+    .card-noticia .leia-mais:hover { text-decoration: underline; }
+
+    /* Vídeos — fachada com lazy load (iframe só entra no clique) */
+    .videos-faixa {
+      margin-top: 40px;
+      display: grid; gap: 18px; grid-template-columns: 1fr;
+    }
+    @media (min-width: 720px) { .videos-faixa { grid-template-columns: repeat(3, 1fr); } }
+
+    .video-facade {
+      position: relative; border: 0; padding: 0; cursor: pointer;
+      aspect-ratio: 16 / 9; border-radius: var(--raio); overflow: hidden;
+      background: linear-gradient(135deg, var(--azul-profundo), var(--azul-noite));
+      display: grid; place-items: center;
+    }
+    .video-facade img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .video-facade .play {
+      position: relative; z-index: 1;
+      width: 64px; height: 64px; border-radius: 50%;
+      background: var(--grad-cta); color: var(--azul-noite);
+      display: grid; place-items: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,.35);
+      transition: transform .18s ease;
+    }
+    .video-facade:hover .play { transform: scale(1.08); }
+    .video-facade iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+    /* ============================================================
+       10. CAPTAÇÃO / WHATSAPP
+       ============================================================ */
+    .secao-captacao {
+      position: relative; overflow: hidden;
+      background: linear-gradient(150deg, var(--azul-profundo), var(--azul-noite));
+      color: #fff;
+    }
+    .secao-captacao .marca-rn { color: #fff; opacity: .05; width: 640px; right: -14%; bottom: -18%; }
+
+    .captacao-grid { position: relative; display: grid; gap: 40px; align-items: center; }
+    @media (min-width: 900px) { .captacao-grid { grid-template-columns: 1fr 1fr; } }
+
+    .captacao-texto .titulo-secao {
+      background: linear-gradient(100deg, #fff, var(--azul-claro));
+      -webkit-background-clip: text; background-clip: text;
+    }
+    .captacao-texto p { color: #D8E4F9; max-width: 480px; margin-bottom: 8px; }
+    .captacao-foto { display: none; }
+    @media (min-width: 900px) {
+      .captacao-foto { display: flex; justify-content: center; }
+      .captacao-foto img { width: min(360px, 100%); filter: drop-shadow(0 18px 40px rgba(0,0,0,.4)); }
+    }
+
+    .form-captacao {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: var(--raio);
+      padding: 28px 24px;
+      display: grid; gap: 16px;
+      max-width: 480px;
+    }
+    .campo { display: grid; gap: 6px; }
+    .campo label { font-weight: 600; font-size: .9rem; }
+    .campo input {
+      font: inherit; color: var(--texto);
+      padding: 13px 16px; border-radius: 10px;
+      border: 2px solid transparent; background: #fff;
+      width: 100%;
+    }
+    .campo input:focus { outline: none; border-color: var(--laranja); }
+    .campo .erro-msg { font-size: .8rem; color: var(--ambar); display: none; }
+    .campo.invalido input { border-color: var(--laranja); }
+    .campo.invalido .erro-msg { display: block; }
+    .form-captacao .btn-cta { width: 100%; }
+    .form-nota { font-size: .78rem; color: #B9CBEE; }
+
+    /* Botão flutuante de WhatsApp */
+    .whats-flutuante {
+      position: fixed; right: 18px; bottom: 18px; z-index: 90;
+      width: 58px; height: 58px; border-radius: 50%;
+      background: #25D366; color: #fff;
+      display: grid; place-items: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,.28);
+      transition: transform .18s ease;
+    }
+    .whats-flutuante:hover { transform: scale(1.08); }
+
+    /* ============================================================
+       11. INSTAGRAM
+       ============================================================ */
+    .insta-grid {
+      display: grid; gap: 10px;
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media (min-width: 640px) { .insta-grid { grid-template-columns: repeat(4, 1fr); } }
+
+    .insta-item {
+      position: relative; aspect-ratio: 1;
+      border-radius: 12px; overflow: hidden;
+      background: linear-gradient(135deg, var(--azul-claro), var(--azul-royal) 70%, var(--azul-profundo));
+      display: grid; place-items: center; color: #fff;
+      text-decoration: none;
+      transition: transform .18s ease;
+    }
+    .insta-item:hover { transform: scale(1.03); }
+    .insta-item:nth-child(even) { background: linear-gradient(135deg, var(--azul-royal), var(--azul-profundo)); }
+
+    /* ============================================================
+       12. RODAPÉ
+       ============================================================ */
+    .rodape {
+      background: var(--azul-noite); color: #C9D7F2;
+      padding: 64px 0 32px;
+      font-size: .92rem;
+    }
+    .rodape-grid { display: grid; gap: 36px; grid-template-columns: 1fr; margin-bottom: 44px; }
+    @media (min-width: 720px) { .rodape-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1080px) { .rodape-grid { grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr; } }
+
+    /* Logo sobre fundo escuro: chip branco até existir a versão dark oficial */
+    .rodape-logo img {
+      height: 52px; width: auto; margin-bottom: 16px;
+      background: #fff; padding: 9px 14px; border-radius: 12px;
+      box-sizing: content-box;
+    }
+    .rodape h3 {
+      font-family: var(--fonte-display); font-size: 1.1rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .05em; color: #fff;
+      margin-bottom: 14px;
+    }
+    .rodape ul { list-style: none; display: grid; gap: 9px; }
+    .rodape a { color: #C9D7F2; text-decoration: none; }
+    .rodape a:hover { color: var(--ambar); text-decoration: underline; }
+
+    .redes { display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+    .redes a {
+      display: grid; place-items: center;
+      width: 42px; height: 42px; border-radius: 12px;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14);
+      color: #fff;
+      transition: background .15s ease;
+    }
+    .redes a:hover { background: var(--azul-royal); }
+
+    /* Bloco legal eleitoral — PLACEHOLDER OBRIGATÓRIO */
+    .bloco-legal {
+      border: 2px dashed rgba(255,255,255,.3);
+      border-radius: var(--raio);
+      padding: 22px 24px;
+      margin-bottom: 28px;
+      font-size: .85rem; line-height: 1.7;
+      background: rgba(255,255,255,.04);
+    }
+    .bloco-legal strong { color: #fff; }
+
+    .rodape-base {
+      border-top: 1px solid rgba(255,255,255,.12);
+      padding-top: 22px;
+      display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between;
+      font-size: .82rem; color: #8FA5D4;
+    }
+  </style>
+</head>
+
+<body data-cms-pagina="home">
+  <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+
+  <!-- Símbolo reutilizável: silhueta simplificada do mapa do RN -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="mapa-rn" viewBox="0 0 120 70">
+      <path d="M8 24 L22 17 L38 12 L56 9 L74 6 L94 5 L106 9 L109 16 L103 27 L95 39 L86 51 L72 56 L55 59 L41 56 L29 58 L18 51 L11 38 Z" fill="currentColor"/>
+    </symbol>
+  </svg>
+
+  <!-- ============================================================
+       HEADER FIXO
+       ============================================================ -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a class="logo-link" href="#inicio" aria-label="TIME SV — início">
+        <!-- Logo oficial TIME SV (1105x146, fundo transparente) -->
+        <img src="assets/logo-time-sv.png" alt="TIME SV" width="333" height="44">
+      </a>
+
+      <nav class="nav-desktop" aria-label="Navegação principal">
+        <ul>
+          <li><a href="#quem-e-o-sv" data-cms="menu.item1">Quem é o SV</a></li>
+          <li><a href="#o-que-ja-fizemos" data-cms="menu.item2">O que já fizemos</a></li>
+          <li><a href="#projetos" data-cms="menu.item3">Projetos</a></li>
+          <li><a href="#noticias" data-cms="menu.item4">Notícias</a></li>
+          <li><a href="#some-se" data-cms="menu.item5">Some-se</a></li>
+        </ul>
+      </nav>
+
+      <a class="btn btn-cta" href="#some-se" data-cms="menu.cta">Entrar no time</a>
+
+      <button class="btn-menu" id="btn-menu" aria-expanded="false" aria-controls="menu-mobile" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Menu mobile full-screen -->
+  <nav class="menu-mobile" id="menu-mobile" aria-label="Menu" hidden>
+    <ul>
+      <li><a href="#quem-e-o-sv" data-cms="menu.item1">Quem é o SV</a></li>
+      <li><a href="#o-que-ja-fizemos" data-cms="menu.item2">O que já fizemos</a></li>
+      <li><a href="#projetos" data-cms="menu.item3">Projetos</a></li>
+      <li><a href="#noticias" data-cms="menu.item4">Notícias</a></li>
+      <li><a href="#some-se" data-cms="menu.item5">Some-se</a></li>
+    </ul>
+    <div class="menu-ctas">
+      <a class="btn btn-cta" href="#some-se" data-cms="menu.cta">Entrar no time</a>
+      <a class="btn btn-outline-branco" href="#o-que-ja-fizemos" data-cms="menu.cta2">Veja o que já foi feito</a>
+    </div>
+  </nav>
+
+  <main id="conteudo">
+
+    <!-- ============================================================
+         HERO
+         ============================================================ -->
+    <section class="hero" id="inicio">
+      <svg class="marca-rn" aria-hidden="true"><use href="#mapa-rn"/></svg>
+
+      <div class="container hero-grid">
+        <div class="hero-chamada">
+          <p class="hero-etiqueta">
+            <i data-lucide="shield-check" aria-hidden="true"></i>
+            <span data-cms="hero.etiqueta">Senador pelo Rio Grande do Norte</span>
+          </p>
+
+          <!-- SLOGAN: texto-modelo — validar slogan oficial da campanha -->
+          <h1 data-cms="hero.titulo">A política tem jeito.<br><span class="destaque">O jeito é fazer certo.</span></h1>
+
+          <p class="hero-sub" data-cms="hero.sub">
+            Honestidade não é promessa, é prática. Fiscalização, transparência e
+            trabalho de verdade por cada município do RN.
+          </p>
+
+          <div class="hero-ctas">
+            <!-- SUBSTITUIR href: landing page de captação de apoiadores -->
+            <a class="btn btn-cta" href="#some-se" data-cms="hero.cta1">Quero fazer parte do time</a>
+            <a class="btn btn-outline-branco" href="#o-que-ja-fizemos" data-cms="hero.cta2">Veja o que já foi feito</a>
+          </div>
+        </div>
+
+        <div class="hero-foto">
+          <!-- Foto oficial: senador comemorando, PNG sem fundo (800x800) -->
+          <img src="assets/foto-sv-hero.png" fetchpriority="high" data-cms="hero.foto"
+            alt="Senador Styvenson Valentim comemorando de punhos erguidos, vestindo a camisa do TIME SV"
+            width="800" height="800">
+        </div>
+      </div>
+
+      <!-- Faixa de números-âncora -->
+      <div class="hero-faixa">
+        <div class="container hero-faixa-grid">
+          <div class="hero-numero">
+            <!-- SUBSTITUIR data-valor (editável pelo CMS): total de municípios atendidos.
+                 Fonte: relatório do mandato / Portal de Recursos svrn.com.br. Datar o número. -->
+            <span class="num" data-contador data-valor="0" data-sufixo="" data-cms="hero.num1.valor">0</span>
+            <span class="rotulo" data-cms="hero.num1.rotulo">municípios do RN atendidos pelo mandato</span>
+          </div>
+          <div class="hero-numero">
+            <!-- SUBSTITUIR data-valor (editável pelo CMS): total de recursos destinados (em milhões).
+                 Fonte: SIGA Brasil / Portal da Transparência do Senado. Datar o número. -->
+            <span class="num" data-contador data-valor="0" data-prefixo="R$ " data-sufixo=" mi" data-cms="hero.num2.valor">R$ 0</span>
+            <span class="rotulo" data-cms="hero.num2.rotulo">em recursos destinados ao Rio Grande do Norte</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FAIXA DE NÚMEROS (4 contadores)
+         ============================================================ -->
+    <section class="secao" aria-labelledby="titulo-numeros">
+      <div class="container centro">
+        <h2 class="titulo-secao" id="titulo-numeros" data-cms="numeros.titulo">Trabalho que dá pra medir</h2>
+        <p class="subtitulo-secao" data-cms="numeros.sub">
+          Transparência começa com número na mesa. Confira os resultados do mandato — e confira
+          você mesmo nas fontes oficiais.
+        </p>
+
+        <div class="numeros-grid">
+          <div class="card-numero reveal">
+            <span class="icone"><i data-lucide="banknote" aria-hidden="true"></i></span>
+            <!-- SUBSTITUIR data-valor: recursos destinados ao RN (milhões).
+                 Fonte: SIGA Brasil / Portal da Transparência. Datar. -->
+            <div class="valor"><span data-contador data-valor="0" data-prefixo="R$ " data-sufixo=" mi" data-cms="numeros.card1.valor">R$ 0</span></div>
+            <div class="rotulo" data-cms="numeros.card1.rotulo">Recursos destinados</div>
+            <p class="micro" data-cms="numeros.card1.micro">Emendas e indicações para o Rio Grande do Norte</p>
+          </div>
+
+          <div class="card-numero reveal">
+            <span class="icone"><i data-lucide="map-pin" aria-hidden="true"></i></span>
+            <!-- SUBSTITUIR data-valor: municípios contemplados. Fonte: relatório do mandato. Datar. -->
+            <div class="valor"><span data-contador data-valor="0" data-cms="numeros.card2.valor">0</span></div>
+            <div class="rotulo" data-cms="numeros.card2.rotulo">Municípios contemplados</div>
+            <p class="micro" data-cms="numeros.card2.micro">Do litoral ao sertão, em todas as regiões do estado</p>
+          </div>
+
+          <div class="card-numero reveal">
+            <span class="icone"><i data-lucide="scroll-text" aria-hidden="true"></i></span>
+            <!-- SUBSTITUIR data-valor: proposições apresentadas.
+                 Fonte: página do senador em www25.senado.leg.br. Datar. -->
+            <div class="valor"><span data-contador data-valor="0" data-cms="numeros.card3.valor">0</span></div>
+            <div class="rotulo" data-cms="numeros.card3.rotulo">Proposições apresentadas</div>
+            <p class="micro" data-cms="numeros.card3.micro">Projetos de lei e propostas em tramitação no Senado</p>
+          </div>
+
+          <div class="card-numero reveal">
+            <span class="icone"><i data-lucide="heart-pulse" aria-hidden="true"></i></span>
+            <!-- SUBSTITUIR data-valor: unidades de saúde entregues/equipadas. Fonte: relatório do mandato. Datar. -->
+            <div class="valor"><span data-contador data-valor="0" data-cms="numeros.card4.valor">0</span></div>
+            <div class="rotulo" data-cms="numeros.card4.rotulo">Unidades de saúde</div>
+            <p class="micro" data-cms="numeros.card4.micro">Hospitais e unidades entregues ou equipadas</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         QUEM É O SV
+         ============================================================ -->
+    <section class="secao" id="quem-e-o-sv" style="background: var(--cinza-fundo);" aria-labelledby="titulo-quem">
+      <div class="container quem-grid">
+        <div class="quem-foto reveal">
+          <svg class="marca-rn" aria-hidden="true"><use href="#mapa-rn"/></svg>
+          <!-- Foto oficial: senador de braços cruzados, PNG sem fundo (800x800) -->
+          <img src="assets/foto-sv-quem.png" loading="lazy" data-cms="quem.foto"
+            alt="Senador Styvenson Valentim de braços cruzados, sorrindo"
+            width="800" height="800">
+        </div>
+
+        <div class="quem-texto reveal">
+          <h2 class="titulo-secao" data-cms="quem.titulo">Quem é o SV</h2>
+          <p data-cms="quem.p1">
+            Antes do Senado, Styvenson Valentim vestiu farda. Capitão da Polícia Militar do
+            Rio Grande do Norte, ficou conhecido pelo trabalho duro nas operações da Lei Seca,
+            enfrentando de frente a irresponsabilidade no trânsito e ganhando a confiança do
+            povo potiguar pela firmeza e pela coerência.
+          </p>
+          <p data-cms="quem.p2">
+            Em 2018, essa confiança virou voto: o povo do RN levou o SV ao Senado Federal sem
+            máquina partidária e sem dinheiro grande — com campanha simples, feita de gente.
+            Lá, manteve o mesmo estilo: fiscalizar, denunciar privilégios e devolver parte do
+            próprio salário.
+          </p>
+          <p data-cms="quem.p3">
+            O mandato segue os valores de sempre: honestidade, transparência total nos gastos,
+            combate ao desperdício e presença real nos municípios. Nem todo político é ladrão —
+            e o SV faz questão de provar isso todos os dias.
+          </p>
+          <!-- SUBSTITUIR href: página/LP de biografia completa -->
+          <a class="link-mais" href="#" data-cms="quem.link">
+            Trajetória completa <i data-lucide="arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         O QUE JÁ FIZEMOS (grid com filtros)
+         ============================================================ -->
+    <section class="secao" id="o-que-ja-fizemos" aria-labelledby="titulo-fizemos">
+      <div class="container">
+        <h2 class="titulo-secao" id="titulo-fizemos" data-cms="fizemos.titulo">O que já fizemos</h2>
+        <p class="subtitulo-secao" data-cms="fizemos.sub">
+          Entregas reais, com endereço e destino certo. Filtre por área e veja o trabalho
+          do TIME SV em todo o estado.
+        </p>
+
+        <!-- Filtros por eixo temático -->
+        <div class="filtros" role="group" aria-label="Filtrar entregas por área">
+          <button class="filtro-btn" data-filtro="todos" aria-pressed="true">Todas</button>
+          <button class="filtro-btn" data-filtro="saude" aria-pressed="false">Saúde</button>
+          <button class="filtro-btn" data-filtro="seguranca" aria-pressed="false">Segurança</button>
+          <button class="filtro-btn" data-filtro="educacao" aria-pressed="false">Educação</button>
+          <button class="filtro-btn" data-filtro="infraestrutura" aria-pressed="false">Infraestrutura</button>
+          <button class="filtro-btn" data-filtro="esporte" aria-pressed="false">Esporte</button>
+        </div>
+
+        <!-- CONTEÚDO-MODELO: substituir títulos, municípios e descrições por entregas
+             reais confirmadas no relatório do mandato. Trocar o div.card-img por
+             <img loading="lazy" src="..." alt="..."> com foto real (~800x500px). -->
+        <div class="entregas-grid" id="entregas-grid" data-cms-lista="entrega">
+
+          <article class="card-entrega reveal" data-eixo="saude" data-cms="entrega1.card">
+            <img class="card-img" data-cms="entrega1.foto" loading="lazy" alt=""
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 5'%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%237CB9F7'/%3E%3Cstop offset='1' stop-color='%232B5BD7'/%3E%3C/linearGradient%3E%3Crect width='8' height='5' fill='url(%23g)'/%3E%3C/svg%3E">
+            <div class="card-corpo">
+              <span class="eixo" data-cms="entrega1.eixo">Saúde</span>
+              <h3 data-cms="entrega1.titulo">Equipamentos para hospital regional</h3>
+              <span class="municipio"><i data-lucide="map-pin" aria-hidden="true"></i> <span data-cms="entrega1.municipio">[MUNICÍPIO] — [REGIÃO]</span></span>
+              <p data-cms="entrega1.descricao">Recursos destinados à compra de equipamentos hospitalares, ampliando a capacidade de atendimento da região.</p>
+            </div>
+          </article>
+
+          <article class="card-entrega reveal" data-eixo="seguranca" data-cms="entrega2.card">
+            <img class="card-img" data-cms="entrega2.foto" loading="lazy" alt=""
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 5'%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%237CB9F7'/%3E%3Cstop offset='1' stop-color='%232B5BD7'/%3E%3C/linearGradient%3E%3Crect width='8' height='5' fill='url(%23g)'/%3E%3C/svg%3E">
+            <div class="card-corpo">
+              <span class="eixo" data-cms="entrega2.eixo">Segurança</span>
+              <h3 data-cms="entrega2.titulo">Viaturas e equipamentos para a PM</h3>
+              <span class="municipio"><i data-lucide="map-pin" aria-hidden="true"></i> <span data-cms="entrega2.municipio">[MUNICÍPIO] — [REGIÃO]</span></span>
+              <p data-cms="entrega2.descricao">Apoio direto às forças de segurança do estado com veículos e equipamentos de proteção.</p>
+            </div>
+          </article>
+
+          <article class="card-entrega reveal" data-eixo="educacao" data-cms="entrega3.card">
+            <img class="card-img" data-cms="entrega3.foto" loading="lazy" alt=""
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 5'%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%237CB9F7'/%3E%3Cstop offset='1' stop-color='%232B5BD7'/%3E%3C/linearGradient%3E%3Crect width='8' height='5' fill='url(%23g)'/%3E%3C/svg%3E">
+            <div class="card-corpo">
+              <span class="eixo" data-cms="entrega3.eixo">Educação</span>
+              <h3 data-cms="entrega3.titulo">Reforma de escola estadual</h3>
+              <span class="municipio"><i data-lucide="map-pin" aria-hidden="true"></i> <span data-cms="entrega3.municipio">[MUNICÍPIO] — [REGIÃO]</span></span>
+              <p data-cms="entrega3.descricao">Investimento em infraestrutura escolar para garantir ambiente digno de aprendizagem.</p>
+            </div>
+          </article>
+
+          <article class="card-entrega reveal" data-eixo="infraestrutura" data-cms="entrega4.card">
+            <img class="card-img" data-cms="entrega4.foto" loading="lazy" alt=""
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 5'%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%237CB9F7'/%3E%3Cstop offset='1' stop-color='%232B5BD7'/%3E%3C/linearGradient%3E%3Crect width='8' height='5' fill='url(%23g)'/%3E%3C/svg%3E">
+            <div class="card-corpo">
+              <span class="eixo" data-cms="entrega4.eixo">Infraestrutura</span>
+              <h3 data-cms="entrega4.titulo">Pavimentação e acesso rural</h3>
+              <span class="municipio"><i data-lucide="map-pin" aria-hidden="true"></i> <span data-cms="entrega4.municipio">[MUNICÍPIO] — [REGIÃO]</span></span>
+              <p data-cms="entrega4.descricao">Obras de pavimentação que encurtam distâncias e escoam a produção do interior.</p>
+            </div>
+          </article>
+
+          <article class="card-entrega reveal" data-eixo="esporte" data-cms="entrega5.card">
+            <img class="card-img" data-cms="entrega5.foto" loading="lazy" alt=""
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 5'%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%237CB9F7'/%3E%3Cstop offset='1' stop-color='%232B5BD7'/%3E%3C/linearGradient%3E%3Crect width='8' height='5' fill='url(%23g)'/%3E%3C/svg%3E">
+            <div class="card-corpo">
+              <span class="eixo" data-cms="entrega5.eixo">Esporte</span>
+              <h3 data-cms="entrega5.titulo">Quadra poliesportiva coberta</h3>
+              <span class="municipio"><i data-lucide="map-pin" aria-hidden="true"></i> <span data-cms="entrega5.municipio">[MUNICÍPIO] — [REGIÃO]</span></span>
+              <p data-cms="entrega5.descricao">Espaço de esporte e convivência para tirar a juventude da rua e formar cidadãos.</p>
+            </div>
+          </article>
+
+          <article class="card-entrega reveal" data-eixo="saude" data-cms="entrega6.card">
+            <img class="card-img" data-cms="entrega6.foto" loading="lazy" alt=""
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 5'%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%237CB9F7'/%3E%3Cstop offset='1' stop-color='%232B5BD7'/%3E%3C/linearGradient%3E%3Crect width='8' height='5' fill='url(%23g)'/%3E%3C/svg%3E">
+            <div class="card-corpo">
+              <span class="eixo" data-cms="entrega6.eixo">Saúde</span>
+              <h3 data-cms="entrega6.titulo">Ambulâncias para o interior</h3>
+              <span class="municipio"><i data-lucide="map-pin" aria-hidden="true"></i> <span data-cms="entrega6.municipio">[MUNICÍPIO] — [REGIÃO]</span></span>
+              <p data-cms="entrega6.descricao">Transporte de emergência para quem mora longe dos grandes centros.</p>
+            </div>
+          </article>
+
+        </div>
+
+        <div class="entregas-cta">
+          <!-- SUBSTITUIR href: portal de recursos destinados (ex.: página de recursos do svrn.com.br) -->
+          <a class="btn btn-cta" href="#" data-cms="fizemos.cta">Quanto o seu município recebeu?</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         PROJETOS DE LEI EM DESTAQUE
+         ============================================================ -->
+    <section class="secao secao-projetos" id="projetos" aria-labelledby="titulo-projetos">
+      <svg class="marca-rn" aria-hidden="true"><use href="#mapa-rn"/></svg>
+      <div class="container">
+        <h2 class="titulo-secao" id="titulo-projetos" data-cms="projetos.titulo">Projetos de lei em destaque</h2>
+        <p class="subtitulo-secao" data-cms="projetos.sub">
+          Propostas com nome, número e propósito. Clique e acompanhe a tramitação
+          direto no portal do Senado.
+        </p>
+
+        <!-- CONTEÚDO-MODELO: substituir número do PL, status e resumo pelos dados reais
+             da página do senador em www25.senado.leg.br. NÃO publicar com placeholders. -->
+        <div class="projetos-grid" data-cms-lista="pl">
+
+          <article class="card-pl reveal" data-cms="pl1.card">
+            <span class="tema" data-cms="pl1.tema">Transparência</span>
+            <h3 data-cms="pl1.titulo">Transparência nos gastos públicos</h3>
+            <span class="numero-pl" data-cms="pl1.numero">PL 0000/0000</span><!-- SUBSTITUIR (editável pelo CMS) -->
+            <p data-cms="pl1.resumo">Amplia a obrigação de divulgação de gastos em tempo real pelos órgãos públicos.</p>
+            <span class="status status-tramitando" data-cms="pl1.status">Em tramitação</span><!-- SUBSTITUIR status real -->
+          </article>
+
+          <article class="card-pl reveal" data-cms="pl2.card">
+            <span class="tema" data-cms="pl2.tema">Segurança</span>
+            <h3 data-cms="pl2.titulo">Endurecimento contra o crime organizado</h3>
+            <span class="numero-pl" data-cms="pl2.numero">PL 0000/0000</span><!-- SUBSTITUIR (editável pelo CMS) -->
+            <p data-cms="pl2.resumo">Fortalece os instrumentos de investigação e punição de facções criminosas.</p>
+            <span class="status status-tramitando" data-cms="pl2.status">Em tramitação</span><!-- SUBSTITUIR -->
+          </article>
+
+          <article class="card-pl reveal" data-cms="pl3.card">
+            <span class="tema" data-cms="pl3.tema">Saúde</span>
+            <h3 data-cms="pl3.titulo">Prevenção ao uso de drogas</h3>
+            <span class="numero-pl" data-cms="pl3.numero">PL 0000/0000</span><!-- SUBSTITUIR (editável pelo CMS) -->
+            <p data-cms="pl3.resumo">Cria ações permanentes de prevenção e acolhimento a dependentes químicos e famílias.</p>
+            <span class="status status-aprovado" data-cms="pl3.status">Aprovado</span><!-- SUBSTITUIR -->
+          </article>
+
+          <article class="card-pl reveal" data-cms="pl4.card">
+            <span class="tema" data-cms="pl4.tema">Trânsito</span>
+            <h3 data-cms="pl4.titulo">Rigor contra o álcool ao volante</h3>
+            <span class="numero-pl" data-cms="pl4.numero">PL 0000/0000</span><!-- SUBSTITUIR (editável pelo CMS) -->
+            <p data-cms="pl4.resumo">Aumenta o rigor na fiscalização e nas penas para quem dirige alcoolizado.</p>
+            <span class="status status-tramitando" data-cms="pl4.status">Em tramitação</span><!-- SUBSTITUIR -->
+          </article>
+
+          <article class="card-pl reveal" data-cms="pl5.card">
+            <span class="tema" data-cms="pl5.tema">Ética</span>
+            <h3 data-cms="pl5.titulo">Fim de privilégios no serviço público</h3>
+            <span class="numero-pl" data-cms="pl5.numero">PL 0000/0000</span><!-- SUBSTITUIR (editável pelo CMS) -->
+            <p data-cms="pl5.resumo">Corta benefícios excessivos e alinha o serviço público à realidade do trabalhador.</p>
+            <span class="status status-tramitando" data-cms="pl5.status">Em tramitação</span><!-- SUBSTITUIR -->
+          </article>
+
+          <article class="card-pl reveal" data-cms="pl6.card">
+            <span class="tema" data-cms="pl6.tema">Educação</span>
+            <h3 data-cms="pl6.titulo">Valorização da escola pública</h3>
+            <span class="numero-pl" data-cms="pl6.numero">PL 0000/0000</span><!-- SUBSTITUIR (editável pelo CMS) -->
+            <p data-cms="pl6.resumo">Garante mais recursos e melhores condições para escolas e professores.</p>
+            <span class="status status-tramitando" data-cms="pl6.status">Em tramitação</span><!-- SUBSTITUIR -->
+          </article>
+
+        </div>
+
+        <div class="projetos-rodape">
+          <!-- Bloco de participação — gera lead qualificado -->
+          <div class="bloco-sugira reveal">
+            <div>
+              <h3 data-cms="sugira.titulo">Tem uma ideia de projeto de lei?</h3>
+              <p data-cms="sugira.texto">O mandato é seu. Envie sua sugestão e ela será analisada pela equipe legislativa do TIME SV.</p>
+            </div>
+            <!-- SUBSTITUIR href: formulário/LP "Sugira um PL" -->
+            <a class="btn btn-cta" href="#" data-cms="sugira.cta">Sugira um projeto de lei</a>
+          </div>
+
+          <!-- SUBSTITUIR href: página de proposições do senador no portal do Senado -->
+          <a class="btn btn-outline-azul" href="https://www25.senado.leg.br/" target="_blank" rel="noopener">
+            Todas as proposições no Senado
+            <i data-lucide="external-link" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         VITRINE DE LANDING PAGES
+         ============================================================ -->
+    <section class="secao" aria-labelledby="titulo-causas">
+      <div class="container">
+        <h2 class="titulo-secao" id="titulo-causas" data-cms="vitrine.titulo">Escolha a sua causa</h2>
+        <p class="subtitulo-secao" data-cms="vitrine.sub">
+          O TIME SV joga em várias frentes. Entre na que fala com você.
+        </p>
+
+        <!-- SUBSTITUIR href de cada card pela LP correspondente.
+             SUBSTITUIR background por foto real: style="background-image:url(assets/lp-saude.jpg)"
+             (o overlay azul já é aplicado pelo ::after) -->
+        <div class="vitrine-grid" data-cms-lista="lp">
+          <a class="card-lp reveal" href="#lp-saude-placeholder" data-cms="lp1.link">
+            <img class="lp-fundo" data-cms="lp1.fundo" loading="lazy" alt=""
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 4'%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%237CB9F7'/%3E%3Cstop offset='1' stop-color='%231A3E9E'/%3E%3C/linearGradient%3E%3Crect width='3' height='4' fill='url(%23g)'/%3E%3C/svg%3E">
+            <div class="conteudo">
+              <span class="icone-lp"><i data-lucide="heart-pulse" aria-hidden="true"></i></span>
+              <h3 data-cms="lp1.titulo">Saúde que chega</h3>
+              <span class="cta-lp" data-cms="lp1.cta">Conhecer a frente <i data-lucide="arrow-right" aria-hidden="true"></i></span>
+            </div>
+          </a>
+
+          <a class="card-lp reveal" href="#lp-seguranca-placeholder" data-cms="lp2.link">
+            <img class="lp-fundo" data-cms="lp2.fundo" loading="lazy" alt=""
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 4'%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%237CB9F7'/%3E%3Cstop offset='1' stop-color='%231A3E9E'/%3E%3C/linearGradient%3E%3Crect width='3' height='4' fill='url(%23g)'/%3E%3C/svg%3E">
+            <div class="conteudo">
+              <span class="icone-lp"><i data-lucide="shield" aria-hidden="true"></i></span>
+              <h3 data-cms="lp2.titulo">Segurança de verdade</h3>
+              <span class="cta-lp" data-cms="lp2.cta">Conhecer a frente <i data-lucide="arrow-right" aria-hidden="true"></i></span>
+            </div>
+          </a>
+
+          <a class="card-lp reveal" href="#lp-transparencia-placeholder" data-cms="lp3.link">
+            <img class="lp-fundo" data-cms="lp3.fundo" loading="lazy" alt=""
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 4'%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%237CB9F7'/%3E%3Cstop offset='1' stop-color='%231A3E9E'/%3E%3C/linearGradient%3E%3Crect width='3' height='4' fill='url(%23g)'/%3E%3C/svg%3E">
+            <div class="conteudo">
+              <span class="icone-lp"><i data-lucide="search-check" aria-hidden="true"></i></span>
+              <h3 data-cms="lp3.titulo">Fiscaliza, SV</h3>
+              <span class="cta-lp" data-cms="lp3.cta">Conhecer a frente <i data-lucide="arrow-right" aria-hidden="true"></i></span>
+            </div>
+          </a>
+
+          <a class="card-lp reveal" href="#lp-juventude-placeholder" data-cms="lp4.link">
+            <img class="lp-fundo" data-cms="lp4.fundo" loading="lazy" alt=""
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 4'%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%237CB9F7'/%3E%3Cstop offset='1' stop-color='%231A3E9E'/%3E%3C/linearGradient%3E%3Crect width='3' height='4' fill='url(%23g)'/%3E%3C/svg%3E">
+            <div class="conteudo">
+              <span class="icone-lp"><i data-lucide="trophy" aria-hidden="true"></i></span>
+              <h3 data-cms="lp4.titulo">Esporte e juventude</h3>
+              <span class="cta-lp" data-cms="lp4.cta">Conhecer a frente <i data-lucide="arrow-right" aria-hidden="true"></i></span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         NOTÍCIAS E MÍDIA
+         ============================================================ -->
+    <section class="secao secao-noticias" id="noticias" aria-labelledby="titulo-noticias">
+      <div class="container">
+        <h2 class="titulo-secao" id="titulo-noticias" data-cms="noticias.titulo">Notícias do time</h2>
+        <p class="subtitulo-secao" data-cms="noticias.sub">
+          O que o mandato andou fazendo — direto da fonte, sem intermediário.
+        </p>
+
+        <!-- CONTEÚDO-MODELO: alimentação manual. Estrutura pronta p/ CMS headless:
+             cada card = { imagem, data ISO, título, resumo, url }. -->
+        <div class="noticias-grid" data-cms-lista="noticia">
+          <article class="card-noticia reveal" data-cms="noticia1.card">
+            <img class="card-img" data-cms="noticia1.foto" loading="lazy" alt=""
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 5'%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%237CB9F7'/%3E%3Cstop offset='1' stop-color='%231A3E9E'/%3E%3C/linearGradient%3E%3Crect width='8' height='5' fill='url(%23g)'/%3E%3C/svg%3E">
+            <div class="corpo">
+              <time datetime="2026-01-01" data-cms="noticia1.data">[DATA]</time>
+              <h3 data-cms="noticia1.titulo">[TÍTULO DA NOTÍCIA 1]</h3>
+              <p data-cms="noticia1.resumo">[Resumo em duas ou três linhas do conteúdo da notícia, escrito para gerar clique sem sensacionalismo.]</p>
+              <a class="leia-mais" href="#" data-cms="noticia1.link">Leia mais <i data-lucide="arrow-right" aria-hidden="true"></i></a>
+            </div>
+          </article>
+
+          <article class="card-noticia reveal" data-cms="noticia2.card">
+            <img class="card-img" data-cms="noticia2.foto" loading="lazy" alt=""
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 5'%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%237CB9F7'/%3E%3Cstop offset='1' stop-color='%231A3E9E'/%3E%3C/linearGradient%3E%3Crect width='8' height='5' fill='url(%23g)'/%3E%3C/svg%3E">
+            <div class="corpo">
+              <time datetime="2026-01-01" data-cms="noticia2.data">[DATA]</time>
+              <h3 data-cms="noticia2.titulo">[TÍTULO DA NOTÍCIA 2]</h3>
+              <p data-cms="noticia2.resumo">[Resumo em duas ou três linhas do conteúdo da notícia.]</p>
+              <a class="leia-mais" href="#" data-cms="noticia2.link">Leia mais <i data-lucide="arrow-right" aria-hidden="true"></i></a>
+            </div>
+          </article>
+
+          <article class="card-noticia reveal" data-cms="noticia3.card">
+            <img class="card-img" data-cms="noticia3.foto" loading="lazy" alt=""
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 5'%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%237CB9F7'/%3E%3Cstop offset='1' stop-color='%231A3E9E'/%3E%3C/linearGradient%3E%3Crect width='8' height='5' fill='url(%23g)'/%3E%3C/svg%3E">
+            <div class="corpo">
+              <time datetime="2026-01-01" data-cms="noticia3.data">[DATA]</time>
+              <h3 data-cms="noticia3.titulo">[TÍTULO DA NOTÍCIA 3]</h3>
+              <p data-cms="noticia3.resumo">[Resumo em duas ou três linhas do conteúdo da notícia.]</p>
+              <a class="leia-mais" href="#" data-cms="noticia3.link">Leia mais <i data-lucide="arrow-right" aria-hidden="true"></i></a>
+            </div>
+          </article>
+        </div>
+
+        <!-- Vídeos: fachada estática; o iframe do YouTube só carrega no clique (protege o LCP) -->
+        <div class="videos-faixa">
+          <!-- SUBSTITUIR data-youtube-id pelos IDs reais dos vídeos -->
+          <button class="video-facade reveal" data-youtube-id="VIDEO_ID_1" data-cms="video1" aria-label="Assistir vídeo 1 no YouTube">
+            <img loading="lazy" src="https://i.ytimg.com/vi/VIDEO_ID_1/hqdefault.jpg" alt="" onerror="this.remove()">
+            <span class="play"><i data-lucide="play" aria-hidden="true"></i></span>
+          </button>
+          <button class="video-facade reveal" data-youtube-id="VIDEO_ID_2" data-cms="video2" aria-label="Assistir vídeo 2 no YouTube">
+            <img loading="lazy" src="https://i.ytimg.com/vi/VIDEO_ID_2/hqdefault.jpg" alt="" onerror="this.remove()">
+            <span class="play"><i data-lucide="play" aria-hidden="true"></i></span>
+          </button>
+          <button class="video-facade reveal" data-youtube-id="VIDEO_ID_3" data-cms="video3" aria-label="Assistir vídeo 3 no YouTube">
+            <img loading="lazy" src="https://i.ytimg.com/vi/VIDEO_ID_3/hqdefault.jpg" alt="" onerror="this.remove()">
+            <span class="play"><i data-lucide="play" aria-hidden="true"></i></span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CAPTAÇÃO / WHATSAPP
+         ============================================================ -->
+    <section class="secao secao-captacao" id="some-se" aria-labelledby="titulo-captacao">
+      <svg class="marca-rn" aria-hidden="true"><use href="#mapa-rn"/></svg>
+
+      <div class="container captacao-grid">
+        <div class="captacao-texto">
+          <h2 class="titulo-secao" id="titulo-captacao" data-cms="captacao.titulo">Entre no TIME SV</h2>
+          <p data-cms="captacao.texto">
+            Todo time forte começa com gente que veste a camisa. Deixe seu contato e receba
+            em primeira mão as novidades do mandato e da campanha — direto no seu WhatsApp.
+          </p>
+
+          <form class="form-captacao" id="form-captacao" novalidate>
+            <div class="campo" id="campo-nome">
+              <label for="nome">Seu nome</label>
+              <input type="text" id="nome" name="nome" autocomplete="name" required>
+              <span class="erro-msg" role="alert">Digite seu nome.</span>
+            </div>
+
+            <div class="campo" id="campo-municipio">
+              <label for="municipio">Seu município</label>
+              <input type="text" id="municipio" name="municipio" autocomplete="address-level2" required>
+              <span class="erro-msg" role="alert">Digite seu município.</span>
+            </div>
+
+            <div class="campo" id="campo-whatsapp">
+              <label for="whatsapp">Seu WhatsApp</label>
+              <input type="tel" id="whatsapp" name="whatsapp" inputmode="numeric"
+                     placeholder="(84) 90000-0000" autocomplete="tel" required>
+              <span class="erro-msg" role="alert">Digite um número válido com DDD.</span>
+            </div>
+
+            <button type="submit" class="btn btn-cta">
+              Entrar no time pelo WhatsApp
+              <i data-lucide="arrow-right" aria-hidden="true"></i>
+            </button>
+
+            <p class="form-nota">
+              Ao enviar, você abre uma conversa no WhatsApp oficial do TIME SV.
+              Seus dados não serão compartilhados com terceiros.
+            </p>
+          </form>
+        </div>
+
+        <div class="captacao-foto">
+          <!-- Foto oficial: senador de mãos abertas, em gesto de boas-vindas, PNG sem fundo (800x800) -->
+          <img src="assets/foto-sv-captacao.png" loading="lazy" data-cms="captacao.foto"
+            alt="Senador Styvenson Valentim de braços abertos, convidando a entrar no TIME SV"
+            width="800" height="800">
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         INSTAGRAM
+         ============================================================ -->
+    <section class="secao" aria-labelledby="titulo-insta">
+      <div class="container centro">
+        <h2 class="titulo-secao" id="titulo-insta" data-cms="insta.titulo">Fiscalização em tempo real</h2>
+        <p class="subtitulo-secao" data-cms="insta.sub">
+          Acompanhe no Instagram o dia a dia do mandato: votações, cobranças e prestação de contas.
+        </p>
+
+        <!-- PLACEHOLDERS estáticos — preparado para widget de feed posteriormente.
+             SUBSTITUIR cada item por <img> do post real ou integrar widget oficial. -->
+        <div class="insta-grid">
+          <a class="insta-item reveal" href="https://www.instagram.com/USUARIO_INSTAGRAM/" target="_blank" rel="noopener" aria-label="Ver post no Instagram">
+            <i data-lucide="instagram" aria-hidden="true"></i>
+          </a>
+          <a class="insta-item reveal" href="https://www.instagram.com/USUARIO_INSTAGRAM/" target="_blank" rel="noopener" aria-label="Ver post no Instagram">
+            <i data-lucide="instagram" aria-hidden="true"></i>
+          </a>
+          <a class="insta-item reveal" href="https://www.instagram.com/USUARIO_INSTAGRAM/" target="_blank" rel="noopener" aria-label="Ver post no Instagram">
+            <i data-lucide="instagram" aria-hidden="true"></i>
+          </a>
+          <a class="insta-item reveal" href="https://www.instagram.com/USUARIO_INSTAGRAM/" target="_blank" rel="noopener" aria-label="Ver post no Instagram">
+            <i data-lucide="instagram" aria-hidden="true"></i>
+          </a>
+          <a class="insta-item reveal" href="https://www.instagram.com/USUARIO_INSTAGRAM/" target="_blank" rel="noopener" aria-label="Ver post no Instagram">
+            <i data-lucide="instagram" aria-hidden="true"></i>
+          </a>
+          <a class="insta-item reveal" href="https://www.instagram.com/USUARIO_INSTAGRAM/" target="_blank" rel="noopener" aria-label="Ver post no Instagram">
+            <i data-lucide="instagram" aria-hidden="true"></i>
+          </a>
+          <a class="insta-item reveal" href="https://www.instagram.com/USUARIO_INSTAGRAM/" target="_blank" rel="noopener" aria-label="Ver post no Instagram">
+            <i data-lucide="instagram" aria-hidden="true"></i>
+          </a>
+          <a class="insta-item reveal" href="https://www.instagram.com/USUARIO_INSTAGRAM/" target="_blank" rel="noopener" aria-label="Ver post no Instagram">
+            <i data-lucide="instagram" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       RODAPÉ
+       ============================================================ -->
+  <footer class="rodape">
+    <div class="container">
+      <div class="rodape-grid">
+        <div class="rodape-logo">
+          <!-- Logo oficial em chip branco. Se for produzida uma versão própria
+               para fundo escuro, trocar o src e remover o chip no CSS (.rodape-logo img) -->
+          <img src="assets/logo-time-sv.png" alt="TIME SV" loading="lazy">
+          <p data-cms="rodape.frase">A política tem jeito. E o jeito é fazer certo, junto com você.</p>
+        </div>
+
+        <nav aria-label="O mandato">
+          <h3>O mandato</h3>
+          <ul>
+            <li><a href="#quem-e-o-sv">Quem é o SV</a></li>
+            <li><a href="#o-que-ja-fizemos">O que já fizemos</a></li>
+            <li><a href="#projetos">Projetos de lei</a></li>
+          </ul>
+        </nav>
+
+        <nav aria-label="Transparência">
+          <h3>Transparência</h3>
+          <ul>
+            <!-- SUBSTITUIR hrefs: links reais do portal de transparência do mandato -->
+            <li><a href="#">Recursos destinados</a></li>
+            <li><a href="#">Prestação de contas</a></li>
+            <li><a href="https://www25.senado.leg.br/" target="_blank" rel="noopener">Portal do Senado</a></li>
+          </ul>
+        </nav>
+
+        <nav aria-label="Comunicação">
+          <h3>Comunicação</h3>
+          <ul>
+            <li><a href="#noticias">Notícias</a></li>
+            <li><a href="#">Fotos</a></li><!-- SUBSTITUIR href -->
+            <li><a href="#">Vídeos</a></li><!-- SUBSTITUIR href -->
+          </ul>
+        </nav>
+
+        <div>
+          <h3>Contato</h3>
+          <ul>
+            <!-- SUBSTITUIR: e-mail e WhatsApp oficiais -->
+            <li><a href="mailto:contato@timesv.com.br">contato@timesv.com.br</a></li>
+            <li><a href="#some-se">Entrar no TIME SV</a></li>
+          </ul>
+          <div class="redes">
+            <!-- SUBSTITUIR hrefs pelas redes reais (editáveis pelo CMS) -->
+            <a href="#" aria-label="Instagram" data-cms="redes.instagram"><i data-lucide="instagram" aria-hidden="true"></i></a>
+            <a href="#" aria-label="Facebook" data-cms="redes.facebook"><i data-lucide="facebook" aria-hidden="true"></i></a>
+            <a href="#" aria-label="YouTube" data-cms="redes.youtube"><i data-lucide="youtube" aria-hidden="true"></i></a>
+            <a href="#" aria-label="X (Twitter)" data-cms="redes.x"><i data-lucide="twitter" aria-hidden="true"></i></a>
+            <a href="#" aria-label="TikTok" data-cms="redes.tiktok"><i data-lucide="music-2" aria-hidden="true"></i></a>
+            <a href="#" aria-label="WhatsApp" data-cms="redes.whatsapp"><i data-lucide="message-circle" aria-hidden="true"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           BLOCO LEGAL ELEITORAL — PLACEHOLDER OBRIGATÓRIO
+           Preencher ANTES de publicar, conforme legislação eleitoral vigente
+           (Lei nº 9.504/1997 e resoluções do TSE para o pleito).
+           ============================================================ -->
+      <div class="bloco-legal" role="contentinfo" data-cms="rodape.legal">
+        <strong>Informações legais (preencher antes da publicação):</strong><br>
+        Eleição [ANO] — [CARGO] — [NOME DO CANDIDATO] — [PARTIDO] — [COLIGAÇÃO/FEDERAÇÃO, se houver]<br>
+        CNPJ da campanha: [XX.XXX.XXX/XXXX-XX]<br>
+        Contratação e responsabilidade: [NOME/RAZÃO SOCIAL DO CONTRATANTE E CNPJ/CPF]<br>
+        Site produzido em conformidade com a legislação eleitoral vigente.
+      </div>
+
+      <div class="rodape-base">
+        <span>© <span id="ano-atual">2026</span> TIME SV — Todos os direitos reservados.</span>
+        <span>Feito com trabalho, do jeito certo.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Botão flutuante de WhatsApp (presente em toda a navegação) -->
+  <!-- SUBSTITUIR: número oficial no href gerado pelo JS (const NUMERO_WHATSAPP) -->
+  <a class="whats-flutuante" id="whats-flutuante" href="#" target="_blank" rel="noopener"
+     aria-label="Falar com o TIME SV no WhatsApp">
+    <i data-lucide="message-circle" aria-hidden="true"></i>
+  </a>
+
+  <script>
+  /* ==============================================================
+     TIME SV — JavaScript vanilla
+     Seções: config, ícones, header, menu mobile, contadores,
+             filtros, vídeos lazy, formulário/WhatsApp, reveal
+     ============================================================== */
+  (function () {
+    'use strict';
+
+    /* ------------------------------------------------------------
+       CONFIG
+       ------------------------------------------------------------ */
+    // SUBSTITUIR: número oficial do WhatsApp da campanha (formato internacional, só dígitos).
+    // Pode também ser definido pelo painel CMS (Configurações → WhatsApp), que tem prioridade.
+    var NUMERO_WHATSAPP = '5584000000000';
+    var MSG_PADRAO = 'Olá! Quero entrar no TIME SV.';
+    function numeroWhats() {
+      return (window.__CMS && window.__CMS.whatsapp) || NUMERO_WHATSAPP;
+    }
+
+    var reduzMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ------------------------------------------------------------
+       ÍCONES LUCIDE
+       ------------------------------------------------------------ */
+    window.addEventListener('load', function () {
+      if (window.lucide) { window.lucide.createIcons(); }
+    });
+
+    /* ------------------------------------------------------------
+       HEADER: sombra ao rolar
+       ------------------------------------------------------------ */
+    var header = document.getElementById('header');
+    window.addEventListener('scroll', function () {
+      header.classList.toggle('rolado', window.scrollY > 8);
+    }, { passive: true });
+
+    /* ------------------------------------------------------------
+       MENU MOBILE full-screen
+       ------------------------------------------------------------ */
+    var btnMenu = document.getElementById('btn-menu');
+    var menuMobile = document.getElementById('menu-mobile');
+
+    function alternarMenu(abrir) {
+      btnMenu.setAttribute('aria-expanded', String(abrir));
+      btnMenu.setAttribute('aria-label', abrir ? 'Fechar menu' : 'Abrir menu');
+      if (abrir) {
+        menuMobile.hidden = false;
+        requestAnimationFrame(function () { menuMobile.classList.add('aberto'); });
+        document.body.style.overflow = 'hidden';
+      } else {
+        menuMobile.classList.remove('aberto');
+        document.body.style.overflow = '';
+        // espera a transição antes de esconder da árvore de acessibilidade
+        setTimeout(function () { if (!menuMobile.classList.contains('aberto')) menuMobile.hidden = true; }, 320);
+      }
+    }
+
+    btnMenu.addEventListener('click', function () {
+      alternarMenu(btnMenu.getAttribute('aria-expanded') !== 'true');
+    });
+
+    // Fecha o menu ao clicar em qualquer link e com a tecla Esc
+    menuMobile.addEventListener('click', function (e) {
+      if (e.target.closest('a')) alternarMenu(false);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && btnMenu.getAttribute('aria-expanded') === 'true') {
+        alternarMenu(false);
+        btnMenu.focus();
+      }
+    });
+
+    /* ------------------------------------------------------------
+       CONTADORES ANIMADOS (Intersection Observer)
+       Lê data-valor / data-prefixo / data-sufixo.
+       Com prefers-reduced-motion, mostra o valor final direto.
+       ------------------------------------------------------------ */
+    function formatarNumero(n) {
+      return n.toLocaleString('pt-BR');
+    }
+
+    function animarContador(el) {
+      var alvo = parseFloat(el.getAttribute('data-valor')) || 0;
+      var prefixo = el.getAttribute('data-prefixo') || '';
+      var sufixo = el.getAttribute('data-sufixo') || '';
+      var duracao = 1600;
+
+      if (reduzMovimento || alvo === 0) {
+        el.textContent = prefixo + formatarNumero(alvo) + sufixo;
+        return;
+      }
+
+      var inicio = null;
+      function passo(ts) {
+        if (!inicio) inicio = ts;
+        var p = Math.min((ts - inicio) / duracao, 1);
+        var suave = 1 - Math.pow(1 - p, 3); // ease-out cúbico
+        el.textContent = prefixo + formatarNumero(Math.round(alvo * suave)) + sufixo;
+        if (p < 1) requestAnimationFrame(passo);
+      }
+      requestAnimationFrame(passo);
+    }
+
+    var contadores = document.querySelectorAll('[data-contador]');
+    if ('IntersectionObserver' in window) {
+      var obsContador = new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (entrada) {
+          if (entrada.isIntersecting) {
+            animarContador(entrada.target);
+            obsContador.unobserve(entrada.target);
+          }
+        });
+      }, { threshold: 0.4 });
+      contadores.forEach(function (c) { obsContador.observe(c); });
+    } else {
+      contadores.forEach(animarContador);
+    }
+
+    /* ------------------------------------------------------------
+       FILTRO DE ENTREGAS (sem reload)
+       ------------------------------------------------------------ */
+    var botoesFiltro = document.querySelectorAll('.filtro-btn');
+
+    botoesFiltro.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var filtro = btn.getAttribute('data-filtro');
+
+        botoesFiltro.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+        btn.setAttribute('aria-pressed', 'true');
+
+        // Consulta na hora do clique: cards adicionados pelo CMS também entram
+        document.querySelectorAll('.card-entrega').forEach(function (card) {
+          var mostrar = filtro === 'todos' || card.getAttribute('data-eixo') === filtro;
+          card.hidden = !mostrar;
+        });
+      });
+    });
+
+    /* ------------------------------------------------------------
+       VÍDEOS DO YOUTUBE — lazy load por fachada
+       O iframe só é criado no clique (protege LCP e privacidade)
+       ------------------------------------------------------------ */
+    document.querySelectorAll('.video-facade').forEach(function (facade) {
+      facade.addEventListener('click', function () {
+        var id = facade.getAttribute('data-youtube-id');
+        var iframe = document.createElement('iframe');
+        iframe.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?autoplay=1';
+        iframe.title = 'Vídeo do YouTube';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        facade.innerHTML = '';
+        facade.appendChild(iframe);
+      }, { once: true });
+    });
+
+    /* ------------------------------------------------------------
+       FORMULÁRIO DE CAPTAÇÃO
+       Máscara BR, validação e redirecionamento para wa.me
+       ------------------------------------------------------------ */
+    var form = document.getElementById('form-captacao');
+    var inputWhats = document.getElementById('whatsapp');
+
+    // Máscara de telefone BR: (99) 99999-9999
+    inputWhats.addEventListener('input', function () {
+      var d = inputWhats.value.replace(/\D/g, '').slice(0, 11);
+      var out = '';
+      if (d.length > 0) out = '(' + d.slice(0, 2);
+      if (d.length >= 3) out += ') ' + d.slice(2, 7);
+      if (d.length >= 8) out += '-' + d.slice(7);
+      inputWhats.value = out;
+    });
+
+    function validarCampo(idCampo, valido) {
+      document.getElementById(idCampo).classList.toggle('invalido', !valido);
+      return valido;
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      var nome = document.getElementById('nome').value.trim();
+      var municipio = document.getElementById('municipio').value.trim();
+      var digitos = inputWhats.value.replace(/\D/g, '');
+
+      var ok = true;
+      ok = validarCampo('campo-nome', nome.length >= 2) && ok;
+      ok = validarCampo('campo-municipio', municipio.length >= 2) && ok;
+      ok = validarCampo('campo-whatsapp', digitos.length >= 10) && ok;
+      if (!ok) return;
+
+      // Evento de conversão (dispara apenas se os scripts estiverem instalados)
+      if (typeof window.fbq === 'function') { window.fbq('track', 'Lead'); }
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'generate_lead', { event_category: 'captacao', event_label: municipio });
+      }
+
+      var mensagem = 'Olá! Quero entrar no TIME SV.\n'
+        + 'Nome: ' + nome + '\n'
+        + 'Município: ' + municipio + '\n'
+        + 'WhatsApp: ' + inputWhats.value;
+
+      window.open(
+        'https://wa.me/' + numeroWhats() + '?text=' + encodeURIComponent(mensagem),
+        '_blank',
+        'noopener'
+      );
+    });
+
+    // Botão flutuante de WhatsApp (o cms-runtime atualiza se houver número no painel)
+    document.getElementById('whats-flutuante').href =
+      'https://wa.me/' + numeroWhats() + '?text=' + encodeURIComponent(MSG_PADRAO);
+
+    /* ------------------------------------------------------------
+       ANIMAÇÕES DE ENTRADA (reveal ao scroll)
+       ------------------------------------------------------------ */
+    var reveals = document.querySelectorAll('.reveal');
+    if (!reduzMovimento && 'IntersectionObserver' in window) {
+      var obsReveal = new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (entrada) {
+          if (entrada.isIntersecting) {
+            entrada.target.classList.add('visivel');
+            obsReveal.unobserve(entrada.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      reveals.forEach(function (el) { obsReveal.observe(el); });
+    } else {
+      reveals.forEach(function (el) { el.classList.add('visivel'); });
+    }
+
+    /* ------------------------------------------------------------
+       ANO ATUAL NO RODAPÉ
+       ------------------------------------------------------------ */
+    document.getElementById('ano-atual').textContent = new Date().getFullYear();
+  })();
+  </script>
+</body>
+</html>

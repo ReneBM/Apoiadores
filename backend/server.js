@@ -15,6 +15,7 @@ const materiaisRoutes = require('./src/routes/materiais');
 const mensagensRoutes = require('./src/routes/mensagens');
 const chatRoutes = require('./src/routes/chat');
 const perfisRoutes = require('./src/routes/perfis');
+const cmsRoutes = require('./src/routes/cms');
 const logger = require('./src/utils/logger');
 
 const app = express();
@@ -38,7 +39,7 @@ app.use(helmet({
       baseUri: ["'self'"],
       objectSrc: ["'none'"],
       frameAncestors: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", 'https://unpkg.com'],
       styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
       fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
       imgSrc: ["'self'", 'data:', 'blob:', 'https:'],
@@ -101,6 +102,11 @@ const authLimiter = rateLimit({
   message: { error: 'Muitas tentativas de login. Tente novamente em 15 minutos.' },
 });
 
+// ── CMS ────────────────────────────────────────────────────────────────────
+// Montado ANTES do body parser global: o conteúdo das páginas (JSONB) passa
+// de 10kb, e o router do CMS define seu próprio express.json com 2mb.
+app.use('/api/cms', cmsRoutes);
+
 // ── Body Parsing ───────────────────────────────────────────────────────────
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
@@ -133,6 +139,9 @@ const fs = require('fs');
 
 // Servir arquivos de uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Site de campanha (TIME SV) + painel CMS em /campanha e /campanha/admin
+app.use('/campanha', express.static(path.join(__dirname, '../site-campanha')));
 
 // Servir arquivos estáticos do Frontend (se compilado)
 const distPath = path.join(__dirname, '../frontend/dist');

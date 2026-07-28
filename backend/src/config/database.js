@@ -208,6 +208,23 @@ const runMockQuery = async (text, params = []) => {
     return { rows: [] };
   }
 
+  // UPDATE users SET reset_password_code = $1, reset_password_expires = $2 WHERE id = $3
+  // ou UPDATE users SET reset_password_code = NULL, reset_password_expires = NULL WHERE id = $1
+  if (normalized.includes('update users set reset_password_code =')) {
+    const id = params[params.length - 1];
+    const user = mockStore.users.find(u => u.id === id);
+    if (user) {
+      if (params.length === 3) {
+        user.reset_password_code = params[0];
+        user.reset_password_expires = params[1];
+      } else {
+        user.reset_password_code = null;
+        user.reset_password_expires = null;
+      }
+    }
+    return { rows: [] };
+  }
+
   // INSERT INTO audit_log
   if (normalized.includes('insert into audit_log')) {
     const [id, user_id, acao, entidade, entidade_id, detalhes, ip] = params;

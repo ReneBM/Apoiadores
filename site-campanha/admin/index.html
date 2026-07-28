@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Painel TIME SV — CMS</title>
+  <link rel="icon" type="image/png" href="../assets/logo-time-sv.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script defer src="https://unpkg.com/lucide@0.454.0/dist/umd/lucide.min.js"></script>
+
+  <style>
+    /* ============ BASE ============ */
+    :root {
+      --azul-claro: #7CB9F7; --azul-royal: #2B5BD7; --azul-profundo: #1A3E9E;
+      --azul-noite: #12275C; --ambar: #FFC55A; --laranja: #F5A623;
+      --fundo: #F4F6FA; --borda: #E3E8F2; --texto: #26314F; --suave: #5A6785;
+      --verde: #1E9E5A; --vermelho: #D64545;
+      --raio: 12px; --sombra: 0 6px 22px rgba(26,62,158,.10);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Inter, system-ui, sans-serif; background: var(--fundo); color: var(--texto); font-size: 14px; }
+    h1, h2, h3 { font-family: "Barlow Condensed", sans-serif; text-transform: uppercase; letter-spacing: .01em; }
+    button { font: inherit; cursor: pointer; }
+    input, select, textarea { font: inherit; color: var(--texto); }
+    a { color: var(--azul-royal); }
+    [hidden] { display: none !important; }
+    :focus-visible { outline: 2px solid var(--laranja); outline-offset: 2px; }
+
+    .campo { display: grid; gap: 5px; margin-bottom: 12px; }
+    .campo label { font-weight: 600; font-size: .82rem; color: var(--suave); }
+    .campo input, .campo select, .campo textarea {
+      padding: 9px 12px; border: 1.5px solid var(--borda); border-radius: 8px; background: #fff; width: 100%;
+    }
+    .campo textarea { min-height: 80px; resize: vertical; }
+    .campo input:focus, .campo textarea:focus, .campo select:focus { outline: none; border-color: var(--azul-royal); }
+
+    .btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 16px; border-radius: 8px;
+           border: 0; font-weight: 600; font-size: .88rem; transition: filter .15s, transform .1s; }
+    .btn:hover { filter: brightness(1.06); }
+    .btn:active { transform: translateY(1px); }
+    .btn-azul { background: var(--azul-royal); color: #fff; }
+    .btn-cta { background: linear-gradient(100deg, var(--ambar), var(--laranja)); color: var(--azul-noite); font-weight: 700; }
+    .btn-claro { background: #fff; border: 1.5px solid var(--borda); color: var(--texto); }
+    .btn-perigo { background: #FDECEC; color: var(--vermelho); }
+    .btn-mini { padding: 6px 10px; font-size: .8rem; }
+    .btn svg { width: 15px; height: 15px; }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: .74rem; font-weight: 700; text-transform: uppercase; }
+    .badge-publicada { background: #E3F4E8; color: #17693A; }
+    .badge-rascunho { background: #FFF3DC; color: #8A5B00; }
+    .badge-agendada { background: #E7EEFC; color: var(--azul-profundo); }
+
+    /* ============ LOGIN ============ */
+    #tela-login { min-height: 100vh; display: grid; place-items: center;
+      background: linear-gradient(150deg, var(--azul-profundo), var(--azul-noite)); padding: 20px; }
+    .login-card { background: #fff; border-radius: 16px; padding: 36px 32px; width: min(400px, 100%); box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+    .login-card img { height: 44px; margin: 0 auto 8px; display: block; }
+    .login-card h1 { text-align: center; font-size: 1.5rem; margin-bottom: 4px; }
+    .login-card .sub { text-align: center; color: var(--suave); margin-bottom: 22px; font-size: .88rem; }
+    .login-erro { background: #FDECEC; color: var(--vermelho); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; font-size: .85rem; }
+
+    /* ============ LAYOUT ============ */
+    /* Sem transition em grid-template-columns: a animação de colunas de grid
+       pode congelar no meio (o painel ficava preso em 68px ao expandir). */
+    #app { display: grid; grid-template-columns: 232px 1fr; min-height: 100vh; }
+    .sidebar { background: linear-gradient(170deg, var(--azul-profundo), var(--azul-noite)); color: #C9D7F2;
+      padding: 20px 14px; display: flex; flex-direction: column; gap: 4px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .btn-recolher { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); color: #C9D7F2;
+      border-radius: 9px; padding: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+    .btn-recolher:hover { background: rgba(255,255,255,.16); }
+    .btn-recolher svg { width: 17px; height: 17px; }
+
+    /* Sidebar recolhida: só ícones */
+    #app.sidebar-fechada { grid-template-columns: 68px 1fr; }
+    #app.sidebar-fechada .sidebar { padding: 20px 10px; }
+    #app.sidebar-fechada .sidebar .logo,
+    #app.sidebar-fechada .sidebar .rotulo-item,
+    #app.sidebar-fechada .rodape-side .nome,
+    #app.sidebar-fechada .rodape-side #usuario-papel { display: none; }
+    #app.sidebar-fechada .sidebar a.item { justify-content: center; padding: 11px 0; }
+    #app.sidebar-fechada .rodape-side { text-align: center; }
+    .sidebar .logo { background: #fff; border-radius: 10px; padding: 8px 12px; margin-bottom: 18px; }
+    .sidebar .logo img { height: 30px; display: block; margin: 0 auto; }
+    .sidebar a.item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 9px;
+      color: #C9D7F2; text-decoration: none; font-weight: 500; font-size: .9rem; }
+    .sidebar a.item:hover { background: rgba(255,255,255,.08); }
+    .sidebar a.item.ativo { background: var(--azul-royal); color: #fff; }
+    .sidebar a.item svg { width: 17px; height: 17px; }
+    .sidebar .rodape-side { margin-top: auto; border-top: 1px solid rgba(255,255,255,.14); padding-top: 12px; font-size: .8rem; }
+    .sidebar .rodape-side .nome { color: #fff; font-weight: 600; }
+    .sidebar .rodape-side button { background: none; border: 0; color: var(--ambar); font-size: .8rem; padding: 4px 0; }
+
+    main { padding: 26px 30px; max-width: 1280px; width: 100%; }
+    .cabecalho-view { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 22px; flex-wrap: wrap; }
+    .cabecalho-view h1 { font-size: 1.75rem; }
+    .cabecalho-view .sub { color: var(--suave); font-size: .88rem; margin-top: 2px; }
+
+    .card { background: #fff; border-radius: var(--raio); box-shadow: var(--sombra); padding: 20px; }
+    .grade-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-bottom: 20px; }
+    .stat { background: #fff; border-radius: var(--raio); box-shadow: var(--sombra); padding: 18px; }
+    .stat .icone { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center;
+      background: linear-gradient(120deg, var(--azul-claro), var(--azul-royal)); color: #fff; margin-bottom: 10px; }
+    .stat .icone svg { width: 19px; height: 19px; }
+    .stat .valor { font-family: "Barlow Condensed"; font-size: 1.9rem; font-weight: 800; line-height: 1; }
+    .stat .rotulo { color: var(--suave); font-size: .8rem; margin-top: 4px; }
+
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; font-size: .74rem; text-transform: uppercase; letter-spacing: .05em; color: var(--suave); padding: 8px 10px; border-bottom: 1.5px solid var(--borda); }
+    td { padding: 11px 10px; border-bottom: 1px solid var(--borda); vertical-align: middle; }
+    tr:last-child td { border-bottom: 0; }
+    .acoes-linha { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    /* ============ EDITOR ============ */
+    .editor-layout { display: grid; grid-template-columns: 1fr 320px; gap: 16px; align-items: start; }
+    .editor-toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; background: #fff;
+      border-radius: var(--raio); box-shadow: var(--sombra); padding: 10px 14px; margin-bottom: 14px; }
+    .editor-toolbar .sep { width: 1px; height: 24px; background: var(--borda); margin: 0 4px; }
+    .editor-toolbar .status-salvo { font-size: .8rem; color: var(--suave); margin-left: auto; }
+    .devices button { background: #fff; border: 1.5px solid var(--borda); padding: 7px 10px; border-radius: 8px; }
+    .devices button.ativo { background: var(--azul-royal); border-color: var(--azul-royal); color: #fff; }
+    .devices button svg { width: 15px; height: 15px; display: block; }
+
+    .quadro-iframe { background: #fff; border-radius: var(--raio); box-shadow: var(--sombra); padding: 14px; display: flex; justify-content: center; overflow: auto; }
+    #iframe-site { border: 1px solid var(--borda); border-radius: 8px; width: 100%; height: calc(100vh - 210px); min-height: 480px; background: #fff; transition: width .25s ease; }
+
+    .painel-props { background: #fff; border-radius: var(--raio); box-shadow: var(--sombra); padding: 18px;
+      position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto; }
+    .painel-props h3 { font-size: 1.05rem; margin-bottom: 4px; }
+    .painel-props .chave { font-size: .74rem; color: var(--suave); background: var(--fundo); border-radius: 6px; padding: 3px 8px; display: inline-block; margin-bottom: 14px; word-break: break-all; }
+    .painel-vazio { color: var(--suave); text-align: center; padding: 40px 10px; font-size: .88rem; }
+    .painel-vazio svg { width: 34px; height: 34px; margin-bottom: 10px; color: var(--azul-claro); }
+    .grupo-estilo { border-top: 1px solid var(--borda); margin-top: 14px; padding-top: 14px; }
+    .grupo-estilo .titulo-grupo { font-weight: 700; font-size: .8rem; text-transform: uppercase; color: var(--suave); margin-bottom: 10px; }
+    .linha-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    /* ============ MÍDIA ============ */
+    .grade-midia { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+    .item-midia { background: #fff; border-radius: 10px; box-shadow: var(--sombra); overflow: hidden; cursor: pointer; border: 2px solid transparent; }
+    .item-midia:hover { border-color: var(--azul-royal); }
+    .item-midia .thumb { height: 110px; background: var(--fundo) center/cover no-repeat; display: grid; place-items: center; color: var(--suave); }
+    .item-midia .thumb svg { width: 28px; height: 28px; }
+    .item-midia .info { padding: 8px 10px; font-size: .76rem; }
+    .item-midia .nome { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item-midia .meta { color: var(--suave); }
+
+    /* ============ MODAL / TOAST ============ */
+    .modal-fundo { position: fixed; inset: 0; background: rgba(18,39,92,.55); z-index: 60; display: grid; place-items: center; padding: 20px; }
+    .modal { background: #fff; border-radius: 14px; padding: 24px; width: min(560px, 100%); max-height: 88vh; overflow-y: auto; box-shadow: 0 24px 70px rgba(0,0,0,.35); }
+    .modal.larga { width: min(860px, 100%); }
+    .modal h2 { font-size: 1.3rem; margin-bottom: 16px; }
+    .modal .acoes { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+
+    #toasts { position: fixed; right: 18px; bottom: 18px; z-index: 90; display: grid; gap: 8px; }
+    .toast { background: var(--azul-noite); color: #fff; padding: 12px 18px; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.3); font-size: .87rem; animation: subir .25s ease; }
+    .toast.erro { background: var(--vermelho); }
+    .toast.ok { background: var(--verde); }
+    @keyframes subir { from { opacity: 0; transform: translateY(10px); } }
+
+    @media (max-width: 1000px) {
+      #app, #app.sidebar-fechada { grid-template-columns: 1fr; }
+      .btn-recolher { display: none; } /* no mobile a sidebar já é compacta */
+      #app.sidebar-fechada .sidebar .logo, #app.sidebar-fechada .sidebar .rotulo-item,
+      #app.sidebar-fechada .rodape-side .nome, #app.sidebar-fechada .rodape-side #usuario-papel { display: revert; }
+      .sidebar { position: static; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; }
+      .sidebar .rodape-side { margin: 0 0 0 auto; border: 0; padding: 0; }
+      .editor-layout { grid-template-columns: 1fr; }
+      .painel-props { position: static; max-height: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ LOGIN ============ -->
+  <div id="tela-login">
+    <form class="login-card" id="form-login">
+      <img src="../assets/logo-time-sv.png" alt="TIME SV">
+      <h1>Painel do site</h1>
+      <p class="sub">Entre com sua conta de administrador ou editor</p>
+      <div class="login-erro" id="login-erro" hidden></div>
+      <div class="campo"><label for="login-email">E-mail</label>
+        <input type="email" id="login-email" autocomplete="username" required></div>
+      <div class="campo"><label for="login-senha">Senha</label>
+        <input type="password" id="login-senha" autocomplete="current-password" required></div>
+      <button class="btn btn-cta" style="width:100%; justify-content:center;" type="submit">Entrar</button>
+    </form>
+  </div>
+
+  <!-- ============ APP ============ -->
+  <div id="app" hidden>
+    <nav class="sidebar">
+      <div class="logo"><img src="../assets/logo-time-sv.png" alt="TIME SV"></div>
+      <button class="btn-recolher" id="btn-recolher" title="Recolher menu" aria-label="Recolher ou expandir menu">
+        <i data-lucide="panel-left-close"></i>
+      </button>
+      <a class="item" href="#/dashboard" data-rota="dashboard" title="Dashboard"><i data-lucide="layout-dashboard"></i> <span class="rotulo-item">Dashboard</span></a>
+      <a class="item" href="#/paginas" data-rota="paginas" title="Páginas"><i data-lucide="files"></i> <span class="rotulo-item">Páginas</span></a>
+      <a class="item" href="#/editor" data-rota="editor" title="Editor visual"><i data-lucide="mouse-pointer-square-dashed"></i> <span class="rotulo-item">Editor visual</span></a>
+      <a class="item" href="#/midia" data-rota="midia" title="Biblioteca de mídia"><i data-lucide="image"></i> <span class="rotulo-item">Biblioteca de mídia</span></a>
+      <a class="item" href="#/historico" data-rota="historico" title="Histórico"><i data-lucide="history"></i> <span class="rotulo-item">Histórico</span></a>
+      <a class="item" href="#/usuarios" data-rota="usuarios" title="Usuários"><i data-lucide="users"></i> <span class="rotulo-item">Usuários</span></a>
+      <a class="item" href="#/config" data-rota="config" title="Configurações"><i data-lucide="settings"></i> <span class="rotulo-item">Configurações</span></a>
+      <div class="rodape-side">
+        <div class="nome" id="usuario-nome">—</div>
+        <div id="usuario-papel" style="opacity:.8"></div>
+        <button id="btn-sair">Sair do painel</button>
+      </div>
+    </nav>
+    <main id="conteudo"></main>
+  </div>
+
+  <div id="modais"></div>
+  <div id="toasts"></div>
+
+  <script>
+  (function () {
+    'use strict';
+
+    /* ══════════════ INFRA ══════════════ */
+    var API = '/api'; // mesmo domínio do backend
+    var tokens = {
+      get access() { return localStorage.getItem('cms_access'); },
+      set access(v) { v ? localStorage.setItem('cms_access', v) : localStorage.removeItem('cms_access'); },
+      get refresh() { return localStorage.getItem('cms_refresh'); },
+      set refresh(v) { v ? localStorage.setItem('cms_refresh', v) : localStorage.removeItem('cms_refresh'); }
+    };
+    var usuario = JSON.parse(localStorage.getItem('cms_usuario') || 'null');
+
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+
+    function toast(msg, tipo) {
+      var t = document.createElement('div');
+      t.className = 'toast ' + (tipo || '');
+      t.textContent = msg;
+      document.getElementById('toasts').appendChild(t);
+      setTimeout(function () { t.remove(); }, 4000);
+    }
+
+    async function api(caminho, opts) {
+      opts = opts || {};
+      opts.headers = opts.headers || {};
+      if (tokens.access) opts.headers['Authorization'] = 'Bearer ' + tokens.access;
+      if (opts.body && !(opts.body instanceof FormData)) {
+        opts.headers['Content-Type'] = 'application/json';
+        opts.body = JSON.stringify(opts.body);
+      }
+      var r = await fetch(API + caminho, opts);
+      if (r.status === 401 && tokens.refresh && !opts._retry) {
+        var rr = await fetch(API + '/auth/refresh', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ refreshToken: tokens.refresh })
+        });
+        if (rr.ok) {
+          var nt = await rr.json();
+          tokens.access = nt.accessToken; tokens.refresh = nt.refreshToken;
+          opts._retry = true;
+          delete opts.headers['Authorization'];
+          return api(caminho, opts);
+        }
+        sair();
+        throw new Error('Sessão expirada. Entre novamente.');
+      }
+      if (r.status === 204) return null;
+      var dados = null;
+      try { dados = await r.json(); } catch (e) { /* respostas sem corpo */ }
+      if (!r.ok) throw new Error((dados && dados.error) || ('Erro ' + r.status));
+      return dados;
+    }
+
+    function icones() { if (window.lucide) window.lucide.createIcons(); }
+
+    /* ══════════════ AUTENTICAÇÃO ══════════════ */
+    var telaLogin = document.getElementById('tela-login');
+    var app = document.getElementById('app');
+
+    function entrarNoApp() {
+      telaLogin.hidden = true;
+      app.hidden = false;
+      document.getElementById('usuario-nome').textContent = usuario.nome;
+      var papeis = { admin: 'Super administrador', coordenador: 'Editor', multiplicador: 'Visualizador' };
+      document.getElementById('usuario-papel').textContent = papeis[usuario.role] || usuario.role;
+      navegar();
+    }
+
+    function sair() {
+      tokens.access = null; tokens.refresh = null;
+      localStorage.removeItem('cms_usuario');
+      usuario = null;
+      app.hidden = true;
+      telaLogin.hidden = false;
+    }
+
+    document.getElementById('form-login').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var erro = document.getElementById('login-erro');
+      erro.hidden = true;
+      try {
+        var d = await api('/auth/login', {
+          method: 'POST',
+          body: { email: document.getElementById('login-email').value.trim(),
+                  senha: document.getElementById('login-senha').value }
+        });
+        tokens.access = d.accessToken; tokens.refresh = d.refreshToken;
+        usuario = d.user;
+        localStorage.setItem('cms_usuario', JSON.stringify(d.user));
+        entrarNoApp();
+      } catch (err) {
+        erro.textContent = err.message;
+        erro.hidden = false;
+      }
+    });
+
+    document.getElementById('btn-sair').addEventListener('click', sair);
+
+    // ── Sidebar recolhível (estado lembrado entre sessões) ──
+    var btnRecolher = document.getElementById('btn-recolher');
+    function aplicarSidebar(fechada) {
+      app.classList.toggle('sidebar-fechada', fechada);
+      btnRecolher.title = fechada ? 'Expandir menu' : 'Recolher menu';
+      btnRecolher.innerHTML = '<i data-lucide="' + (fechada ? 'panel-left-open' : 'panel-left-close') + '"></i>';
+      icones();
+    }
+    btnRecolher.addEventListener('click', function () {
+      var fechada = !app.classList.contains('sidebar-fechada');
+      localStorage.setItem('cms_sidebar_fechada', fechada ? '1' : '');
+      aplicarSidebar(fechada);
+    });
+    if (localStorage.getItem('cms_sidebar_fechada') === '1') aplicarSidebar(true);
+
+    var somenteLeitura = function () { return usuario && usuario.role === 'multiplicador'; };
+
+    /* ══════════════ ROTEADOR ══════════════ */
+    var conteudo = document.getElementById('conteudo');
+    var vistas = {};
+
+    function navegar() {
+      var hash = location.hash.replace('#/', '') || 'dashboard';
+      var partes = hash.split('/');
+      var rota = partes[0];
+      if (!vistas[rota]) rota = 'dashboard';
+      document.querySelectorAll('.sidebar a.item').forEach(function (a) {
+        a.classList.toggle('ativo', a.getAttribute('data-rota') === rota);
+      });
+      vistas[rota](partes.slice(1));
+    }
+    window.addEventListener('hashchange', function () { if (usuario) navegar(); });
+
+    function fmtData(d) {
+      if (!d) return '—';
+      return new Date(d).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
+    }
+    function fmtBytes(n) {
+      if (!n) return '';
+      return n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.round(n / 1024) + ' KB';
+    }
+
+    /* ══════════════ MODAL ══════════════ */
+    function modal(html, larga) {
+      var fundo = document.createElement('div');
+      fundo.className = 'modal-fundo';
+      fundo.innerHTML = '<div class="modal ' + (larga ? 'larga' : '') + '">' + html + '</div>';
+      fundo.addEventListener('click', function (e) { if (e.target === fundo) fundo.remove(); });
+      document.getElementById('modais').appendChild(fundo);
+      icones();
+      return fundo;
+    }
+
+    /* ══════════════ DASHBOARD ══════════════ */
+    vistas.dashboard = async function () {
+      conteudo.innerHTML = '<div class="cabecalho-view"><div><h1>Dashboard</h1>' +
+        '<p class="sub">Visão geral do site e das últimas atividades</p></div>' +
+        '<a class="btn btn-cta" href="#/editor"><i data-lucide="pencil-ruler"></i> Abrir editor visual</a></div>' +
+        '<div id="dash-corpo"><p style="color:var(--suave)">Carregando…</p></div>';
+      icones();
+      try {
+        var d = await api('/cms/dashboard');
+        var stats = [
+          ['activity', d.acessos.total, 'Acessos totais'],
+          ['trending-up', d.acessos.semana, 'Acessos (7 dias)'],
+          ['users', d.visitantesUnicos, 'Visitantes únicos'],
+          ['file-check', d.paginas.publicadas, 'Páginas publicadas'],
+          ['file-clock', d.paginas.rascunhos, 'Rascunhos'],
+          ['user-check', d.usuarios, 'Usuários ativos']
+        ];
+        var html = '<div class="grade-stats">' + stats.map(function (s) {
+          return '<div class="stat"><div class="icone"><i data-lucide="' + s[0] + '"></i></div>' +
+                 '<div class="valor">' + (s[1] != null ? Number(s[1]).toLocaleString('pt-BR') : '—') + '</div>' +
+                 '<div class="rotulo">' + s[2] + '</div></div>';
+        }).join('') + '</div>';
+
+        html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px">';
+        html += '<div class="card"><h3 style="margin-bottom:10px">Alterações recentes</h3><table><tbody>' +
+          (d.alteracoesRecentes.length ? d.alteracoesRecentes.map(function (a) {
+            return '<tr><td><strong>' + esc(a.usuario_nome || '—') + '</strong><br><span style="color:var(--suave)">' +
+              esc(a.acao.replace(/_/g, ' ')) + ' · ' + esc(a.entidade) + '</span></td>' +
+              '<td style="text-align:right;color:var(--suave);white-space:nowrap">' + fmtData(a.criado_em) + '</td></tr>';
+          }).join('') : '<tr><td style="color:var(--suave)">Nenhuma alteração registrada ainda.</td></tr>') +
+          '</tbody></table></div>';
+        html += '<div class="card"><h3 style="margin-bottom:10px">Últimas publicações</h3><table><tbody>' +
+          (d.publicacoesRecentes.length ? d.publicacoesRecentes.map(function (p) {
+            return '<tr><td><strong>' + esc(p.titulo) + '</strong><br><span style="color:var(--suave)">por ' +
+              esc(p.autor_nome || '—') + '</span></td>' +
+              '<td style="text-align:right;color:var(--suave);white-space:nowrap">' + fmtData(p.criado_em) + '</td></tr>';
+          }).join('') : '<tr><td style="color:var(--suave)">Nada publicado pelo painel ainda.</td></tr>') +
+          '</tbody></table></div></div>';
+
+        document.getElementById('dash-corpo').innerHTML = html;
+        icones();
+      } catch (err) {
+        document.getElementById('dash-corpo').innerHTML = '<div class="card">Erro ao carregar: ' + esc(err.message) + '</div>';
+      }
+    };
+
+    /* ══════════════ PÁGINAS ══════════════ */
+    vistas.paginas = async function () {
+      conteudo.innerHTML = '<div class="cabecalho-view"><div><h1>Páginas</h1>' +
+        '<p class="sub">Crie, publique e organize as páginas do site</p></div>' +
+        (somenteLeitura() ? '' : '<button class="btn btn-azul" id="btn-nova-pagina"><i data-lucide="plus"></i> Nova página</button>') +
+        '</div><div class="card" id="tabela-paginas">Carregando…</div>';
+      icones();
+      if (!somenteLeitura()) {
+        document.getElementById('btn-nova-pagina').addEventListener('click', function () { modalPagina(null); });
+      }
+      carregarPaginas();
+    };
+
+    async function carregarPaginas() {
+      try {
+        var paginas = await api('/cms/paginas');
+        var alvo = document.getElementById('tabela-paginas');
+        if (!alvo) return;
+        alvo.innerHTML = '<table><thead><tr><th>Página</th><th>Slug</th><th>Status</th><th>Atualizada</th><th>Ações</th></tr></thead><tbody>' +
+          paginas.map(function (p) {
+            var badge = '<span class="badge badge-' + p.status + '">' + p.status + '</span>' +
+              (p.status === 'agendada' && p.publicar_em ? '<br><small style="color:var(--suave)">' + fmtData(p.publicar_em) + '</small>' : '');
+            return '<tr><td><strong>' + esc(p.titulo) + '</strong><br><small style="color:var(--suave)">' + esc(p.descricao || '') + '</small></td>' +
+              '<td><code>/' + esc(p.slug) + '</code></td><td>' + badge + '</td>' +
+              '<td style="color:var(--suave)">' + fmtData(p.updated_at) + '</td>' +
+              '<td><div class="acoes-linha">' +
+              '<a class="btn btn-claro btn-mini" href="#/editor/' + p.id + '" title="Editor visual"><i data-lucide="pencil-ruler"></i></a>' +
+              (somenteLeitura() ? '' :
+                '<button class="btn btn-claro btn-mini" data-acao="editar" data-id="' + p.id + '" title="Configurar / SEO"><i data-lucide="settings-2"></i></button>' +
+                '<button class="btn btn-claro btn-mini" data-acao="duplicar" data-id="' + p.id + '" title="Duplicar"><i data-lucide="copy"></i></button>' +
+                (p.status === 'publicada'
+                  ? '<button class="btn btn-claro btn-mini" data-acao="despublicar" data-id="' + p.id + '" title="Despublicar"><i data-lucide="eye-off"></i></button>'
+                  : '<button class="btn btn-claro btn-mini" data-acao="publicar" data-id="' + p.id + '" title="Publicar"><i data-lucide="rocket"></i></button>') +
+                (usuario.role === 'admin' && p.slug !== 'home'
+                  ? '<button class="btn btn-perigo btn-mini" data-acao="excluir" data-id="' + p.id + '" title="Excluir"><i data-lucide="trash-2"></i></button>' : '')) +
+              '</div></td></tr>';
+          }).join('') + '</tbody></table>';
+        icones();
+
+        alvo.querySelectorAll('button[data-acao]').forEach(function (b) {
+          b.addEventListener('click', async function () {
+            var id = b.getAttribute('data-id'), acao = b.getAttribute('data-acao');
+            var p = paginas.find(function (x) { return x.id === id; });
+            try {
+              if (acao === 'editar') return modalPagina(p);
+              if (acao === 'duplicar') { await api('/cms/paginas/' + id + '/duplicar', { method: 'POST' }); toast('Página duplicada.', 'ok'); }
+              if (acao === 'publicar') { await api('/cms/paginas/' + id + '/publicar', { method: 'POST', body: {} }); toast('Página publicada.', 'ok'); }
+              if (acao === 'despublicar') { await api('/cms/paginas/' + id + '/despublicar', { method: 'POST' }); toast('Página despublicada.', 'ok'); }
+              if (acao === 'excluir') {
+                if (!confirm('Excluir a página "' + p.titulo + '"? Essa ação não pode ser desfeita.')) return;
+                await api('/cms/paginas/' + id, { method: 'DELETE' }); toast('Página excluída.', 'ok');
+              }
+              carregarPaginas();
+            } catch (err) { toast(err.message, 'erro'); }
+          });
+        });
+      } catch (err) {
+        var el = document.getElementById('tabela-paginas');
+        if (el) el.innerHTML = 'Erro: ' + esc(err.message);
+      }
+    }
+
+    function modalPagina(p) {
+      var seo = (p && p.seo) || {};
+      var m = modal(
+        '<h2>' + (p ? 'Configurar página' : 'Nova página') + '</h2>' +
+        '<div class="linha-2"><div class="campo"><label>Título</label><input id="pg-titulo" value="' + esc(p ? p.titulo : '') + '"></div>' +
+        '<div class="campo"><label>Slug (URL amigável)</label><input id="pg-slug" value="' + esc(p ? p.slug : '') + '" ' + (p && p.slug === 'home' ? 'disabled' : '') + '></div></div>' +
+        '<div class="campo"><label>Descrição</label><input id="pg-desc" value="' + esc(p ? p.descricao : '') + '"></div>' +
+        '<div class="campo"><label>Categoria</label><input id="pg-cat" value="' + esc(p ? p.categoria : 'geral') + '"></div>' +
+        '<h2 style="font-size:1rem;margin-top:8px">SEO</h2>' +
+        '<div class="campo"><label>Título SEO (aba do navegador / Google)</label><input id="pg-seo-titulo" value="' + esc(seo.title || '') + '"></div>' +
+        '<div class="campo"><label>Descrição SEO</label><textarea id="pg-seo-desc">' + esc(seo.description || '') + '</textarea></div>' +
+        '<div class="campo"><label>Imagem de compartilhamento (URL — 1200x630)</label><input id="pg-seo-og" value="' + esc(seo.og_image || '') + '" placeholder="Escolha na Biblioteca de mídia e cole a URL"></div>' +
+        (p ? '<div class="campo"><label>Agendar publicação (opcional)</label><input type="datetime-local" id="pg-agendar"></div>' : '') +
+        '<div class="acoes"><button class="btn btn-claro" data-fechar>Cancelar</button>' +
+        (p ? '<button class="btn btn-cta" id="pg-btn-agendar" title="Publica o conteúdo atual no horário agendado">Agendar</button>' : '') +
+        '<button class="btn btn-azul" id="pg-salvar">Salvar</button></div>'
+      );
+      m.querySelector('[data-fechar]').addEventListener('click', function () { m.remove(); });
+
+      m.querySelector('#pg-salvar').addEventListener('click', async function () {
+        var corpo = {
+          titulo: m.querySelector('#pg-titulo').value.trim(),
+          slug: m.querySelector('#pg-slug').value.trim(),
+          descricao: m.querySelector('#pg-desc').value.trim(),
+          categoria: m.querySelector('#pg-cat').value.trim(),
+          seo: {
+            title: m.querySelector('#pg-seo-titulo').value.trim(),
+            description: m.querySelector('#pg-seo-desc').value.trim(),
+            og_image: m.querySelector('#pg-seo-og').value.trim()
+          }
+        };
+        try {
+          if (p) await api('/cms/paginas/' + p.id, { method: 'PUT', body: corpo });
+          else await api('/cms/paginas', { method: 'POST', body: corpo });
+          toast('Página salva.', 'ok'); m.remove(); carregarPaginas();
+        } catch (err) { toast(err.message, 'erro'); }
+      });
+
+      var btnAg = m.querySelector('#pg-btn-agendar');
+      if (btnAg) btnAg.addEventListener('click', async function () {
+        var quando = m.querySelector('#pg-agendar').value;
+        if (!quando) return toast('Escolha data e hora para agendar.', 'erro');
+        try {
+          await api('/cms/paginas/' + p.id + '/publicar', { method: 'POST', body: { agendarPara: new Date(quando).toISOString() } });
+          toast('Publicação agendada.', 'ok'); m.remove(); carregarPaginas();
+        } catch (err) { toast(err.message, 'erro'); }
+      });
+    }
+
+    /* ══════════════ EDITOR VISUAL ══════════════ */
+    var ed = null; // estado do editor aberto
+
+    vistas.editor = async function (args) {
+      var paginas = await api('/cms/paginas').catch(function () { return []; });
+      var pagina = args[0] ? paginas.find(function (p) { return p.id === args[0]; }) : paginas.find(function (p) { return p.slug === 'home'; });
+      if (!pagina) { conteudo.innerHTML = '<div class="card">Página não encontrada.</div>'; return; }
+
+      ed = {
+        pagina: pagina, draft: {}, undo: [], redo: [],
+        chaveSel: null, timerSave: null, sujo: false
+      };
+
+      conteudo.innerHTML =
+        '<div class="editor-toolbar">' +
+        '<a class="btn btn-claro btn-mini" href="#/paginas"><i data-lucide="arrow-left"></i></a>' +
+        '<strong style="font-family:\'Barlow Condensed\';font-size:1.1rem;text-transform:uppercase">' + esc(pagina.titulo) + '</strong>' +
+        '<span class="badge badge-' + pagina.status + '">' + pagina.status + '</span>' +
+        '<span class="sep"></span>' +
+        '<span class="devices">' +
+        '<button data-dev="100%" class="ativo" title="Desktop"><i data-lucide="monitor"></i></button>' +
+        '<button data-dev="768px" title="Tablet"><i data-lucide="tablet"></i></button>' +
+        '<button data-dev="390px" title="Celular"><i data-lucide="smartphone"></i></button></span>' +
+        '<span class="sep"></span>' +
+        '<button class="btn btn-claro btn-mini" id="ed-undo" title="Desfazer" disabled><i data-lucide="undo-2"></i></button>' +
+        '<button class="btn btn-claro btn-mini" id="ed-redo" title="Refazer" disabled><i data-lucide="redo-2"></i></button>' +
+        '<button class="btn btn-claro btn-mini" id="ed-descartar" title="Descartar rascunho e voltar ao publicado"><i data-lucide="rotate-ccw"></i> Descartar</button>' +
+        '<span class="status-salvo" id="ed-status">Carregando conteúdo…</span>' +
+        '<button class="btn btn-cta" id="ed-publicar"><i data-lucide="rocket"></i> Publicar</button>' +
+        '</div>' +
+        '<div class="editor-layout">' +
+        '<div class="quadro-iframe"><iframe id="iframe-site" src="../?cms-edit=1" title="Site em edição"></iframe></div>' +
+        '<aside class="painel-props" id="painel-props">' +
+        '<div class="painel-vazio"><i data-lucide="mouse-pointer-click"></i><br>' +
+        'Clique em qualquer texto, imagem, botão ou número no site ao lado para editar.</div>' +
+        '</aside></div>';
+      icones();
+
+      // Carrega o rascunho mais recente
+      try {
+        var r = await api('/cms/paginas/' + pagina.id + '/conteudo');
+        ed.draft = r.content || {};
+        document.getElementById('ed-status').textContent = r.meta ? ('Último salvamento: ' + fmtData(r.meta.criado_em)) : 'Sem alterações salvas';
+      } catch (err) { document.getElementById('ed-status').textContent = 'Erro ao carregar rascunho'; }
+
+      var iframe = document.getElementById('iframe-site');
+
+      window.addEventListener('message', receberDoSite);
+      function receberDoSite(e) {
+        var m = e.data || {};
+        if (!m.cms || !ed) return;
+        if (m.cms === 'pronto') {
+          ed.listas = m.listas || {};
+          iframe.contentWindow.postMessage({ cms: 'aplicar-tudo', content: ed.draft }, '*');
+        }
+        if (m.cms === 'selecionado') selecionar(m.info);
+        if (m.cms === 'texto-alterado') {
+          registrarPatch(m.chave, { text: m.texto }, true);
+          var ta = document.getElementById('prop-texto');
+          if (ta && ed.chaveSel === m.chave) ta.value = m.texto;
+        }
+      }
+
+      // Troca de dispositivo
+      conteudo.querySelectorAll('[data-dev]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          conteudo.querySelectorAll('[data-dev]').forEach(function (x) { x.classList.remove('ativo'); });
+          b.classList.add('ativo');
+          iframe.style.width = b.getAttribute('data-dev');
+        });
+      });
+
+      /* ── núcleo de alterações: draft + undo/redo + autosave ── */
+      function enviarPatch(chave, patch) {
+        // _listas muda a estrutura (clona/poda cards) — reaplica o conteúdo inteiro
+        if (chave === '_listas') {
+          iframe.contentWindow.postMessage({ cms: 'aplicar-tudo', content: ed.draft }, '*');
+          return;
+        }
+        iframe.contentWindow.postMessage({ cms: 'aplicar', chave: chave, patch: patch }, '*');
+      }
+
+      function registrarPatch(chave, patch, jaAplicado) {
+        var anterior = JSON.parse(JSON.stringify(ed.draft[chave] || {}));
+        ed.draft[chave] = Object.assign({}, ed.draft[chave], patch);
+        // estilos aninhados se mesclam
+        if (patch.styles) ed.draft[chave].styles = Object.assign({}, anterior.styles, patch.styles);
+        ed.undo.push({ chave: chave, anterior: anterior, novo: JSON.parse(JSON.stringify(ed.draft[chave])) });
+        if (ed.undo.length > 200) ed.undo.shift();
+        ed.redo = [];
+        atualizarBotoesHistorico();
+        if (!jaAplicado) enviarPatch(chave, ed.draft[chave]);
+        agendarSave();
+      }
+
+      function atualizarBotoesHistorico() {
+        document.getElementById('ed-undo').disabled = !ed.undo.length;
+        document.getElementById('ed-redo').disabled = !ed.redo.length;
+      }
+
+      document.getElementById('ed-undo').addEventListener('click', function () {
+        var op = ed.undo.pop(); if (!op) return;
+        ed.redo.push(op);
+        if (Object.keys(op.anterior).length) ed.draft[op.chave] = op.anterior; else delete ed.draft[op.chave];
+        iframe.contentWindow.postMessage({ cms: 'recarregar' }, '*'); // reaplica estado limpo
+        atualizarBotoesHistorico(); agendarSave();
+      });
+      document.getElementById('ed-redo').addEventListener('click', function () {
+        var op = ed.redo.pop(); if (!op) return;
+        ed.undo.push(op);
+        ed.draft[op.chave] = op.novo;
+        enviarPatch(op.chave, op.novo);
+        atualizarBotoesHistorico(); agendarSave();
+      });
+
+      function agendarSave() {
+        ed.sujo = true;
+        document.getElementById('ed-status').textContent = 'Alterações não salvas…';
+        clearTimeout(ed.timerSave);
+        ed.timerSave = setTimeout(salvarRascunho, 1800);
+      }
+
+      async function salvarRascunho() {
+        if (!ed.sujo) return;
+        try {
+          await api('/cms/paginas/' + ed.pagina.id + '/rascunho', { method: 'PUT', body: { content: ed.draft } });
+          ed.sujo = false;
+          document.getElementById('ed-status').textContent = 'Rascunho salvo automaticamente ✓';
+        } catch (err) {
+          document.getElementById('ed-status').textContent = 'Falha ao salvar: ' + err.message;
+        }
+      }
+
+      document.getElementById('ed-publicar').addEventListener('click', async function () {
+        try {
+          await salvarRascunho();
+          await api('/cms/paginas/' + ed.pagina.id + '/publicar', { method: 'POST', body: { content: ed.draft } });
+          toast('Alterações publicadas no site! 🚀', 'ok');
+        } catch (err) { toast(err.message, 'erro'); }
+      });
+
+      document.getElementById('ed-descartar').addEventListener('click', async function () {
+        if (!confirm('Descartar o rascunho e voltar ao conteúdo publicado?')) return;
+        try {
+          var r = await api('/cms/paginas/' + ed.pagina.id + '/conteudo?versao=publicada');
+          ed.draft = r.content || {};
+          ed.undo = []; ed.redo = []; atualizarBotoesHistorico();
+          await api('/cms/paginas/' + ed.pagina.id + '/rascunho', { method: 'PUT', body: { content: ed.draft } });
+          iframe.contentWindow.postMessage({ cms: 'recarregar' }, '*');
+          toast('Rascunho descartado.', 'ok');
+        } catch (err) { toast(err.message, 'erro'); }
+      });
+
+      /* ── painel de propriedades ── */
+      function selecionar(info) {
+        ed.chaveSel = info.chave;
+        var atual = ed.draft[info.chave] || {};
+        var estilos = atual.styles || {};
+        var painel = document.getElementById('painel-props');
+        var ehImg = info.tag === 'img';
+        var ehLink = info.tag === 'a';
+        // Card inteiro (contêiner): não oferece edição de texto em bloco
+        var mCard = info.chave.match(/^(entrega|pl|noticia|lp)(\d+)\./);
+        var lista = mCard ? mCard[1] : null;
+        var chaveCard = mCard ? (lista === 'lp' ? 'lp' + mCard[2] + '.link' : lista + mCard[2] + '.card') : null;
+        var ehContainer = /\.card$/.test(info.chave) || /^lp\d+\.link$/.test(info.chave);
+        var temTexto = !ehImg && !ehContainer;
+
+        var html = '<h3>Elemento selecionado</h3><span class="chave">' + esc(info.chave) + '</span>';
+
+        if (temTexto) {
+          html += '<div class="campo"><label>Texto</label><textarea id="prop-texto">' + esc(atual.text !== undefined ? atual.text : info.texto) + '</textarea></div>' +
+            '<button class="btn btn-claro btn-mini" id="prop-inline" style="margin-bottom:12px"><i data-lucide="type"></i> Editar direto no site</button>';
+        }
+        if (ehLink) {
+          html += '<div class="campo"><label>Link (href)</label><input id="prop-href" value="' + esc(atual.href !== undefined ? atual.href : (info.href || '')) + '"></div>';
+        }
+        if (ehImg) {
+          html += '<div class="campo"><label>Imagem (URL)</label><input id="prop-src" value="' + esc(atual.src !== undefined ? atual.src : (info.src || '')) + '"></div>' +
+            '<div style="display:flex;gap:8px;margin-bottom:12px">' +
+            '<button class="btn btn-azul btn-mini" id="prop-biblioteca"><i data-lucide="image"></i> Biblioteca</button>' +
+            '<label class="btn btn-claro btn-mini" style="margin:0"><i data-lucide="upload"></i> Upload' +
+            '<input type="file" accept="image/*" id="prop-upload" hidden></label></div>';
+        }
+        if (info.contador !== null) {
+          html += '<div class="campo"><label>Valor do contador (só número)</label>' +
+            '<input type="number" id="prop-contador" value="' + esc((atual.attr && atual.attr['data-valor']) || info.contador) + '"></div>';
+        }
+        if (info.youtube) {
+          html += '<div class="campo"><label>ID do vídeo do YouTube</label>' +
+            '<input id="prop-youtube" value="' + esc((atual.attr && atual.attr['data-youtube-id']) || info.youtube) + '" placeholder="ex.: dQw4w9WgXcQ"></div>';
+        }
+
+        html += '<div class="campo" style="flex-direction:row;display:flex;align-items:center;gap:8px">' +
+          '<input type="checkbox" id="prop-oculto" style="width:auto" ' + (atual.hidden ? 'checked' : '') + '>' +
+          '<label for="prop-oculto" style="margin:0">Ocultar este elemento no site</label></div>';
+
+        if (lista) {
+          html += '<div class="grupo-estilo"><div class="titulo-grupo">Card</div>' +
+            '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+            '<button class="btn btn-azul btn-mini" id="card-add"><i data-lucide="plus"></i> Adicionar card</button>' +
+            '<button class="btn btn-perigo btn-mini" id="card-remover"><i data-lucide="trash-2"></i> Remover card</button></div>' +
+            '<p style="font-size:.74rem;color:var(--suave);margin-top:8px">O card novo entra no fim da lista, copiado deste. ' +
+            'Card removido fica esmaecido só no editor — clique nele e desmarque "Ocultar" para trazer de volta.</p></div>';
+        }
+
+        html += '<div class="grupo-estilo"><div class="titulo-grupo">Estilo</div>';
+        if (ehImg) {
+          html += '<div class="linha-2">' +
+            '<div class="campo"><label>Largura (px)</label><input type="number" id="st-largura" placeholder="auto" value="' + esc(parseInt(estilos.width) || '') + '"></div>' +
+            '<div class="campo"><label>Altura (px)</label><input type="number" id="st-altura" placeholder="auto" value="' + esc(parseInt(estilos.height) || '') + '"></div></div>' +
+            '<div class="linha-2">' +
+            '<div class="campo"><label>Opacidade (%)</label><input type="number" min="0" max="100" id="st-opacidade" placeholder="100" value="' + esc(estilos.opacity !== undefined ? Math.round(parseFloat(estilos.opacity) * 100) : '') + '"></div>' +
+            '<div class="campo"><label>Cantos arredondados (px)</label><input type="number" id="st-raio" placeholder="0" value="' + esc(parseInt(estilos['border-radius']) || '') + '"></div></div>';
+        } else {
+          html += '<div class="linha-2">' +
+            '<div class="campo"><label>Cor do texto</label><input type="color" id="st-cor" value="' + esc(estilos.color || '#26314f') + '" style="height:38px;padding:3px"></div>' +
+            '<div class="campo"><label>Tamanho da fonte (px)</label><input type="number" id="st-tamanho" placeholder="auto" value="' + esc(parseInt(estilos['font-size']) || '') + '"></div></div>' +
+            '<div class="linha-2">' +
+            '<div class="campo"><label>Alinhamento</label><select id="st-alinhamento">' +
+            ['', 'left', 'center', 'right'].map(function (a) {
+              var rot = { '': 'Padrão', left: 'Esquerda', center: 'Centro', right: 'Direita' }[a];
+              return '<option value="' + a + '"' + ((estilos['text-align'] || '') === a ? ' selected' : '') + '>' + rot + '</option>';
+            }).join('') + '</select></div>' +
+            '<div class="campo"><label>Peso da fonte</label><select id="st-peso">' +
+            ['', '400', '600', '700', '800'].map(function (p) {
+              var rot = { '': 'Padrão', 400: 'Normal', 600: 'Semibold', 700: 'Negrito', 800: 'Extra' }[p];
+              return '<option value="' + p + '"' + ((estilos['font-weight'] || '') === p ? ' selected' : '') + '>' + rot + '</option>';
+            }).join('') + '</select></div></div>';
+        }
+        html += '<div class="linha-2">' +
+          '<div class="campo"><label>Espaço acima (px)</label><input type="number" id="st-mt" placeholder="auto" value="' + esc(parseInt(estilos['margin-top']) || '') + '"></div>' +
+          '<div class="campo"><label>Espaço abaixo (px)</label><input type="number" id="st-mb" placeholder="auto" value="' + esc(parseInt(estilos['margin-bottom']) || '') + '"></div></div>' +
+          '</div>' +
+          '<div class="grupo-estilo"><button class="btn btn-perigo btn-mini" id="prop-restaurar"><i data-lucide="eraser"></i> Restaurar padrão deste elemento</button></div>';
+
+        painel.innerHTML = html;
+        icones();
+
+        function aoMudar(id, evento, fn) {
+          var el = document.getElementById(id);
+          if (el) el.addEventListener(evento, fn);
+        }
+        aoMudar('prop-texto', 'input', function (e) { registrarPatch(info.chave, { text: e.target.value }); });
+        aoMudar('prop-href', 'change', function (e) { registrarPatch(info.chave, { href: e.target.value }); });
+        aoMudar('prop-src', 'change', function (e) { registrarPatch(info.chave, { src: e.target.value }); });
+        aoMudar('prop-contador', 'change', function (e) { registrarPatch(info.chave, { attr: { 'data-valor': e.target.value } }); });
+        aoMudar('prop-youtube', 'change', function (e) { registrarPatch(info.chave, { attr: { 'data-youtube-id': e.target.value } }); });
+        aoMudar('prop-oculto', 'change', function (e) { registrarPatch(info.chave, { hidden: e.target.checked }); });
+        aoMudar('card-add', 'click', function () {
+          var base = (ed.listas && ed.listas[lista]) || 0;
+          var atual2 = Math.max(base, (ed.draft._listas && ed.draft._listas[lista]) || 0);
+          var patch = {}; patch[lista] = atual2 + 1;
+          registrarPatch('_listas', patch);
+          toast('Card adicionado no fim da lista — role o site e clique nele para editar.', 'ok');
+        });
+        aoMudar('card-remover', 'click', function () {
+          registrarPatch(chaveCard, { hidden: true });
+          toast('Card removido. Ele fica esmaecido no editor; desmarque "Ocultar" para trazer de volta.', 'ok');
+        });
+        aoMudar('prop-inline', 'click', function () {
+          iframe.contentWindow.postMessage({ cms: 'editar-inline', chave: info.chave }, '*');
+        });
+        aoMudar('prop-biblioteca', 'click', function () {
+          abrirSeletorMidia(function (url) {
+            document.getElementById('prop-src').value = url;
+            registrarPatch(info.chave, { src: url });
+          });
+        });
+        aoMudar('prop-upload', 'change', async function (e) {
+          if (!e.target.files.length) return;
+          try {
+            var item = await enviarArquivo(e.target.files[0]);
+            document.getElementById('prop-src').value = item.url;
+            registrarPatch(info.chave, { src: item.url });
+            toast('Imagem enviada e aplicada.', 'ok');
+          } catch (err) { toast(err.message, 'erro'); }
+        });
+        function estilo(prop, valor) {
+          var s = {}; s[prop] = valor || '';
+          registrarPatch(info.chave, { styles: s });
+        }
+        aoMudar('st-largura', 'input', function (e) { estilo('width', e.target.value ? e.target.value + 'px' : ''); });
+        aoMudar('st-altura', 'input', function (e) { estilo('height', e.target.value ? e.target.value + 'px' : ''); });
+        aoMudar('st-opacidade', 'input', function (e) { estilo('opacity', e.target.value !== '' ? String(Math.min(100, Math.max(0, e.target.value)) / 100) : ''); });
+        aoMudar('st-raio', 'input', function (e) { estilo('border-radius', e.target.value ? e.target.value + 'px' : ''); });
+        aoMudar('st-cor', 'change', function (e) { estilo('color', e.target.value); });
+        aoMudar('st-tamanho', 'input', function (e) { estilo('font-size', e.target.value ? e.target.value + 'px' : ''); });
+        aoMudar('st-alinhamento', 'change', function (e) { estilo('text-align', e.target.value); });
+        aoMudar('st-peso', 'change', function (e) { estilo('font-weight', e.target.value); });
+        aoMudar('st-mt', 'change', function (e) { estilo('margin-top', e.target.value ? e.target.value + 'px' : ''); });
+        aoMudar('st-mb', 'change', function (e) { estilo('margin-bottom', e.target.value ? e.target.value + 'px' : ''); });
+        aoMudar('prop-restaurar', 'click', function () {
+          var anterior = JSON.parse(JSON.stringify(ed.draft[info.chave] || {}));
+          delete ed.draft[info.chave];
+          ed.undo.push({ chave: info.chave, anterior: anterior, novo: {} });
+          ed.redo = []; atualizarBotoesHistorico(); agendarSave();
+          iframe.contentWindow.postMessage({ cms: 'recarregar' }, '*');
+        });
+      }
+    };
+
+    /* ══════════════ MÍDIA ══════════════ */
+    async function enviarArquivo(arquivo, pasta) {
+      var fd = new FormData();
+      fd.append('arquivo', arquivo);
+      fd.append('pasta', pasta || 'geral');
+      return api('/cms/midia', { method: 'POST', body: fd });
+    }
+
+    function cartaoMidia(m2) {
+      var ehImg = /^image\//.test(m2.tipo);
+      return '<div class="item-midia" data-url="' + esc(m2.url) + '" data-id="' + m2.id + '">' +
+        '<div class="thumb" style="' + (ehImg ? 'background-image:url(\'' + esc(m2.url) + '\')' : '') + '">' +
+        (ehImg ? '' : '<i data-lucide="file"></i>') + '</div>' +
+        '<div class="info"><div class="nome" title="' + esc(m2.nome) + '">' + esc(m2.nome) + '</div>' +
+        '<div class="meta">' + esc(m2.pasta) + ' · ' + fmtBytes(m2.tamanho) + '</div></div></div>';
+    }
+
+    vistas.midia = async function () {
+      conteudo.innerHTML = '<div class="cabecalho-view"><div><h1>Biblioteca de mídia</h1>' +
+        '<p class="sub">Imagens, vídeos e documentos usados no site</p></div>' +
+        (somenteLeitura() ? '' :
+        '<label class="btn btn-azul" style="margin:0"><i data-lucide="upload"></i> Enviar arquivos' +
+        '<input type="file" id="midia-upload" multiple hidden></label>') + '</div>' +
+        '<div class="card" style="margin-bottom:14px;display:flex;gap:10px;flex-wrap:wrap">' +
+        '<input id="midia-busca" placeholder="Pesquisar por nome…" style="flex:1;min-width:200px;padding:9px 12px;border:1.5px solid var(--borda);border-radius:8px">' +
+        '<input id="midia-pasta" placeholder="Filtrar por pasta" style="width:180px;padding:9px 12px;border:1.5px solid var(--borda);border-radius:8px"></div>' +
+        '<div class="grade-midia" id="grade-midia">Carregando…</div>';
+      icones();
+
+      async function recarregar() {
+        var busca = document.getElementById('midia-busca').value.trim();
+        var pasta = document.getElementById('midia-pasta').value.trim();
+        try {
+          var itens = await api('/cms/midia?busca=' + encodeURIComponent(busca) + '&pasta=' + encodeURIComponent(pasta));
+          var grade = document.getElementById('grade-midia');
+          grade.innerHTML = itens.length ? itens.map(cartaoMidia).join('')
+            : '<p style="color:var(--suave)">Nenhum arquivo. Use "Enviar arquivos" para começar.</p>';
+          icones();
+          grade.querySelectorAll('.item-midia').forEach(function (card) {
+            card.addEventListener('click', function () {
+              var item = itens.find(function (x) { return x.id === card.getAttribute('data-id'); });
+              modalDetalheMidia(item, recarregar);
+            });
+          });
+        } catch (err) { document.getElementById('grade-midia').innerHTML = 'Erro: ' + esc(err.message); }
+      }
+      recarregar();
+
+      var deb;
+      ['midia-busca', 'midia-pasta'].forEach(function (id) {
+        document.getElementById(id).addEventListener('input', function () {
+          clearTimeout(deb); deb = setTimeout(recarregar, 350);
+        });
+      });
+
+      var up = document.getElementById('midia-upload');
+      if (up) up.addEventListener('change', async function () {
+        for (var i = 0; i < up.files.length; i++) {
+          try { await enviarArquivo(up.files[i]); }
+          catch (err) { toast(up.files[i].name + ': ' + err.message, 'erro'); }
+        }
+        toast('Upload concluído.', 'ok');
+        recarregar();
+      });
+    };
+
+    function modalDetalheMidia(item, aoMudar) {
+      var ehImg = /^image\//.test(item.tipo);
+      var m = modal(
+        '<h2>' + esc(item.nome) + '</h2>' +
+        (ehImg ? '<img src="' + esc(item.url) + '" style="max-width:100%;border-radius:10px;margin-bottom:14px">' : '') +
+        '<div class="campo"><label>URL pública</label><input id="md-url" readonly value="' + esc(item.url) + '"></div>' +
+        '<div class="linha-2"><div class="campo"><label>Nome</label><input id="md-nome" value="' + esc(item.nome) + '"></div>' +
+        '<div class="campo"><label>Pasta</label><input id="md-pasta" value="' + esc(item.pasta) + '"></div></div>' +
+        '<div class="acoes">' +
+        '<button class="btn btn-claro" id="md-copiar"><i data-lucide="clipboard-copy"></i> Copiar URL</button>' +
+        (somenteLeitura() ? '' :
+          '<button class="btn btn-perigo" id="md-excluir"><i data-lucide="trash-2"></i> Excluir</button>' +
+          '<button class="btn btn-azul" id="md-salvar">Salvar</button>') +
+        '</div>'
+      );
+      m.querySelector('#md-copiar').addEventListener('click', function () {
+        navigator.clipboard.writeText(item.url).then(function () { toast('URL copiada.', 'ok'); });
+      });
+      var salvar = m.querySelector('#md-salvar');
+      if (salvar) salvar.addEventListener('click', async function () {
+        try {
+          await api('/cms/midia/' + item.id, { method: 'PUT', body: {
+            nome: m.querySelector('#md-nome').value.trim(), pasta: m.querySelector('#md-pasta').value.trim() } });
+          toast('Arquivo atualizado.', 'ok'); m.remove(); aoMudar();
+        } catch (err) { toast(err.message, 'erro'); }
+      });
+      var excluir = m.querySelector('#md-excluir');
+      if (excluir) excluir.addEventListener('click', async function () {
+        if (!confirm('Excluir "' + item.nome + '" da biblioteca?')) return;
+        try { await api('/cms/midia/' + item.id, { method: 'DELETE' }); toast('Arquivo excluído.', 'ok'); m.remove(); aoMudar(); }
+        catch (err) { toast(err.message, 'erro'); }
+      });
+    }
+
+    // Seletor usado pelo editor visual
+    function abrirSeletorMidia(aoEscolher) {
+      var m = modal('<h2>Escolher imagem</h2><div class="grade-midia" id="sel-midia">Carregando…</div>' +
+        '<div class="acoes"><label class="btn btn-azul" style="margin:0"><i data-lucide="upload"></i> Enviar nova' +
+        '<input type="file" accept="image/*" id="sel-upload" hidden></label>' +
+        '<button class="btn btn-claro" data-fechar>Cancelar</button></div>', true);
+      m.querySelector('[data-fechar]').addEventListener('click', function () { m.remove(); });
+
+      api('/cms/midia').then(function (itens) {
+        var imgs = itens.filter(function (x) { return /^image\//.test(x.tipo); });
+        var grade = m.querySelector('#sel-midia');
+        grade.innerHTML = imgs.length ? imgs.map(cartaoMidia).join('') : '<p style="color:var(--suave)">Nenhuma imagem na biblioteca ainda.</p>';
+        icones();
+        grade.querySelectorAll('.item-midia').forEach(function (card) {
+          card.addEventListener('click', function () { aoEscolher(card.getAttribute('data-url')); m.remove(); });
+        });
+      }).catch(function (err) { m.querySelector('#sel-midia').innerHTML = 'Erro: ' + esc(err.message); });
+
+      m.querySelector('#sel-upload').addEventListener('change', async function (e) {
+        if (!e.target.files.length) return;
+        try { var item = await enviarArquivo(e.target.files[0]); aoEscolher(item.url); m.remove(); }
+        catch (err) { toast(err.message, 'erro'); }
+      });
+    }
+
+    /* ══════════════ HISTÓRICO ══════════════ */
+    vistas.historico = async function () {
+      conteudo.innerHTML = '<div class="cabecalho-view"><div><h1>Histórico</h1>' +
+        '<p class="sub">Auditoria de alterações e versões de cada página</p></div></div>' +
+        '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px">' +
+        '<div class="card"><h3 style="margin-bottom:10px">Versões por página</h3>' +
+        '<div class="campo"><select id="hist-pagina"></select></div><div id="hist-revisoes"></div></div>' +
+        '<div class="card"><h3 style="margin-bottom:10px">Auditoria completa</h3><div id="hist-auditoria">Carregando…</div></div></div>';
+
+      try {
+        var paginas = await api('/cms/paginas');
+        var sel = document.getElementById('hist-pagina');
+        sel.innerHTML = paginas.map(function (p) { return '<option value="' + p.id + '">' + esc(p.titulo) + '</option>'; }).join('');
+        sel.addEventListener('change', carregarRevisoes);
+        carregarRevisoes();
+
+        async function carregarRevisoes() {
+          var revs = await api('/cms/paginas/' + sel.value + '/revisoes');
+          document.getElementById('hist-revisoes').innerHTML = revs.length ?
+            '<table><thead><tr><th>#</th><th>Tipo</th><th>Autor</th><th>Quando</th><th></th></tr></thead><tbody>' +
+            revs.map(function (r) {
+              return '<tr><td>' + r.numero + '</td>' +
+                '<td><span class="badge badge-' + (r.tipo === 'publicada' ? 'publicada' : 'rascunho') + '">' + r.tipo + '</span></td>' +
+                '<td>' + esc(r.autor_nome || '—') + '</td>' +
+                '<td style="color:var(--suave)">' + fmtData(r.criado_em) + '</td>' +
+                '<td>' + (somenteLeitura() ? '' : '<button class="btn btn-claro btn-mini" data-rev="' + r.id + '">Restaurar</button>') + '</td></tr>';
+            }).join('') + '</tbody></table>'
+            : '<p style="color:var(--suave)">Nenhuma versão salva ainda.</p>';
+          document.querySelectorAll('[data-rev]').forEach(function (b) {
+            b.addEventListener('click', async function () {
+              if (!confirm('Restaurar esta versão como novo rascunho? (nada é publicado até você publicar)')) return;
+              try { await api('/cms/revisoes/' + b.getAttribute('data-rev') + '/restaurar', { method: 'POST' });
+                toast('Versão restaurada como rascunho. Abra o editor para revisar e publicar.', 'ok'); carregarRevisoes(); }
+              catch (err) { toast(err.message, 'erro'); }
+            });
+          });
+        }
+
+        var audits = await api('/cms/auditoria?limite=100');
+        document.getElementById('hist-auditoria').innerHTML = audits.length ?
+          '<table><tbody>' + audits.map(function (a) {
+            return '<tr><td><strong>' + esc(a.usuario_nome || '—') + '</strong> — ' + esc(a.acao.replace(/_/g, ' ')) +
+              ' <span style="color:var(--suave)">(' + esc(a.entidade) + ')</span></td>' +
+              '<td style="text-align:right;color:var(--suave);white-space:nowrap">' + fmtData(a.criado_em) + '</td></tr>';
+          }).join('') + '</tbody></table>'
+          : '<p style="color:var(--suave)">Nenhum registro ainda.</p>';
+      } catch (err) {
+        document.getElementById('hist-auditoria').innerHTML = 'Erro: ' + esc(err.message);
+      }
+    };
+
+    /* ══════════════ USUÁRIOS ══════════════ */
+    vistas.usuarios = async function () {
+      conteudo.innerHTML = '<div class="cabecalho-view"><div><h1>Usuários</h1>' +
+        '<p class="sub">Quem pode acessar o painel — papéis definem as permissões</p></div></div>' +
+        '<div class="card" style="margin-bottom:14px;color:var(--suave);font-size:.86rem">' +
+        '<strong style="color:var(--texto)">Papéis:</strong> ' +
+        '<span class="badge badge-publicada">Super administrador</span> tudo, inclusive configurações e exclusões · ' +
+        '<span class="badge badge-agendada">Editor</span> edita e publica conteúdo e mídia · ' +
+        '<span class="badge badge-rascunho">Visualizador</span> somente leitura.<br><br>' +
+        'A criação de contas e troca de senhas é feita no painel principal do TimeSV (aba Usuários).</div>' +
+        '<div class="card" id="tabela-usuarios">Carregando…</div>';
+      try {
+        var lista = await api('/users');
+        var usuarios = Array.isArray(lista) ? lista : (lista.data || lista.users || lista.rows || []);
+        var papel = { admin: ['Super administrador', 'publicada'], coordenador: ['Editor', 'agendada'], multiplicador: ['Visualizador', 'rascunho'] };
+        document.getElementById('tabela-usuarios').innerHTML =
+          '<table><thead><tr><th>Nome</th><th>E-mail</th><th>Papel no CMS</th><th>Ativo</th></tr></thead><tbody>' +
+          usuarios.map(function (u) {
+            var p = papel[u.role] || [u.role, 'rascunho'];
+            return '<tr><td><strong>' + esc(u.nome) + '</strong></td><td>' + esc(u.email) + '</td>' +
+              '<td><span class="badge badge-' + p[1] + '">' + p[0] + '</span></td>' +
+              '<td>' + (u.ativo === false ? 'Não' : 'Sim') + '</td></tr>';
+          }).join('') + '</tbody></table>';
+      } catch (err) {
+        document.getElementById('tabela-usuarios').innerHTML =
+          'Não foi possível listar (' + esc(err.message) + '). A gestão de usuários fica no painel principal do TimeSV.';
+      }
+    };
+
+    /* ══════════════ CONFIGURAÇÕES ══════════════ */
+    vistas.config = async function () {
+      conteudo.innerHTML = '<div class="cabecalho-view"><div><h1>Configurações</h1>' +
+        '<p class="sub">Valem para o site inteiro e são aplicadas na hora</p></div>' +
+        (usuario.role === 'admin' ? '<button class="btn btn-cta" id="cfg-salvar"><i data-lucide="save"></i> Salvar tudo</button>' : '') +
+        '</div><div id="cfg-corpo">Carregando…</div>';
+      icones();
+
+      var cfg = {};
+      try { cfg = await api('/cms/configuracoes'); } catch (err) { /* segue com vazio */ }
+      var geral = cfg.geral || {}, cores = cfg.cores || {}, analytics = cfg.analytics || {}, custom = cfg.custom || {};
+      var ro = usuario.role !== 'admin' ? 'disabled' : '';
+
+      document.getElementById('cfg-corpo').innerHTML =
+        '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px">' +
+        '<div class="card"><h3 style="margin-bottom:12px">Site</h3>' +
+        '<div class="campo"><label>Nome do site (título da aba)</label><input id="cfg-nome" ' + ro + ' value="' + esc(geral.nome || '') + '" placeholder="TIME SV — Senador Styvenson Valentim"></div>' +
+        '<div class="campo"><label>WhatsApp oficial (só dígitos, com 55 e DDD)</label><input id="cfg-whats" ' + ro + ' value="' + esc(geral.whatsapp || '') + '" placeholder="5584999999999"></div></div>' +
+
+        '<div class="card"><h3 style="margin-bottom:12px">Cores globais</h3>' +
+        [['azulClaro', 'Azul claro', '#7CB9F7'], ['azulRoyal', 'Azul royal', '#2B5BD7'],
+         ['azulProfundo', 'Azul profundo', '#1A3E9E'], ['ambar', 'Âmbar', '#FFC55A'], ['laranja', 'Laranja (CTA)', '#F5A623']]
+          .map(function (c) {
+            return '<div class="campo" style="display:flex;align-items:center;gap:10px;flex-direction:row">' +
+              '<input type="color" id="cor-' + c[0] + '" ' + ro + ' value="' + esc(cores[c[0]] || c[2]) + '" style="width:44px;height:34px;padding:2px;border:1.5px solid var(--borda);border-radius:8px">' +
+              '<label style="margin:0">' + c[1] + '</label></div>';
+          }).join('') + '</div>' +
+
+        '<div class="card"><h3 style="margin-bottom:12px">Analytics</h3>' +
+        '<div class="campo"><label>Google Analytics 4 (ID G-XXXX)</label><input id="cfg-ga" ' + ro + ' value="' + esc(analytics.gaId || '') + '"></div>' +
+        '<div class="campo"><label>Meta Pixel (ID)</label><input id="cfg-pixel" ' + ro + ' value="' + esc(analytics.pixelId || '') + '"></div></div>' +
+
+        '<div class="card"><h3 style="margin-bottom:12px">Avançado</h3>' +
+        '<div class="campo"><label>CSS personalizado</label><textarea id="cfg-css" ' + ro + ' placeholder="/* aplicado no site inteiro */">' + esc(custom.css || '') + '</textarea></div>' +
+        '<div class="campo"><label>JavaScript personalizado</label><textarea id="cfg-js" ' + ro + '>' + esc(custom.js || '') + '</textarea></div></div>' +
+        '</div>';
+
+      var btn = document.getElementById('cfg-salvar');
+      if (btn) btn.addEventListener('click', async function () {
+        try {
+          await api('/cms/configuracoes', { method: 'PUT', body: {
+            geral: { nome: document.getElementById('cfg-nome').value.trim(),
+                     whatsapp: document.getElementById('cfg-whats').value.replace(/\D/g, '') },
+            cores: {
+              azulClaro: document.getElementById('cor-azulClaro').value,
+              azulRoyal: document.getElementById('cor-azulRoyal').value,
+              azulProfundo: document.getElementById('cor-azulProfundo').value,
+              ambar: document.getElementById('cor-ambar').value,
+              laranja: document.getElementById('cor-laranja').value
+            },
+            analytics: { gaId: document.getElementById('cfg-ga').value.trim(),
+                         pixelId: document.getElementById('cfg-pixel').value.trim() },
+            custom: { css: document.getElementById('cfg-css').value,
+                      js: document.getElementById('cfg-js').value }
+          }});
+          toast('Configurações salvas e aplicadas ao site.', 'ok');
+        } catch (err) { toast(err.message, 'erro'); }
+      });
+    };
+
+    /* ══════════════ BOOT ══════════════ */
+    window.addEventListener('load', icones);
+    if (tokens.access && usuario) entrarNoApp();
+  })();
+  </script>
+</body>
+</html>

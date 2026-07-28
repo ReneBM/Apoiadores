@@ -30,7 +30,8 @@ export default defineConfig({
         // tudo de novo antes de responder a navegação (~3,4s de atraso).
         globPatterns: ['**/*.{js,css,html}', 'favicon.svg', 'pwa-192x192.png', 'pwa-512x512.png', 'apple-touch-icon.png'],
         cleanupOutdatedCaches: true,
-        navigateFallbackDenylist: [/^\/api/, /^\/uploads/],
+        // /campanha é o site público + CMS, servido fora do SPA — o SW não pode interceptar
+        navigateFallbackDenylist: [/^\/api/, /^\/uploads/, /^\/campanha/],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,

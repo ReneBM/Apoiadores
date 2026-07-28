@@ -12,6 +12,7 @@ import CadastroApoiador from '../pages/CadastroApoiador';
 // Demais páginas sob demanda: evita baixar o app inteiro (gráficos, telas
 // administrativas) para quem só abriu a landing page.
 const PrimeiroAcesso      = lazy(() => import('../pages/PrimeiroAcesso'));
+const RecuperarSenha      = lazy(() => import('../pages/RecuperarSenha'));
 const Dashboard           = lazy(() => import('../pages/Dashboard'));
 const ApoiadoresList      = lazy(() => import('../pages/apoiadores/ApoiadoresList'));
 const ApoiadoresForm      = lazy(() => import('../pages/apoiadores/ApoiadoresForm'));
@@ -57,6 +58,16 @@ export default function AppRoutes() {
           isAuthenticated
             ? <Navigate to={getHomeRedirect()} replace />
             : <Login />
+        }
+      />
+
+      {/* Rota pública de recuperação de senha */}
+      <Route
+        path="/recuperar-senha"
+        element={
+          isAuthenticated
+            ? <Navigate to={getHomeRedirect()} replace />
+            : <RecuperarSenha />
         }
       />
 

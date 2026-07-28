@@ -241,4 +241,112 @@ const changePassword = async (req, res, next) => {
   }
 };
 
-module.exports = { login, refresh, logout, me, changePassword };
+// ── Esqueci a Senha ────────────────────────────────────────────────────────
+const forgotPassword = async (req, res, next) => {
+  try {
+    const { identificador } = req.body;
+    if (!identificador) {
+      return res.status(400).json({ error: 'Informe seu e-mail ou telefone.' });
+    }
+
+    // Busca o usuário pelo email (já que o login primário é por e-mail)
+    // No futuro, se houver busca por telefone na tabela users, pode adaptar aqui.
+    const { rows } = await db.query(
+      'SELECT id, nome, email, ativo FROM users WHERE email = $1',
+      [identificador.toLowerCase().trim()]
+    );
+
+    const user = rows[0];
+    if (!user || !user.ativo) {
+      // Retorna sucesso genérico para não expor quais emails existem
+      return res.json({ message: 'Se o e-mail estiver cadastrado, um código foi enviado.' });
+    }
+
+    // Gera PIN numérico de 6 dígitos
+    const pin = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutos
+
+    await db.query(
+      'UPDATE users SET reset_password_code = $1, reset_password_expires = $2 WHERE id = $3',
+      [pin, expiresAt.toISOString(), user.id]
+    );
+
+    const { sendPasswordResetCodeEmail } = require('../utils/mailer');
+    await sendPasswordResetCodeEmail(user.email, user.nome, pin);
+
+    res.json({ message: 'Se o e-mail estiver cadastrado, um código foi enviado.' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const verifyResetCode = async (req, res, next) => {
+  try {
+    const { email, codigo } = req.body;
+    if (!email || !codigo) {
+      return res.status(400).json({ error: 'E-mail e código são obrigatórios.' });
+    }
+
+    const { rows } = await db.query(
+      'SELECT id, reset_password_code, reset_password_expires FROM users WHERE email = $1',
+      [email.toLowerCase().trim()]
+    );
+
+    const user = rows[0];
+    if (!user || user.reset_password_code !== codigo) {
+      return res.status(400).json({ error: 'Código inválido.' });
+    }
+
+    if (new Date() > new Date(user.reset_password_expires)) {
+      return res.status(400).json({ error: 'Código expirado. Solicite novamente.' });
+    }
+
+    res.json({ success: true, message: 'Código válido.' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const resetPassword = async (req, res, next) => {
+  try {
+    const { email, codigo, novaSenha } = req.body;
+    if (!email || !codigo || !novaSenha) {
+      return res.status(400).json({ error: 'Dados incompletos.' });
+    }
+
+    const { rows } = await db.query(
+      'SELECT id, reset_password_code, reset_password_expires FROM users WHERE email = $1',
+      [email.toLowerCase().trim()]
+    );
+
+    const user = rows[0];
+    if (!user || user.reset_password_code !== codigo) {
+      return res.status(400).json({ error: 'Código inválido.' });
+    }
+
+    if (new Date() > new Date(user.reset_password_expires)) {
+      return res.status(400).json({ error: 'Código expirado. Solicite novamente.' });
+    }
+
+    const novoHash = await bcrypt.hash(novaSenha, BCRYPT_ROUNDS);
+    
+    // Atualiza a senha e limpa o PIN
+    await db.query(
+      'UPDATE users SET senha_hash = $1, primeiro_acesso = FALSE, updated_at = now() WHERE id = $2',
+      [novoHash, user.id]
+    );
+    await db.query(
+      'UPDATE users SET reset_password_code = NULL, reset_password_expires = NULL WHERE id = $1',
+      [user.id]
+    );
+
+    // Invalida sessões antigas
+    await db.query('DELETE FROM refresh_tokens WHERE user_id = $1', [user.id]);
+
+    res.json({ message: 'Senha redefinida com sucesso. Você já pode fazer login.' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { login, refresh, logout, me, changePassword, forgotPassword, verifyResetCode, resetPassword };

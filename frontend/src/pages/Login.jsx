@@ -305,7 +305,7 @@ export default function Login() {
                 <label htmlFor="senha" className="login-label" style={{ margin: 0 }}>Senha</label>
                 <button
                   type="button"
-                  onClick={() => toast.info('Para redefinir sua senha, entre em contato com a coordenação do Time SV.', { duration: 5000 })}
+                  onClick={() => navigate('/recuperar-senha')}
                   style={{ background: 'none', border: 'none', color: '#0054A6', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', padding: 0 }}
                 >
                   Esqueceu a senha?
