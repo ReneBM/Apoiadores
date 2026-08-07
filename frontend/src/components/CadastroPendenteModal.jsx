@@ -14,11 +14,11 @@ const APARENCIA = {
     cor: '#d97706',
     fundo: 'rgba(217,119,6,0.1)',
     titulo: 'Cadastro em análise',
-    corpo: 'Seu cadastro foi recebido e está aguardando a aprovação da coordenação. Assim que for aprovado, você recebe a senha de acesso.',
+    corpo: 'Seu cadastro foi recebido e está aguardando a aprovação da coordenação. Assim que for aprovado, você já entra com a senha que criou no cadastro.',
     passos: [
       'A coordenação confere os seus dados',
-      'Você recebe um e-mail com a senha temporária',
-      'No primeiro acesso, você cria a sua senha definitiva',
+      'Aprovado o cadastro, o acesso é liberado',
+      'Entre com este mesmo e-mail e a senha que você escolheu',
     ],
   },
   CADASTRO_INATIVO: {
@@ -137,7 +137,7 @@ export default function CadastroPendenteModal({ open, onClose, codigo, nome, des
 
         <p style={{ fontSize: '0.75rem', color: '#94a3b8', lineHeight: 1.5, margin: '0.9rem 0 1.1rem' }}>
           {codigo === 'CADASTRO_PENDENTE'
-            ? 'Não é preciso se cadastrar de novo — isso criaria um cadastro duplicado.'
+            ? 'Não é preciso se cadastrar de novo — isso criaria um cadastro duplicado. Se esquecer a senha, use "Esqueceu a senha?" depois da aprovação.'
             : 'Guarde o e-mail que você usou no cadastro para agilizar o atendimento.'}
         </p>
 
