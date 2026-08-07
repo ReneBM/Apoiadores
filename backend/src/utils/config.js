@@ -52,17 +52,28 @@ const DEFINICOES = {
     padrao: 'Esta é uma senha temporária. No primeiro acesso, você será obrigado a criar uma senha definitiva. Não compartilhe esta senha com ninguém.',
   },
 
-  // ── WhatsApp (Cloud API oficial da Meta) ────────────────────────────────
-  // O texto das mensagens NÃO fica aqui: a Meta exige que cada modelo seja
-  // cadastrado e aprovado no painel dela. Aqui guardamos só o acesso e o
-  // nome de cada modelo aprovado.
+  // ── WhatsApp (Evolution API) ────────────────────────────────────────────
+  // A Evolution conversa com um WhatsApp comum pareado por QR Code, então não
+  // há modelo a aprovar: o texto é livre e fica editável logo abaixo.
   WHATSAPP_ATIVO:      { sensivel: false, env: 'WHATSAPP_ATIVO', padrao: 'nao' },
-  WHATSAPP_TOKEN:      { sensivel: true,  env: 'WHATSAPP_TOKEN' },
-  WHATSAPP_PHONE_ID:   { sensivel: false, env: 'WHATSAPP_PHONE_ID' },
-  WHATSAPP_IDIOMA:     { sensivel: false, env: 'WHATSAPP_IDIOMA', padrao: 'pt_BR' },
-  WHATSAPP_TPL_RESET:  { sensivel: false, padrao: 'codigo_recuperacao' },
-  WHATSAPP_TPL_ACESSO: { sensivel: false, padrao: 'acesso_criado' },
-  WHATSAPP_TPL_AVISO:  { sensivel: false, padrao: 'aviso_campanha' },
+  WHATSAPP_URL:        { sensivel: false, env: 'WHATSAPP_URL' },
+  WHATSAPP_APIKEY:     { sensivel: true,  env: 'WHATSAPP_APIKEY' },
+  WHATSAPP_INSTANCIA:  { sensivel: false, env: 'WHATSAPP_INSTANCIA' },
+
+  // ── Textos do WhatsApp (Configurações → Mensagens) ──────────────────────
+  // Vão como texto puro: *negrito* do WhatsApp funciona, HTML não.
+  ZAP_RESET_TEXTO: {
+    sensivel: false,
+    padrao: 'Olá, {{nome}}! Seu código para redefinir a senha do Time SV é:\n\n*{{codigo}}*\n\nO código expira em 15 minutos. Se não foi você que pediu, ignore esta mensagem.',
+  },
+  ZAP_ACESSO_TEXTO: {
+    sensivel: false,
+    padrao: 'Olá, {{nome}}! Seu acesso ao Time SV foi criado. 🎉\n\nEntre em timesv.com.br com:\nE-mail: {{email}}\nSenha temporária: *{{senha}}*\n\nNo primeiro acesso você vai criar sua senha definitiva. Não compartilhe esta senha com ninguém.',
+  },
+  ZAP_AVISO_TEXTO: {
+    sensivel: false,
+    padrao: 'Olá, {{nome}}!\n\n{{mensagem}}\n\n— Equipe Time SV\n\n_Para não receber mais estes avisos, responda SAIR._',
+  },
 };
 
 /** Variáveis aceitas em cada texto (usadas na tela de Configurações). */
@@ -71,6 +82,10 @@ const VARIAVEIS = {
   EMAIL_RESET_TITULO: ['{{nome}}'],
   EMAIL_ACESSO_TEXTO: ['{{nome}}', '{{email}}'],
   EMAIL_ACESSO_TITULO: ['{{nome}}'],
+
+  ZAP_RESET_TEXTO:  ['{{nome}}', '{{codigo}}'],
+  ZAP_ACESSO_TEXTO: ['{{nome}}', '{{email}}', '{{senha}}'],
+  ZAP_AVISO_TEXTO:  ['{{nome}}', '{{mensagem}}'],
 };
 
 const CHAVES = Object.keys(DEFINICOES);
@@ -158,8 +173,19 @@ const renderizarTexto = (texto, valores = {}) => {
   return escapar(comValores).replace(/\r?\n/g, '<br>');
 };
 
+/**
+ * Versão texto puro, para WhatsApp: troca as variáveis e mais nada. Sem
+ * escape de HTML e sem <br> — a mensagem chega com as quebras de linha reais
+ * e a formatação própria do WhatsApp (*negrito*, _itálico_) preservada.
+ */
+const renderizarSimples = (texto, valores = {}) =>
+  String(texto || '').replace(
+    /\{\{\s*(\w+)\s*\}\}/g,
+    (_, chave) => (chave in valores ? String(valores[chave] ?? '') : '')
+  );
+
 module.exports = {
   DEFINICOES, CHAVES, VARIAVEIS,
   obterConfig, obterConfigs, salvarConfig, definidaNoBanco, invalidarCache,
-  renderizarTexto,
+  renderizarTexto, renderizarSimples,
 };

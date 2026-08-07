@@ -4,29 +4,23 @@ import api from '../../api/axios';
 import toast from 'react-hot-toast';
 import { Loader2, ChevronLeft, Mail, Save, Send, CheckCircle2, AlertTriangle, Eye, EyeOff, ShieldCheck, MessageSquare, RotateCcw, MessageCircle, Info } from 'lucide-react';
 
-// Modelos que precisam existir aprovados no painel da Meta
-const MODELOS_WHATSAPP = [
-  { chave: 'WHATSAPP_TPL_RESET', rotulo: 'Recuperação de senha', dica: 'Categoria "Autenticação". Recebe o código de 6 dígitos.' },
-  { chave: 'WHATSAPP_TPL_ACESSO', rotulo: 'Primeiro acesso', dica: 'Categoria "Utilidade". Recebe nome, e-mail e senha temporária.' },
-  { chave: 'WHATSAPP_TPL_AVISO', rotulo: 'Aviso da campanha', dica: 'Categoria "Marketing". Recebe o nome e o texto do disparo.' },
-];
-
 const CHAVES_WHATSAPP = [
-  'WHATSAPP_ATIVO', 'WHATSAPP_TOKEN', 'WHATSAPP_PHONE_ID', 'WHATSAPP_IDIOMA',
-  ...MODELOS_WHATSAPP.map((m) => m.chave),
+  'WHATSAPP_ATIVO', 'WHATSAPP_URL', 'WHATSAPP_APIKEY', 'WHATSAPP_INSTANCIA',
 ];
 
-// Textos dos e-mails, agrupados por mensagem
+// Textos das mensagens automáticas, agrupados por assunto.
+// Cada grupo traz os campos do e-mail e, quando existe, o texto do WhatsApp.
 const MENSAGENS = [
   {
     id: 'reset',
     titulo: 'Recuperação de senha',
     descricao: 'Enviado quando alguém usa o "Esqueceu a senha?" e recebe o código de 6 dígitos.',
     campos: [
-      { chave: 'EMAIL_RESET_ASSUNTO', rotulo: 'Assunto', tipo: 'texto' },
+      { chave: 'EMAIL_RESET_ASSUNTO', rotulo: 'Assunto do e-mail', tipo: 'texto' },
       { chave: 'EMAIL_RESET_TITULO', rotulo: 'Título dentro do e-mail', tipo: 'texto' },
-      { chave: 'EMAIL_RESET_TEXTO', rotulo: 'Mensagem', tipo: 'area' },
+      { chave: 'EMAIL_RESET_TEXTO', rotulo: 'Mensagem do e-mail', tipo: 'area' },
       { chave: 'EMAIL_RESET_AVISO', rotulo: 'Aviso destacado (caixa amarela)', tipo: 'area' },
+      { chave: 'ZAP_RESET_TEXTO', rotulo: 'Mensagem do WhatsApp', tipo: 'area', zap: true },
     ],
   },
   {
@@ -34,10 +28,19 @@ const MENSAGENS = [
     titulo: 'Primeiro acesso',
     descricao: 'Enviado quando um cadastro é aprovado e a pessoa recebe a senha temporária.',
     campos: [
-      { chave: 'EMAIL_ACESSO_ASSUNTO', rotulo: 'Assunto', tipo: 'texto' },
+      { chave: 'EMAIL_ACESSO_ASSUNTO', rotulo: 'Assunto do e-mail', tipo: 'texto' },
       { chave: 'EMAIL_ACESSO_TITULO', rotulo: 'Título dentro do e-mail', tipo: 'texto' },
-      { chave: 'EMAIL_ACESSO_TEXTO', rotulo: 'Mensagem', tipo: 'area' },
+      { chave: 'EMAIL_ACESSO_TEXTO', rotulo: 'Mensagem do e-mail', tipo: 'area' },
       { chave: 'EMAIL_ACESSO_AVISO', rotulo: 'Aviso destacado (caixa amarela)', tipo: 'area' },
+      { chave: 'ZAP_ACESSO_TEXTO', rotulo: 'Mensagem do WhatsApp', tipo: 'area', zap: true },
+    ],
+  },
+  {
+    id: 'aviso',
+    titulo: 'Aviso da campanha',
+    descricao: 'Moldura usada quando você marca "Enviar também por WhatsApp" num disparo. O texto que você escrever no disparo entra em {{mensagem}}.',
+    campos: [
+      { chave: 'ZAP_AVISO_TEXTO', rotulo: 'Mensagem do WhatsApp', tipo: 'area', zap: true },
     ],
   },
 ];
@@ -74,7 +77,7 @@ export default function Configuracoes() {
         MAIL_FROM_NAME: data.itens.MAIL_FROM_NAME?.valor || '',
         ...textos,
         ...zap,
-        WHATSAPP_TOKEN: '', // sensível: idem
+        WHATSAPP_APIKEY: '', // sensível: idem
       });
     } catch {
       toast.error('Não foi possível carregar as configurações.');
@@ -91,7 +94,7 @@ export default function Configuracoes() {
     try {
       const { data } = await api.put('/config', form);
       toast.success(data.message);
-      setForm((f) => ({ ...f, MAIL_PASS: '', WHATSAPP_TOKEN: '' })); // limpa os campos sensíveis
+      setForm((f) => ({ ...f, MAIL_PASS: '', WHATSAPP_APIKEY: '' })); // limpa os campos sensíveis
       await carregar();
     } catch (err) {
       toast.error(err.response?.data?.error || 'Erro ao salvar as configurações.');
@@ -140,7 +143,7 @@ export default function Configuracoes() {
   const dicaSenha = estado?.itens?.MAIL_PASS?.dica;
   const origem = estado?.itens?.MAIL_PASS?.origem;
   const whatsappPronto = estado?.whatsappPronto;
-  const dicaToken = estado?.itens?.WHATSAPP_TOKEN?.dica;
+  const dicaToken = estado?.itens?.WHATSAPP_APIKEY?.dica;
 
   const restaurarPadrao = (chave) => {
     const padrao = estado?.itens?.[chave]?.padrao || '';
@@ -192,8 +195,9 @@ export default function Configuracoes() {
       {aba === 'mensagens' && (
         <>
           <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--texto-medio)', lineHeight: 1.5, textAlign: 'left', padding: '0 0.25rem' }}>
-            Personalize o que os usuários leem nos e-mails automáticos. O visual e a
-            identidade do e-mail continuam os mesmos — aqui você ajusta só os textos.
+            Personalize o que os usuários leem nas mensagens automáticas, por e-mail e por
+            WhatsApp. O visual e a identidade do e-mail continuam os mesmos — aqui você
+            ajusta só os textos.
           </p>
 
           {MENSAGENS.map((msg) => (
@@ -210,7 +214,10 @@ export default function Configuracoes() {
                 return (
                   <div className="form-group" key={campo.chave}>
                     <label htmlFor={campo.chave} className="form-label" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
-                      <span>{campo.rotulo}</span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        {campo.zap && <MessageCircle size={13} style={{ color: '#25D366' }} />}
+                        {campo.rotulo}
+                      </span>
                       {alterado && (
                         <button
                           type="button"
@@ -224,7 +231,7 @@ export default function Configuracoes() {
                     </label>
                     {campo.tipo === 'area' ? (
                       <textarea
-                        id={campo.chave} className="form-input" rows={3}
+                        id={campo.chave} className="form-input" rows={campo.zap ? 5 : 3}
                         style={{ resize: 'vertical', fontFamily: 'inherit', lineHeight: 1.5 }}
                         value={form[campo.chave] || ''}
                         onChange={(e) => setForm({ ...form, [campo.chave]: e.target.value })}
@@ -241,6 +248,12 @@ export default function Configuracoes() {
                     {variaveis.length > 0 && (
                       <small style={{ color: 'var(--texto-claro)', fontSize: '0.7rem' }}>
                         Você pode usar: {variaveis.map((v) => <code key={v} style={{ marginRight: '6px' }}>{v}</code>)}
+                      </small>
+                    )}
+                    {campo.zap && (
+                      <small style={{ color: 'var(--texto-claro)', fontSize: '0.7rem', display: 'block' }}>
+                        Formatação do WhatsApp: <code>*negrito*</code>, <code>_itálico_</code>.
+                        As quebras de linha chegam como você escreveu.
                       </small>
                     )}
                   </div>
@@ -282,14 +295,14 @@ export default function Configuracoes() {
           <span style={{ fontSize: '0.78rem', color: 'var(--texto-medio)', lineHeight: 1.5 }}>
             {whatsappPronto
               ? 'O código de senha, o primeiro acesso e os disparos podem sair pelo WhatsApp.'
-              : 'Preencha o token e o ID do número abaixo, e marque "Ativar", para começar a enviar.'}
+              : 'Preencha o endereço do servidor, a chave e a instância abaixo, e marque "Ativar", para começar a enviar.'}
           </span>
         </div>
       </div>
 
       <form onSubmit={handleSalvar} className="card" style={{ padding: 'clamp(1rem, 3vw, 1.5rem)', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <h2 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <MessageCircle size={16} /> Conexão com a Meta
+          <MessageCircle size={16} /> Conexão com o Evolution
         </h2>
 
         <label style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem', cursor: 'pointer', textAlign: 'left' }}>
@@ -309,18 +322,34 @@ export default function Configuracoes() {
         </label>
 
         <div className="form-group">
-          <label htmlFor="WHATSAPP_TOKEN" className="form-label">
-            Token de acesso {estado?.itens?.WHATSAPP_TOKEN?.preenchido ? '(já configurado)' : '*'}
+          <label htmlFor="WHATSAPP_URL" className="form-label">Endereço do servidor *</label>
+          <input
+            id="WHATSAPP_URL" type="url" inputMode="url" className="form-input"
+            placeholder="https://evolution.seudominio.com.br"
+            value={form.WHATSAPP_URL}
+            onChange={(e) => setForm({ ...form, WHATSAPP_URL: e.target.value })}
+            disabled={salvando}
+            autoComplete="off"
+          />
+          <small style={{ color: 'var(--texto-claro)', fontSize: '0.72rem' }}>
+            O endereço onde o Evolution está rodando, com <strong>https://</strong> e sem barra no
+            final. É o mesmo endereço que você usa para abrir o painel dele.
+          </small>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="WHATSAPP_APIKEY" className="form-label">
+            Chave de API {estado?.itens?.WHATSAPP_APIKEY?.preenchido ? '(já configurada)' : '*'}
           </label>
           <div style={{ position: 'relative' }}>
             <input
-              id="WHATSAPP_TOKEN"
+              id="WHATSAPP_APIKEY"
               type={mostrarToken ? 'text' : 'password'}
               className="form-input"
               style={{ paddingRight: '3rem' }}
-              placeholder={estado?.itens?.WHATSAPP_TOKEN?.preenchido ? 'Deixe em branco para manter o atual' : 'Cole aqui o token permanente da Meta'}
-              value={form.WHATSAPP_TOKEN}
-              onChange={(e) => setForm({ ...form, WHATSAPP_TOKEN: e.target.value })}
+              placeholder={estado?.itens?.WHATSAPP_APIKEY?.preenchido ? 'Deixe em branco para manter a atual' : 'Cole aqui a chave do Evolution'}
+              value={form.WHATSAPP_APIKEY}
+              onChange={(e) => setForm({ ...form, WHATSAPP_APIKEY: e.target.value })}
               disabled={salvando}
               autoComplete="new-password"
             />
@@ -328,7 +357,7 @@ export default function Configuracoes() {
               type="button"
               onClick={() => setMostrarToken((v) => !v)}
               style={{ position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: '4px', display: 'flex' }}
-              aria-label={mostrarToken ? 'Ocultar token' : 'Mostrar token'}
+              aria-label={mostrarToken ? 'Ocultar chave' : 'Mostrar chave'}
               tabIndex={-1}
             >
               {mostrarToken ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -336,54 +365,38 @@ export default function Configuracoes() {
           </div>
           {dicaToken && (
             <small style={{ color: 'var(--texto-claro)', fontSize: '0.72rem' }}>
-              Salvo atualmente: <code>{dicaToken}</code>
-              {estado?.itens?.WHATSAPP_TOKEN?.origem === 'ambiente' && ' (vindo das variáveis de ambiente)'}
+              Salva atualmente: <code>{dicaToken}</code>
+              {estado?.itens?.WHATSAPP_APIKEY?.origem === 'ambiente' && ' (vindo das variáveis de ambiente)'}
             </small>
           )}
           <small style={{ color: 'var(--texto-claro)', fontSize: '0.72rem', display: 'block', marginTop: '0.2rem' }}>
-            Gere um <strong>token permanente</strong> em business.facebook.com → Configurações do
-            negócio → Usuários do sistema. O token de teste do painel expira em 24 horas.
+            É a <code>AUTHENTICATION_API_KEY</code> definida na instalação do Evolution — a mesma
+            que você digita para entrar no painel dele.
           </small>
         </div>
 
         <div className="form-group">
-          <label htmlFor="WHATSAPP_PHONE_ID" className="form-label">ID do número de telefone *</label>
+          <label htmlFor="WHATSAPP_INSTANCIA" className="form-label">Nome da instância *</label>
           <input
-            id="WHATSAPP_PHONE_ID" type="text" inputMode="numeric" className="form-input"
-            placeholder="Ex.: 123456789012345"
-            value={form.WHATSAPP_PHONE_ID}
-            onChange={(e) => setForm({ ...form, WHATSAPP_PHONE_ID: e.target.value })}
+            id="WHATSAPP_INSTANCIA" type="text" className="form-input"
+            placeholder="Ex.: timesv"
+            value={form.WHATSAPP_INSTANCIA}
+            onChange={(e) => setForm({ ...form, WHATSAPP_INSTANCIA: e.target.value })}
             disabled={salvando}
             autoComplete="off"
           />
           <small style={{ color: 'var(--texto-claro)', fontSize: '0.72rem' }}>
-            É o <em>Phone number ID</em> que aparece na área de API do WhatsApp — só números,
-            não é o telefone da campanha.
+            O nome que você deu à instância ao ler o QR Code no painel do Evolution.
+            Diferencia maiúsculas de minúsculas.
           </small>
         </div>
 
-        <h2 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--primary)', margin: '0.4rem 0 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <MessageSquare size={16} /> Modelos aprovados
-        </h2>
-        <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--texto-medio)', lineHeight: 1.5, textAlign: 'left' }}>
-          A Meta exige que o texto de cada mensagem seja aprovado por ela. Cadastre os modelos
-          no painel da Meta e escreva aqui o nome exato de cada um.
-        </p>
-
-        {MODELOS_WHATSAPP.map((m) => (
-          <div className="form-group" key={m.chave}>
-            <label htmlFor={m.chave} className="form-label">{m.rotulo}</label>
-            <input
-              id={m.chave} type="text" className="form-input"
-              placeholder={estado?.itens?.[m.chave]?.padrao || ''}
-              value={form[m.chave]}
-              onChange={(e) => setForm({ ...form, [m.chave]: e.target.value })}
-              disabled={salvando}
-              autoComplete="off"
-            />
-            <small style={{ color: 'var(--texto-claro)', fontSize: '0.72rem' }}>{m.dica}</small>
-          </div>
-        ))}
+        <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-start', padding: '0.7rem 0.8rem', borderRadius: '10px', backgroundColor: 'rgba(0,84,166,0.05)', color: 'var(--texto-medio)', fontSize: '0.75rem', lineHeight: 1.5, textAlign: 'left' }}>
+          <MessageSquare size={15} style={{ flexShrink: 0, marginTop: '2px', color: 'var(--primary)' }} />
+          <span>
+            O texto de cada mensagem fica na aba <strong>Mensagens</strong> — aqui é só a conexão.
+          </span>
+        </div>
 
         <button type="submit" disabled={salvando} className="submit-btn" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', minHeight: '48px' }}>
           {salvando ? <><Loader2 size={16} className="spin" /> Salvando...</> : <><Save size={16} /> Salvar WhatsApp</>}
@@ -397,7 +410,7 @@ export default function Configuracoes() {
         </h2>
         <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--texto-medio)', lineHeight: 1.5, textAlign: 'left' }}>
           Informe um celular com DDD para receber uma mensagem de teste, ou deixe em
-          branco para apenas conferir a conexão com a Meta.
+          branco para apenas conferir se a instância está conectada.
         </p>
         <input
           type="tel" className="form-input" placeholder="(84) 99999-8888 (opcional)"

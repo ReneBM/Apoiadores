@@ -290,7 +290,7 @@ const forgotPassword = async (req, res, next) => {
         .then(() => ({ ok: true }))
         .catch((err) => ({ ok: false, erro: err.message })),
       user.telefone
-        ? enviarCodigoRecuperacao(user.telefone, pin)
+        ? enviarCodigoRecuperacao(user.telefone, pin, user.nome)
         : Promise.resolve({ ok: false, erro: 'Usuário sem telefone cadastrado.' }),
     ]);
 

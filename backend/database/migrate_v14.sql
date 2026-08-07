@@ -37,10 +37,10 @@ CREATE TABLE IF NOT EXISTS whatsapp_envios (
   id           UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
   telefone     VARCHAR(20)  NOT NULL,
   tipo         VARCHAR(30)  NOT NULL,   -- reset_senha | primeiro_acesso | disparo | teste
-  template     VARCHAR(80),
+  template     VARCHAR(80),              -- instância do Evolution que enviou
   status       VARCHAR(20)  NOT NULL,   -- enviado | erro
   erro         TEXT,
-  message_id   VARCHAR(120),            -- id devolvido pela Meta
+  message_id   VARCHAR(120),            -- id devolvido pelo servidor
   referencia   UUID,                    -- ex.: id da mensagem disparada
   created_at   TIMESTAMPTZ  NOT NULL DEFAULT now()
 );
