@@ -15,6 +15,59 @@ const logger = require('../utils/logger');
 
 const BCRYPT_ROUNDS = 12;
 
+/**
+ * Por que o login não tem senha: descobre se o e-mail pertence a um cadastro
+ * que ainda não virou acesso.
+ *
+ * Sem isso, quem se cadastrou e ainda não foi aprovado recebe "Credenciais
+ * inválidas" — a mesma resposta de quem errou a senha — e conclui que o
+ * aplicativo está quebrado, quando na verdade só falta a coordenação aprovar.
+ *
+ * Contrapartida assumida: a resposta revela que aquele e-mail está cadastrado
+ * como apoiador. O limitador de tentativas do login (10 falhas a cada 15 min)
+ * é o que impede varrer uma lista de e-mails atrás dessa informação.
+ */
+const situacaoDoCadastro = async (email) => {
+  const { rows } = await db.query(
+    `SELECT nome, status, created_at
+       FROM apoiadores
+      WHERE LOWER(email) = $1
+      ORDER BY created_at DESC
+      LIMIT 1`,
+    [email]
+  );
+
+  const cadastro = rows[0];
+  if (!cadastro) return null;
+
+  const primeiroNome = String(cadastro.nome || '').trim().split(/\s+/)[0] || '';
+
+  if (cadastro.status === 'pendente') {
+    return {
+      codigo: 'CADASTRO_PENDENTE',
+      nome: primeiroNome,
+      desde: cadastro.created_at,
+      error: 'Seu cadastro ainda está em análise pela coordenação.',
+    };
+  }
+
+  if (cadastro.status === 'inativo') {
+    return {
+      codigo: 'CADASTRO_INATIVO',
+      nome: primeiroNome,
+      error: 'Seu cadastro está inativo. Fale com a coordenação.',
+    };
+  }
+
+  // Cadastro aprovado mas sem acesso utilizável (acesso ainda não criado ou
+  // desativado depois). Sem esta faixa a pessoa ficaria sem explicação.
+  return {
+    codigo: 'CADASTRO_SEM_ACESSO',
+    nome: primeiroNome,
+    error: 'Seu cadastro existe, mas o acesso ainda não está liberado.',
+  };
+};
+
 // Helper to load profile-based permissions
 const loadUserPermissions = async (perfilId) => {
   const permissoes = {};
@@ -49,14 +102,23 @@ const login = async (req, res, next) => {
     const { email, senha } = req.body;
 
     // Busca usuário ativo
+    const emailNormalizado = email.toLowerCase().trim();
+
     const { rows } = await db.query(
       'SELECT id, nome, email, senha_hash, role, tipo, ativo, primeiro_acesso, pesquisa_concluida, perfil_id FROM users WHERE email = $1',
-      [email.toLowerCase().trim()]
+      [emailNormalizado]
     );
 
     const user = rows[0];
 
     if (!user || !user.ativo) {
+      // Antes de responder "credenciais inválidas", vê se o e-mail é de um
+      // cadastro aguardando aprovação — nesse caso a pessoa não errou nada e
+      // merece saber disso.
+      const situacao = await situacaoDoCadastro(emailNormalizado);
+      if (situacao) {
+        return res.status(403).json(situacao);
+      }
       // Resposta genérica para não revelar se o e-mail existe
       return res.status(401).json({ error: 'Credenciais inválidas.' });
     }

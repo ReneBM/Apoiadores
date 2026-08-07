@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { getMediaUrl } from '../api/axios';
+import CadastroPendenteModal from '../components/CadastroPendenteModal';
 
 export default function Login() {
   const { login } = useAuth();
@@ -13,6 +14,7 @@ export default function Login() {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState('');
+  const [aviso, setAviso]       = useState(null); // cadastro sem acesso liberado
 
   const handleChange = (e) => {
     setError('');
@@ -38,6 +40,10 @@ export default function Login() {
         const targetPath = ['admin', 'coordenador'].includes(result.role) ? '/dashboard' : '/painel';
         navigate(targetPath, { replace: true });
       }
+    } else if (result.codigo) {
+      // Cadastro existe, mas o acesso ainda não foi liberado: explica em vez
+      // de mostrar "credenciais inválidas", que faz a pessoa achar que errou.
+      setAviso({ codigo: result.codigo, nome: result.nome, desde: result.desde });
     } else {
       setError(result.message);
     }
@@ -363,6 +369,14 @@ export default function Login() {
           </p>
         </div>
       </div>
+
+      <CadastroPendenteModal
+        open={Boolean(aviso)}
+        onClose={() => setAviso(null)}
+        codigo={aviso?.codigo}
+        nome={aviso?.nome}
+        desde={aviso?.desde}
+      />
     </>
   );
 }

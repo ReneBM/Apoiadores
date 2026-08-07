@@ -62,8 +62,12 @@ export function AuthProvider({ children }) {
         primeiroAcesso: data.user.primeiro_acesso,
       };
     } catch (err) {
-      const message = err.response?.data?.error || 'Erro ao fazer login.';
-      return { success: false, message };
+      const dados = err.response?.data || {};
+      const message = dados.error || 'Erro ao fazer login.';
+      // `codigo` marca os casos em que a pessoa não errou nada — o cadastro é
+      // que ainda não virou acesso. A tela de login abre um aviso explicando,
+      // em vez da faixa vermelha de erro.
+      return { success: false, message, codigo: dados.codigo, nome: dados.nome, desde: dados.desde };
     } finally {
       setLoading(false);
     }
